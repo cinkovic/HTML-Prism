@@ -29,7 +29,8 @@ Try it now at: [https://html-prism.vercel.app/](https://html-prism.vercel.app/)
   - **Images**: SVG and image-specific attributes
     - d, viewBox, fill, stroke, stroke-width, cx, cy, r, x, y, dx, dy, rx, ry, x1, x2, y1, y2, z1, z2, transform, points, preserveAspectRatio, path, clip-path, mask, filter, vector-effect, pointer-events, stop-color, stop-opacity, text-anchor, dominant-baseline, stroke-linecap, stroke-linejoin, stroke-miterlimit, stroke-dasharray, stroke-dashoffset, fill-rule, clip-rule, enable-background, gradientUnits, gradientTransform, spreadMethod, fx, fy, offset, patternUnits, patternTransform, marker-start, marker-mid, marker-end, mask-type, mask-units, primitiveUnits, xlink:href, area, img
   - **Others**: Any attributes not falling into the above categories
-
+  - **Inner Content**: The actual text content within HTML elements (always displayed)
+  
 - Interactive visualization interface
 - Real-time analysis
 - Collapsible tree view

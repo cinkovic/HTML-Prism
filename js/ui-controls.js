@@ -20,7 +20,8 @@ function updateVisibility() {
         { id: 'showMultimedia', class: 'multimedia' },
         { id: 'showScriptingBehavior', class: 'scripting-behavior' },
         { id: 'showImages', class: 'image-specific' },
-        { id: 'showOthers', class: 'other-attributes' }
+        { id: 'showOthers', class: 'other-attributes' },
+        { id: 'showInnerText', class: 'inner-content' }
     ];
     elements.forEach(el => {
         const show = document.getElementById(el.id).checked;
@@ -67,3 +68,17 @@ window.onerror = function(message, source, lineno, colno, error) {
     alert("An error occurred. Please try again or contact support if the problem persists.");
     return true;
 };
+
+function parseHTML(htmlString) {
+    try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        if (doc.body.firstChild && doc.body.firstChild.nodeName === "parsererror") {
+            throw new Error("Parser error");
+        }
+        return doc.body;
+    } catch (error) {
+        console.error("Error parsing HTML:", error);
+        return document.createElement('body');
+    }
+}

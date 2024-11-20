@@ -207,3 +207,6 @@ button:hover {
 .tree-view .scripting-behavior { color: #4682B4; }
 .tree-view .image-specific { color: #20B2AA; }
 .tree-view .other-attributes { color: #43003c; }
+.tree-view .inner-content { 
+    color: black;
+}

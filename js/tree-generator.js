@@ -3,7 +3,13 @@ function generateTreeHTML(node) {
 
     let result = '<li>';
     const hasChildren = node.children.length > 0;
-    if (hasChildren) {
+    const textContent = Array.from(node.childNodes)
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .map(node => node.textContent.trim())
+        .filter(text => text.length > 0)
+        .join(' ');
+
+    if (hasChildren || textContent) {
         result += '<span class="collapsible">';
     }
 
@@ -47,12 +53,19 @@ function generateTreeHTML(node) {
         }
     }
 
+    // Add text content if it exists
+    if (textContent) {
+        result += ` <span class="inner-content">[text="${textContent}"]</span>`;
+    }
+
     if (hasChildren) {
         result += '</span><ul>';
         for (let child of node.children) {
             result += generateTreeHTML(child);
         }
         result += '</ul>';
+    } else if (textContent) {
+        result += '</span>';
     }
 
     result += '</li>';
