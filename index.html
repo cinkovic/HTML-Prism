@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta name="description" content="HTML Prism: Visualize and analyze HTML structure">
+    <meta property="og:title" content="HTML Prism">
+    <meta property="og:description" content="Visualize and analyze HTML structure with HTML Prism">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-website-url.com">
+    <meta property="og:image" content="https://your-website-url.com/path-to-your-logo.png">
+    <title>HTML Prism</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="header">
+        <button onclick="visualize()" aria-label="Visualize HTML">Visualize</button>
+        <h1><span class="header-span">HTML</span> Prism</h1>
+    </div>
+    <div class="container">
+        <textarea id="input" placeholder="Enter your HTML here..."></textarea>
+        <div class="controls">
+            <label><input type="checkbox" id="showTags" checked onchange="updateVisibility()" aria-label="Show Tags"> Tags</label>
+            <label><input type="checkbox" id="showClasses" checked onchange="updateVisibility()" aria-label="Show Classes"> Classes</label>
+            <label><input type="checkbox" id="showIds" checked onchange="updateVisibility()" aria-label="Show IDs"> IDs</label>
+            <label><input type="checkbox" id="showContentSource" checked onchange="updateVisibility()" aria-label="Show Content and Source"> Content & Source</label>
+            <label><input type="checkbox" id="showStyleAppearance" checked onchange="updateVisibility()" aria-label="Show Styling and Appearance"> Styling & Appearance</label>
+            <label><input type="checkbox" id="showFormInput" checked onchange="updateVisibility()" aria-label="Show Form and Input"> Form & Input</label>
+            <label><input type="checkbox" id="showAccessibilityRoles" checked onchange="updateVisibility()" aria-label="Show Accessibility and Roles"> Accessibility & Roles</label>
+            <label><input type="checkbox" id="showMetadataRelationships" checked onchange="updateVisibility()" aria-label="Show Metadata and Relationships"> Metadata & Relationships</label>
+            <label><input type="checkbox" id="showScriptingBehavior" checked onchange="updateVisibility()" aria-label="Show Scripting and Behavior"> Scripting & Behavior</label>
+            <label><input type="checkbox" id="showImages" checked onchange="updateVisibility()" aria-label="Show Images"> Images</label>
+            <label><input type="checkbox" id="showMultimedia" checked onchange="updateVisibility()" aria-label="Show Multimedia"> Multimedia</label>
+            <label><input type="checkbox" id="showOthers" checked onchange="updateVisibility()" aria-label="Show Others"> Others</label>
+        </div>
+        <div id="output" class="tree-view"></div>
+    </div>
+
+    <script src="js/dom-parser.js"></script>
+    <script src="js/tree-generator.js"></script>
+    <script src="js/ui-controls.js"></script>
+</body>
+</html>
