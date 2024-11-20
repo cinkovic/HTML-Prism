@@ -123,6 +123,7 @@ h1 {
 #showScriptingBehavior:checked::after { background-color: #4682B4; }
 #showImages:checked::after { background-color: #20B2AA; }
 #showOthers:checked::after { background-color: #43003c; }
+#showInnerText:checked::after { background-color: black; display: block; }
 
 button {
     padding: 4px 15px 6px 15px;
