@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Prism</title>
+    <style>
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4; 
+            display: flex;
+            flex-direction: column;
+            background-color: #ebebeb;
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 10px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 400;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            pointer-events: none;
+        }
+        .container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            max-height: calc(100vh - 20px);
+            overflow: hidden;
+        }
+        #input, #output { 
+            width: 100%; 
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(87, 87, 87, 0.122);
+        }
+        #input {
+            height: 200px;
+            margin-bottom: 10px;
+            resize: vertical;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            padding: 10px;
+        }
+        #output { 
+            flex-grow: 1;
+            overflow: auto; 
+            border: 1px solid #ddd; 
+            padding: 10px;
+            background-color: white;
+            border-radius: 7px;
+            max-height: calc(100vh - 50px - 200px - 80px - 35px);
+        }
+        .controls {
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .controls label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .controls input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            margin-right: 5px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .controls input[type="checkbox"]::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: none;
+        }
+        
+        .controls input[type="checkbox"]:checked::after {
+            display: block;
+        }
+        
+        #showTags:checked::after { background-color: #00f; }
+        #showClasses:checked::after { background-color: #090; }
+        #showIds:checked::after { background-color: rgb(227, 0, 53); }
+        #showContentSource:checked::after { background-color: #00aaff; }
+        #showStyleAppearance:checked::after { background-color: #ff00fb; }
+        #showFormInput:checked::after { background-color: #ff5500; }
+        #showAccessibilityRoles:checked::after { background-color: #aa00ff; }
+        #showMetadataRelationships:checked::after { background-color: #ff00aa; }
+        #showMultimedia:checked::after { background-color: #8B4513; }
+        #showScriptingBehavior:checked::after { background-color: #4682B4; }
+        #showSvgSpecific:checked::after { background-color: #20B2AA; }
+        #showOthers:checked::after { background-color: #43003c; }
+        
+        button {
+            padding: 3px 15px 5px 15px;
+            font-size: 15px;
+            font-family: inherit;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+            font-weight: 400;
+        }
+        button:hover {
+            background-color: #555;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        .header h1 .header-span {
+            font-weight: 100;
+        }
+        .tree-view { 
+            font-family: monospace; 
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        .tree-view ul { list-style-type: none; padding-left: 16px; margin: 0; }
+        .tree-view li { position: relative; padding-left: 19px; }
+        .tree-view li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -1px;
+            border-left: 1px solid #8888887e;
+            height: 100%;
+        }
+        .tree-view li:last-child::before { height: 9px; }
+        .tree-view li::after {
+            content: '';
+            position: absolute;
+            top: 9px;
+            left: 0;
+            width: 16px;
+            border-top: 1px solid #8888887e;
+        }
+        .tree-view > ul > li:first-child::before { top: 9px; }
+        .tree-view .collapsible {
+            cursor: pointer;
+            user-select: none;
+        }
+        .tree-view .collapsible::before {
+            content: '▼';
+            color: #5c5e7784;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            font-size: 8px;
+            padding: 5px;
+            position: absolute;
+            left: -10.4px;
+            top: 0.8px;
+            text-align: center;
+            line-height: 10px;
+            z-index: 1;
+        }
+        .tree-view .collapsed > .collapsible::before { 
+            content: '►'; 
+            top: -0.9px; 
+            left: -8.6px;
+            font-size: 10px;
+        }
+        .tree-view .collapsed > ul { display: none; }
+        .tree-view .tag { color: #00f; }
+        .tree-view .class { color: #090; }
+        .tree-view .id { color: rgb(227, 0, 53); }
+        .tree-view .content-source { color: #00aaff; }
+        .tree-view .style-appearance { color:#ff00fb; }
+        .tree-view .form-input { color: #ff5500; }
+        .tree-view .accessibility-roles { color: #aa00ff; }
+        .tree-view .metadata-relationships { color: #ff00aa; }
+        .tree-view .multimedia { color: #8B4513; }
+        .tree-view .scripting-behavior { color: #4682B4; }
+        .tree-view .svg-specific { color: #20B2AA; }
+        .tree-view .other-attributes { color: #43003c; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button onclick="visualize()">Visualize</button>
+        <h1><span class="header-span">HTML</span> Prism</h1>
+    </div>
+    <div class="container">
+        <textarea id="input" placeholder="Enter your HTML here..."></textarea>
+        <div class="controls">
+            <label><input type="checkbox" id="showTags" checked onchange="updateVisibility()"> Tags</label>
+            <label><input type="checkbox" id="showClasses" checked onchange="updateVisibility()"> Classes</label>
+            <label><input type="checkbox" id="showIds" checked onchange="updateVisibility()"> IDs</label>
+            <label><input type="checkbox" id="showContentSource" checked onchange="updateVisibility()"> Content & Source</label>
+            <label><input type="checkbox" id="showStyleAppearance" checked onchange="updateVisibility()"> Styling & Appearance</label>
+            <label><input type="checkbox" id="showFormInput" checked onchange="updateVisibility()"> Form & Input</label>
+            <label><input type="checkbox" id="showAccessibilityRoles" checked onchange="updateVisibility()"> Accessibility & Roles</label>
+            <label><input type="checkbox" id="showMetadataRelationships" checked onchange="updateVisibility()"> Metadata & Relationships</label>
+            <label><input type="checkbox" id="showMultimedia" checked onchange="updateVisibility()"> Multimedia</label>
+            <label><input type="checkbox" id="showScriptingBehavior" checked onchange="updateVisibility()"> Scripting & Behavior</label>
+            <label><input type="checkbox" id="showSvgSpecific" checked onchange="updateVisibility()"> SVG Specific</label>
+            <label><input type="checkbox" id="showOthers" checked onchange="updateVisibility()"> Others</label>
+        </div>
+        <div id="output" class="tree-view"></div>
+    </div>
+
+    <script>
+    function parseHTML(htmlString) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        return doc.body;
+    }
+
+    function generateTreeHTML(node) {
+        if (node.nodeType !== Node.ELEMENT_NODE) return '';
+    
+        let result = '<li>';
+        const hasChildren = node.children.length > 0;
+        if (hasChildren) {
+            result += '<span class="collapsible">';
+        }
+    
+        result += `<span class="tag">${node.tagName.toLowerCase()}</span>`;
+        
+        if (node.className && typeof node.className === 'string') {
+            const classes = node.className.split(' ').filter(c => c.trim() !== '');
+            if (classes.length > 0) {
+                result += '<span class="class">.' + classes.join('.') + '</span>';
+            }
+        }
+        
+        if (node.id) result += `<span class="id">#${node.id}</span>`;
+    
+        let attributeGroups = {
+            'content-source': ['src', 'href', 'alt', 'title', 'target', 'rel', 'download', 'ping', 'media', 'poster', 'cite', 'data', 'action', 'formaction', 'icon', 'manifest', 'srcdoc', 'srcset', 'crossorigin', 'integrity', 'referrerpolicy'],
+            'style-appearance': ['style', 'styles', 'width', 'height', 'align', 'valign', 'bgcolor', 'color', 'border', 'cellpadding', 'cellspacing', 'colspan', 'rowspan', 'size', 'face', 'shape', 'coords', 'background', 'margin', 'padding', 'font', 'text-align', 'vertical-align', 'float', 'clear', 'display', 'position', 'z-index', 'opacity', 'stroke-opacity', 'popover', 'sizes', 'rows'],
+            'form-input': ['type', 'name', 'value', 'placeholder', 'required', 'disabled', 'readonly', 'checked', 'selected', 'max', 'min', 'maxlength', 'minlength', 'pattern', 'form', 'formmethod', 'formtarget', 'formnovalidate', 'autocomplete', 'method', 'enctype', 'accept', 'accept-charset', 'autocapitalize', 'autofocus', 'capture', 'inputmode', 'list', 'multiple', 'step', 'spellcheck', 'for'],
+            'accessibility-roles': ['role', 'aria-*', 'tabindex', 'accesskey', 'lang', 'dir', 'hidden', 'contenteditable', 'draggable', 'dropzone', 'translate', 'for', 'action'],
+            'metadata-relationships': ['data-*', 'itemscope', 'itemtype', 'itemprop', 'datetime', 'content', 'id', 'name', 'property', 'rev', 'about', 'resource', 'datatype', 'typeof', 'vocab', 'prefix', 'xmlns', 'xml:lang', 'xml:base', 'xml:space'],
+            'multimedia': ['autoplay', 'controls', 'loop', 'muted', 'preload', 'playsinline', 'volume', 'currenttime', 'duration', 'buffered', 'played', 'seekable', 'ended', 'defaultmuted', 'defaultplaybackrate', 'disableremoteplayback', 'controlslist'],
+            'scripting-behavior': ['onclick', 'onload', 'onsubmit', 'oninput', 'onchange', 'onkeydown', 'onkeyup', 'onmouseover', 'onmouseout', 'onblur', 'onfocus', 'ondrag', 'ondrop', 'onscroll', 'async', 'defer', 'nonce', 'onerror', 'onabort', 'onautocomplete', 'onautocompleteerror', 'oncancel', 'oncanplay', 'oncanplaythrough', 'onclose', 'oncontextmenu', 'oncuechange', 'ondblclick', 'ondragend', 'ondragenter', 'ondragexit', 'ondragleave', 'ondragover', 'ondragstart', 'ondurationchange', 'onemptied', 'onended', 'onformdata', 'oninput', 'oninvalid', 'onkeypress', 'onloadeddata', 'onloadedmetadata', 'onloadstart', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseup', 'onpause', 'onplay', 'onplaying', 'onprogress', 'onratechange', 'onreset', 'onsecuritypolicyviolation', 'onseeked', 'onseeking', 'onselect', 'onslotchange', 'onstalled', 'onsuspend', 'ontimeupdate', 'ontoggle', 'onvolumechange', 'onwaiting', 'onwheel'],
+            'svg-specific': ['d', 'viewBox', 'fill', 'stroke', 'stroke-width', 'cx', 'cy', 'r', 'x', 'y', 'dx', 'dy', 'rx', 'ry', 'x1', 'x2', 'y1', 'y2', 'transform', 'points', 'preserveAspectRatio', 'path', 'clip-path', 'mask', 'filter', 'vector-effect', 'pointer-events', 'stop-color', 'stop-opacity', 'font-family', 'font-size', 'font-weight', 'text-anchor', 'dominant-baseline', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-dasharray', 'stroke-dashoffset', 'fill-rule', 'clip-rule', 'enable-background', 'gradientUnits', 'gradientTransform', 'spreadMethod', 'fx', 'fy', 'offset', 'patternUnits', 'patternTransform', 'marker-start', 'marker-mid', 'marker-end', 'mask-type', 'mask-units', 'primitiveUnits', 'xlink:href'],
+            'other-attributes': []
+        };
+    
+        for (let attr of node.attributes) {
+            if (attr.name === 'class' || attr.name === 'id') continue;
+            let grouped = false;
+            for (let [group, attrs] of Object.entries(attributeGroups)) {
+                if (attrs.includes(attr.name) || 
+                    (group === 'metadata-relationships' && attr.name.startsWith('data-')) ||
+                    (group === 'accessibility-roles' && attr.name.startsWith('aria-'))) {
+                    result += `<span class="${group}">[${attr.name}="${attr.value}"]</span>`;
+                    grouped = true;
+                    break;
+                }
+            }
+            if (!grouped) {
+                result += `<span class="other-attributes">[${attr.name}="${attr.value}"]</span>`;
+            }
+        }
+    
+        if (hasChildren) {
+            result += '</span><ul>';
+            for (let child of node.children) {
+                result += generateTreeHTML(child);
+            }
+            result += '</ul>';
+        }
+    
+        result += '</li>';
+        return result;
+    }
+    
+    function visualizeHTML(htmlString) {
+        const rootNode = parseHTML(htmlString);
+        return '<ul>' + generateTreeHTML(rootNode) + '</ul>';
+    }
+
+    function visualize() {
+        const input = document.getElementById('input').value;
+        const output = visualizeHTML(input);
+        document.getElementById('output').innerHTML = output;
+        addCollapsibleFunctionality();
+        updateVisibility();
+    }
+
+    function addCollapsibleFunctionality() {
+        document.querySelectorAll('.collapsible').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.parentElement.classList.toggle('collapsed');
+            });
+        });
+    }
+
+    function updateVisibility() {
+        const elements = [
+            { id: 'showTags', class: 'tag' },
+            { id: 'showClasses', class: 'class' },
+            { id: 'showIds', class: 'id' },
+            { id: 'showContentSource', class: 'content-source' },
+            { id: 'showStyleAppearance', class: 'style-appearance' },
+            { id: 'showFormInput', class: 'form-input' },
+            { id: 'showAccessibilityRoles', class: 'accessibility-roles' },
+            { id: 'showMetadataRelationships', class: 'metadata-relationships' },
+            { id: 'showMultimedia', class: 'multimedia' },
+            { id: 'showScriptingBehavior', class: 'scripting-behavior' },
+            { id: 'showSvgSpecific', class: 'svg-specific' },
+            { id: 'showOthers', class: 'other-attributes' }
+        ];
+        elements.forEach(el => {
+            const show = document.getElementById(el.id).checked;
+            document.querySelectorAll(`.${el.class}`).forEach(elem => {
+                elem.style.display = show ? '' : 'none';
+            });
+        });
+    }
+
+    document.getElementById('input').value = `
+    <div id="iLogo" class="clearfix" data-role="banner" aria-label="Logo Section">
+        <h1>
+            <a class="fwckembedded" href="https://example.com" title="Go to example">
+            <img src="logo.png" alt="Logo" width="100" height="50">
+            </a>
+        </h1>
+    </div>
+    `.trim();
+
+    // Call visualize when the page loads
+    document.addEventListener('DOMContentLoaded', visualize);
+    </script>
+</body>
+</html>
