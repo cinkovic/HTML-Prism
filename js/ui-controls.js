@@ -32,13 +32,33 @@ function updateVisibility() {
 
 // Initial sample HTML
 document.getElementById('input').value = `
-<div id="iLogo" class="clearfix" data-role="banner" aria-label="Logo Section">
-    <h1>
-        <a class="fwckembedded" href="https://example.com" title="Go to example">
-        <img src="logo.png" alt="Logo" width="100" height="50">
-        </a>
-    </h1>
-</div>
+<html>
+<head>
+    <title>DOM-Prism Demo</title>
+    <meta name="description" content="Interactive DOM visualization">
+    <style>
+        .highlight { color: blue; }
+        #special { display: none; }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav id="top-nav">
+            <ul data-role="menu">
+                <li class="active highlight">Home</li>
+                <li hidden>About</li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="special">Hidden content</div>
+        <img src="logo.png" alt="Logo" width="100">
+        <form>
+            <input type="text" required>
+        </form>
+    </main>
+</body>
+</html>
 `.trim();
 
 // Global error handler
