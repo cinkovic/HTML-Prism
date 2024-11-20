@@ -9,9 +9,7 @@ function generateTreeHTML(node) {
         .filter(text => text.length > 0)
         .join(' ');
 
-    if (hasChildren || textContent) {
-        result += '<span class="collapsible">';
-    }
+    result += '<span class="collapsible">';
 
     result += `<span class="tag">${node.tagName.toLowerCase()}</span>`;
     
@@ -53,22 +51,19 @@ function generateTreeHTML(node) {
         }
     }
 
-    // Add text content if it exists
     if (textContent) {
-        result += ` <span class="inner-content">[text="${textContent}"]</span>`;
+        result += ` <span class="inner-content">${textContent}</span>`;
     }
 
+    result += '</span><ul>';
+    
     if (hasChildren) {
-        result += '</span><ul>';
         for (let child of node.children) {
             result += generateTreeHTML(child);
         }
-        result += '</ul>';
-    } else if (textContent) {
-        result += '</span>';
     }
-
-    result += '</li>';
+    
+    result += '</ul></li>';
     return result;
 }
 
