@@ -25,11 +25,11 @@ HTML-Prism is a tool for visualizing and analyzing HTML structure. It provides a
    ```
    cd HTML-Prism
    ```
-3. Open `visualize_html_tree.html` in your web browser.
+3. Open `index.html` in your web browser.
 
 ## Usage
 
-1. Open `visualize_html_tree.html` in your web browser.
+1. Open `index.html` in your web browser.
 2. Paste your HTML code into the input area.
 3. Click the "Visualize" button to see the HTML structure represented as a tree.
 4. Explore the tree by expanding and collapsing nodes.
