@@ -1,74 +1,254 @@
 function generateTreeHTML(node) {
+    if (!node) return '';
     if (node.nodeType !== Node.ELEMENT_NODE) return '';
 
-    let result = '<li>';
-    const hasChildren = node.children.length > 0;
-    const textContent = Array.from(node.childNodes)
-        .filter(node => node.nodeType === Node.TEXT_NODE)
-        .map(node => node.textContent.trim())
-        .filter(text => text.length > 0)
-        .join(' ');
+    try {
+        let result = '<li>';
+        const hasChildren = node.children.length > 0;
+        const textContent = Array.from(node.childNodes)
+            .filter(node => node.nodeType === Node.TEXT_NODE)
+            .map(node => node.textContent.trim())
+            .filter(text => text.length > 0)
+            .join(' ');
 
-    result += '<span class="collapsible">';
+        result += '<span class="collapsible">';
 
-    result += `<span class="tag">${node.tagName.toLowerCase()}</span>`;
-    
-    if (node.className && typeof node.className === 'string') {
-        const classes = node.className.split(' ').filter(c => c.trim() !== '');
-        if (classes.length > 0) {
-            result += '<span class="class">.' + classes.join('.') + '</span>';
-        }
-    }
-    
-    if (node.id) result += `<span class="id">#${node.id}</span>`;
-
-    let attributeGroups = {
-        'content-source': ['src', 'href', 'alt', 'title', 'target', 'rel', 'download', 'ping', 'media', 'poster', 'cite', 'data', 'action', 'formaction', 'icon', 'manifest', 'srcdoc', 'srcset', 'crossorigin', 'integrity', 'referrerpolicy'],
-        'style-appearance': ['style', 'styles', 'width', 'height', 'align', 'valign', 'bgcolor', 'color', 'border', 'cellpadding', 'cellspacing', 'colspan', 'rowspan', 'size', 'face', 'shape', 'coords', 'background', 'margin', 'padding', 'font', 'font-family', 'font-size', 'font-weight', 'text-align', 'vertical-align', 'float', 'clear', 'display', 'position', 'z-index', 'opacity', 'stroke-opacity', 'popover', 'sizes', 'rows'],
-        'form-input': ['type', 'name', 'value', 'placeholder', 'required', 'disabled', 'readonly', 'checked', 'selected', 'max', 'min', 'maxlength', 'minlength', 'pattern', 'form', 'formmethod', 'formtarget', 'formnovalidate', 'autocomplete', 'method', 'enctype', 'accept', 'accept-charset', 'autocapitalize', 'autofocus', 'capture', 'inputmode', 'list', 'multiple', 'step', 'spellcheck', 'for'],
-        'accessibility-roles': ['role', 'aria-*', 'tabindex', 'accesskey', 'lang', 'dir', 'hidden', 'contenteditable', 'draggable', 'dropzone', 'translate', 'for', 'action'],
-        'metadata-relationships': ['data-*', 'itemscope', 'itemtype', 'itemprop', 'datetime', 'content', 'id', 'name', 'property', 'rev', 'about', 'resource', 'datatype', 'typeof', 'vocab', 'prefix', 'xmlns', 'xml:lang', 'xml:base', 'xml:space'],
-        'multimedia': ['autoplay', 'controls', 'loop', 'muted', 'preload', 'playsinline', 'volume', 'currenttime', 'duration', 'buffered', 'played', 'seekable', 'ended', 'defaultmuted', 'defaultplaybackrate', 'disableremoteplayback', 'controlslist'],
-        'scripting-behavior': ['onclick', 'onload', 'onsubmit', 'oninput', 'onchange', 'onkeydown', 'onkeyup', 'onmouseover', 'onmouseout', 'onblur', 'onfocus', 'ondrag', 'ondrop', 'onscroll', 'async', 'defer', 'nonce', 'onerror', 'onabort', 'onautocomplete', 'onautocompleteerror', 'oncancel', 'oncanplay', 'oncanplaythrough', 'onclose', 'oncontextmenu', 'oncuechange', 'ondblclick', 'ondragend', 'ondragenter', 'ondragexit', 'ondragleave', 'ondragover', 'ondragstart', 'ondurationchange', 'onemptied', 'onended', 'onformdata', 'oninput', 'oninvalid', 'onkeypress', 'onloadeddata', 'onloadedmetadata', 'onloadstart', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseup', 'onpause', 'onplay', 'onplaying', 'onprogress', 'onratechange', 'onreset', 'onsecuritypolicyviolation', 'onseeked', 'onseeking', 'onselect', 'onslotchange', 'onstalled', 'onsuspend', 'ontimeupdate', 'ontoggle', 'onvolumechange', 'onwaiting', 'onwheel'],
-        'image-specific': ['d', 'viewBox', 'fill', 'stroke', 'stroke-width', 'cx', 'cy', 'r', 'x', 'y', 'dx', 'dy', 'rx', 'ry', 'x1', 'x2', 'y1', 'y2', 'z1', 'z2', 'transform', 'points', 'preserveAspectRatio', 'path', 'clip-path', 'mask', 'filter', 'vector-effect', 'pointer-events', 'stop-color', 'stop-opacity', 'text-anchor', 'dominant-baseline', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-dasharray', 'stroke-dashoffset', 'fill-rule', 'clip-rule', 'enable-background', 'gradientUnits', 'gradientTransform', 'spreadMethod', 'fx', 'fy', 'offset', 'patternUnits', 'patternTransform', 'marker-start', 'marker-mid', 'marker-end', 'mask-type', 'mask-units', 'primitiveUnits', 'xlink:href', 'area', 'img'],
-        'other-attributes': []
-    };
-
-    for (let attr of node.attributes) {
-        if (attr.name === 'class' || attr.name === 'id') continue;
-        let grouped = false;
-        for (let [group, attrs] of Object.entries(attributeGroups)) {
-            if (attrs.includes(attr.name) || 
-                (group === 'metadata-relationships' && attr.name.startsWith('data-')) ||
-                (group === 'accessibility-roles' && attr.name.startsWith('aria-'))) {
-                result += `<span class="${group}">[${attr.name}="${attr.value}"]</span>`;
-                grouped = true;
-                break;
+        result += `<span class="tag">${node.tagName.toLowerCase()}</span>`;
+        
+        if (node.className) {
+            let classes;
+            if (typeof node.className === 'string') {
+                classes = node.className.split(' ');
+            } else if (node.className.baseVal) {
+                // Handle SVG elements
+                classes = node.className.baseVal.split(' ');
+            } else {
+                classes = [];
+            }
+            
+            classes = classes.filter(c => c.trim() !== '');
+            if (classes.length > 0) {
+                result += '<span class="class">.' + classes.join('.') + '</span>';
             }
         }
-        if (!grouped) {
-            result += `<span class="other-attributes">[${attr.name}="${attr.value}"]</span>`;
-        }
-    }
+        
+        if (node.id) result += `<span class="id">#${node.id}</span>`;
 
-    if (node.tagName.toLowerCase() === 'script' && node.textContent.trim()) {
-        result += ` <span class="scripting-behavior">${node.textContent.trim()}</span>`;
-    } else if (node.tagName.toLowerCase() === 'style' && node.textContent.trim()) {
-        result += ` <span class="style-appearance">${node.textContent.trim()}</span>`;
-    } else if (textContent) {
-        result += ` <span class="inner-content">${textContent}</span>`;
-    }
+        let attributeGroups = {
+            'content-source': [
+                // Core resource references
+                'src', 'href', 'srcset', 'sizes', 'source', 'icon', 'manifest', 'srcdoc',
+                // Resource metadata
+                'alt', 'title', 'caption', 'figcaption', 'data',
+                // Link behavior
+                'target', 'rel', 'download', 'ping',
+                // Media specifics
+                'media', 'poster', 'preload',
+                // Citations & References
+                'cite', 'quotation', 'blockquote',
+                // Form destinations
+                'action', 'formaction',
+                // Resource integrity
+                'crossorigin', 'integrity', 'referrerpolicy',
+                // Progressive enhancement
+                'fallback', 'placeholder'
+            ],
+            'style-appearance': [
+                // Core styling
+                'style', 'styles', 'class',
+                // Dimensions & Layout
+                'width', 'height', 'size', 'aspect-ratio', 'align', 'valign', 'shape', 'coords',
+                // Layout
+                'display', 'position', 'float', 'clear', 'z-index', 'popover',
+                // Spacing
+                'margin', 'padding', 'gap',
+                // Visual
+                'background', 'color', 'opacity', 'visibility', 'bgcolor', 'border',
+                // Typography
+                'font', 'font-family', 'font-size', 'font-weight', 'text-align', 'vertical-align', 'face',
+                // Table specific
+                'colspan', 'rowspan', 'cellpadding', 'cellspacing', 'rows',
+                // Flexbox/Grid
+                'flex', 'grid', 'order', 'align', 'justify',
+                // Transitions & Animations
+                'transition', 'animation', 'transform',
+                // SVG-specific styling
+                'stroke-opacity'
+            ],
+            'form-input': [
+                // Core attributes
+                'type', 'name', 'value', 'form',
+                // Validation
+                'required', 'pattern', 'minlength', 'maxlength', 'min', 'max',
+                // State
+                'disabled', 'readonly', 'checked', 'selected', 'multiple',
+                // User experience
+                'placeholder', 'autocomplete', 'autocapitalize', 'autofocus',
+                // File inputs
+                'accept', 'capture',
+                // Form behavior
+                'formmethod', 'formtarget', 'formnovalidate', 'formenctype',
+                // Lists & Stepping
+                'list', 'step', 'datalist',
+                // Mobile optimization
+                'inputmode', 'enterkeyhint',
+                // Additional form attributes
+                'method', 'enctype', 'accept-charset', 'spellcheck', 'for'
+            ],
+            'accessibility-roles': [
+                // ARIA
+                'role', 'aria-*',
+                // Navigation
+                'tabindex', 'accesskey',
+                // Language & Direction
+                'lang', 'dir',
+                // State & Properties
+                'hidden', 'disabled', 'readonly',
+                // Interactive elements
+                'contenteditable', 'draggable', 'dropzone', 'translate',
+                // Focus management
+                'autofocus', 'focusable',
+                // Live regions
+                'aria-live', 'aria-atomic',
+                // Descriptions
+                'aria-label', 'aria-describedby',
+                // Additional accessibility
+                'for', 'action'
+            ],
+            'metadata-relationships': [
+                // Custom data
+                'data-*',
+                // Microdata
+                'itemscope', 'itemtype', 'itemprop',
+                // RDFa
+                'vocab', 'typeof', 'property',
+                // Time & Dates
+                'datetime', 'pubdate',
+                // Document structure
+                'rel', 'rev', 'about', 'content', 'id', 'name',
+                // Namespaces
+                'xmlns', 'xml:lang', 'xml:base', 'xml:space',
+                // Resource identification
+                'resource', 'prefix', 'datatype'
+            ],
+            'multimedia': [
+                'autoplay', 'controls', 'loop', 'muted', 'preload', 'playsinline',
+                'volume', 'currenttime', 'duration', 'buffered', 'played', 'seekable',
+                'ended', 'defaultmuted', 'defaultplaybackrate', 'disableremoteplayback',
+                'controlslist'
+            ],
+            'scripting-behavior': [
+                // Mouse events
+                'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 
+                'onmouseout', 'onmousemove', 'onmouseenter', 'onmouseleave',
+                // Keyboard events
+                'onkeydown', 'onkeyup', 'onkeypress',
+                // Form events
+                'onsubmit', 'oninput', 'onchange', 'onformdata', 'oninvalid', 'onreset',
+                // Focus events
+                'onblur', 'onfocus',
+                // Drag events
+                'ondrag', 'ondrop', 'ondragend', 'ondragenter', 'ondragexit', 
+                'ondragleave', 'ondragover', 'ondragstart',
+                // Media events
+                'oncanplay', 'oncanplaythrough', 'ondurationchange', 'onemptied', 
+                'onended', 'onloadeddata', 'onloadedmetadata', 'onloadstart',
+                'onpause', 'onplay', 'onplaying', 'onprogress', 'onratechange',
+                'onseeked', 'onseeking', 'onstalled', 'onsuspend', 'ontimeupdate',
+                'onvolumechange', 'onwaiting',
+                // Other events
+                'onload', 'onscroll', 'onerror', 'onabort', 'onautocomplete', 
+                'onautocompleteerror', 'oncancel', 'onclose', 'oncontextmenu',
+                'oncuechange', 'onselect', 'onslotchange', 'ontoggle', 'onwheel',
+                'onsecuritypolicyviolation',
+                // Script attributes
+                'async', 'defer', 'nonce'
+            ],
+            'image-specific': [
+                // Basic SVG attributes
+                'd', 'viewBox', 'fill', 'stroke', 'stroke-width', 'cx', 'cy', 'r',
+                'x', 'y', 'dx', 'dy', 'rx', 'ry', 'x1', 'x2', 'y1', 'y2', 'z1', 'z2',
+                // Transform and positioning
+                'transform', 'points', 'preserveAspectRatio',
+                // Clipping and masking
+                'path', 'clip-path', 'mask', 'filter',
+                // Advanced SVG attributes
+                'vector-effect', 'pointer-events', 'stop-color', 'stop-opacity',
+                'text-anchor', 'dominant-baseline', 'stroke-linecap', 'stroke-linejoin',
+                'stroke-miterlimit', 'stroke-dasharray', 'stroke-dashoffset',
+                'fill-rule', 'clip-rule', 'enable-background',
+                // Gradient and pattern
+                'gradientUnits', 'gradientTransform', 'spreadMethod', 'fx', 'fy',
+                'offset', 'patternUnits', 'patternTransform',
+                // Markers and masks
+                'marker-start', 'marker-mid', 'marker-end', 'mask-type', 'mask-units',
+                'primitiveUnits',
+                // Links and areas
+                'xlink:href', 'area', 'img'
+            ],
+            'other-attributes': []
+        };
 
-    result += '</span><ul>';
-    
-    if (hasChildren) {
-        for (let child of node.children) {
-            result += generateTreeHTML(child);
+        for (let attr of node.attributes) {
+            if (attr.name === 'class' || attr.name === 'id') continue;
+            let grouped = false;
+            for (let [group, attrs] of Object.entries(attributeGroups)) {
+                if (attrs.includes(attr.name) || 
+                    (group === 'metadata-relationships' && attr.name.startsWith('data-')) ||
+                    (group === 'accessibility-roles' && attr.name.startsWith('aria-'))) {
+                    const sanitizedValue = attr.value
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                        .replace(/`/g, '&#96;');
+                    result += `<span class="${group}">[${attr.name}="${sanitizedValue}"]</span>`;
+                    grouped = true;
+                    break;
+                }
+            }
+            if (!grouped) {
+                const sanitizedValue = attr.value
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/`/g, '&#96;');
+                result += `<span class="other-attributes">[${attr.name}="${sanitizedValue}"]</span>`;
+            }
         }
+
+        if (node.tagName.toLowerCase() === 'script' && node.textContent.trim()) {
+            const sanitizedContent = node.textContent.trim()
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            result += ` <span class="scripting-behavior">${sanitizedContent}</span>`;
+        } else if (node.tagName.toLowerCase() === 'style' && node.textContent.trim()) {
+            const sanitizedContent = node.textContent.trim()
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            result += ` <span class="style-appearance">${sanitizedContent}</span>`;
+        } else if (textContent) {
+            const sanitizedContent = textContent
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            result += ` <span class="inner-content">${sanitizedContent}</span>`;
+        }
+
+        result += '</span><ul>';
+        
+        if (hasChildren) {
+            for (let child of node.children) {
+                result += generateTreeHTML(child);
+            }
+        }
+        
+        result += '</ul></li>';
+        return result;
+    } catch (error) {
+        console.error("Error generating tree for node:", node, error);
+        return `<li><span class="error">Error processing node: ${error.message}</span></li>`;
     }
-    
-    result += '</ul></li>';
-    return result;
 }
 
 function visualizeHTML(htmlString) {
@@ -79,15 +259,30 @@ function visualizeHTML(htmlString) {
 function visualize() {
     try {
         const input = document.getElementById('input');
+        if (!input || !input.value.trim()) {
+            throw new Error("Empty or invalid input");
+        }
+        
         const output = visualizeHTML(input.value);
-        
         const outputDiv = document.getElementById('output');
-        outputDiv.innerHTML = output;
+        if (!outputDiv) {
+            throw new Error("Output container not found");
+        }
         
+        outputDiv.innerHTML = output;
         addCollapsibleFunctionality();
         updateVisibility();
     } catch (error) {
         console.error("Error in visualization:", error);
-        document.getElementById('output').innerHTML = '<p>An error occurred during visualization. Please check your input HTML.</p>';
+        const outputDiv = document.getElementById('output');
+        if (outputDiv) {
+            outputDiv.innerHTML = `<p class="error">Error: ${error.message || 'An error occurred during visualization. Please check your input HTML.'}</p>`;
+        }
     }
+}
+
+// Add browser checks
+if (!window.DOMParser) {
+    console.error("Browser doesn't support DOMParser");
+    // Fallback or error message
 }
