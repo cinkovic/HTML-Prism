@@ -51,7 +51,9 @@ function generateTreeHTML(node) {
         }
     }
 
-    if (textContent) {
+    if (node.tagName.toLowerCase() === 'script' && node.textContent.trim()) {
+        result += ` <span class="scripting-behavior">${node.textContent.trim()}</span>`;
+    } else if (textContent) {
         result += ` <span class="inner-content">${textContent}</span>`;
     }
 
