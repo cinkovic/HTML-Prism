@@ -53,6 +53,8 @@ function generateTreeHTML(node) {
 
     if (node.tagName.toLowerCase() === 'script' && node.textContent.trim()) {
         result += ` <span class="scripting-behavior">${node.textContent.trim()}</span>`;
+    } else if (node.tagName.toLowerCase() === 'style' && node.textContent.trim()) {
+        result += ` <span class="style-appearance">${node.textContent.trim()}</span>`;
     } else if (textContent) {
         result += ` <span class="inner-content">${textContent}</span>`;
     }
