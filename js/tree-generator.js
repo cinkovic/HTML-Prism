@@ -11,9 +11,8 @@ function generateTreeHTML(node) {
             .filter(text => text.length > 0)
             .join(' ');
 
-        result += `<span class="${hasChildren ? 'collapsible' : 'leaf'}">`;
+        result += '<span class="collapsible">';
 
-        result += '<span class="tag">';
         result += `<span class="tag">${node.tagName.toLowerCase()}</span>`;
         
         if (node.className) {
