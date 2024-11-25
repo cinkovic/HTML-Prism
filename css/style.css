@@ -211,3 +211,6 @@ button:hover {
 .tree-view .inner-content { 
     color: black;
 }
+.tree-view .leaf::before {
+    display: none;
+}
