@@ -118,7 +118,7 @@ h1 {
 #showStyleAppearance:checked::after { background-color: #ff00fb; }
 #showFormInput:checked::after { background-color: #ff5500; }
 #showAccessibilityRoles:checked::after { background-color: #aa00ff; }
-#showMetadataRelationships:checked::after { background-color: #ff00c8; }
+#showMetadataRelationships:checked::after { background-color: #B8860B; }
 #showMultimedia:checked::after { background-color: #8B4513; }
 #showScriptingBehavior:checked::after { background-color: #4682B4; }
 #showImages:checked::after { background-color: #20B2AA; }
