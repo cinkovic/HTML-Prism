@@ -34,90 +34,106 @@ function updateVisibility() {
 // Sample HTML
 document.getElementById('input').value = `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="metadata-relationships">
 <head>
     <meta charset="UTF-8" class="metadata-relationships">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" class="metadata-relationships">
-    <meta name="description" content="HTML Prism - A powerful tool for visualizing and analyzing HTML structure" class="metadata-relationships">
-    <title>HTML Prism - HTML Structure Visualization Tool</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/analyzer.js" defer class="scripting-behavior"></script>
+    <meta name="description" content="HTML Prism reveals the structure and relationships in your HTML through visual analysis" class="metadata-relationships">
+    <meta name="keywords" content="HTML analysis, semantic structure, element relationships, web architecture" class="metadata-relationships">
+    <meta property="og:title" content="HTML Prism - Understand HTML Structure" class="metadata-relationships">
+    <meta property="og:image" content="prism-preview.png" class="metadata-relationships image-specific">
+    <title class="metadata-relationships">HTML Prism - Visualize HTML Architecture</title>
+    <link rel="stylesheet" href="prism.css" class="metadata-relationships style-appearance">
+    <script src="prism.js" defer class="scripting-behavior"></script>
 </head>
 <body>
-    <nav id="mainNav" class="main-navigation" role="navigation" class="accessibility-roles">
-        <ul class="nav-list" role="menubar" class="accessibility-roles">
-            <li><a href="#features" class="active inner-content">Key Features</a></li>
-            <li><a href="#how-it-works" class="inner-content">How It Works</a></li>
-            <li><a href="#docs" class="inner-content">Documentation</a></li>
-        </ul>
-    </nav>
-
-    <main id="analyzer">
-        <section class="hero-section">
-            <h1 class="main-title inner-content">Visualize Your HTML Structure</h1>
-            <p class="lead-text inner-content">Transform complex HTML into clear, interactive tree diagrams. Perfect for developers, designers, and educators.</p>
-        </section>
-
-        <section class="features">
-            <h2 class="inner-content">Why Use HTML Prism?</h2>
-            <ul class="feature-list">
-                <li class="inner-content">Instantly visualize HTML structure and hierarchy</li>
-                <li class="inner-content">Identify and analyze HTML elements by category</li>
-                <li class="inner-content">Debug layout and structure issues efficiently</li>
-                <li class="inner-content">Perfect for learning and teaching HTML concepts</li>
+    <header class="document-header style-appearance">
+        <img src="prism-logo.svg" 
+             alt="HTML Prism" 
+             class="image-specific"
+             width="120" 
+             height="40">
+        <nav id="main-nav" class="accessibility-roles" role="navigation">
+            <ul class="nav-structure" role="menubar">
+                <li><a href="#input" class="action-analyze scripting-behavior">Analyze HTML</a></li>
+                <li><a href="#output" class="action-visualize scripting-behavior">View Structure</a></li>
+                <li><a href="#help" class="action-learn scripting-behavior">Learn Patterns</a></li>
             </ul>
+        </nav>
+    </header>
+
+    <main id="workspace">
+        <section id="input" class="html-input">
+            <h1 class="input-heading inner-content">Analyze Your HTML</h1>
+            <p class="input-guide content-source">Input HTML to reveal its structural patterns and element relationships</p>
+            
+            <form id="html-form" class="form-input" onsubmit="return processHTML(event)">
+                <label for="code-input" class="form-input accessibility-roles">Enter HTML Code:</label>
+                <textarea 
+                    id="code-input" 
+                    name="html" 
+                    required 
+                    class="form-input"
+                    placeholder="Paste HTML to analyze its structure..."
+                    aria-label="HTML code entry">
+                </textarea>
+                <button type="submit" class="form-submit form-input scripting-behavior">Reveal Structure</button>
+            </form>
         </section>
 
-        <section class="interactive-demo">
-            <h2 class="inner-content">Try It Yourself</h2>
-            <div class="demo-container">
-                <form id="analyzeForm" class="form-input">
-                    <label for="htmlInput" class="inner-content">Paste your HTML in top window and hit 'Visualize'</label>
-                    <textarea 
-                        id="htmlInput" 
-                        name="html" 
-                        required 
-                        class="form-input"
-                        placeholder="Enter your HTML code here to see it transformed into a visual tree structure..."
-                        aria-label="HTML input area" 
-                        class="accessibility-roles">
-                    </textarea>
-                    <button type="submit" class="form-input inner-content">Analyze Structure</button>
-                </form>
+        <section id="output" class="html-output">
+            <h2 class="output-heading inner-content">Structure Visualization</h2>
+            <div class="output-display">
+                <picture class="visual-output multimedia">
+                    <source srcset="structure-dark.webp" media="(prefers-color-scheme: dark)" class="image-specific">
+                    <source srcset="structure-light.webp" class="image-specific">
+                    <img src="structure.png" 
+                         alt="HTML structure diagram" 
+                         class="image-specific"
+                         width="800" 
+                         height="400"
+                         loading="lazy">
+                </picture>
+                <div class="view-controls">
+                    <h3 class="control-heading inner-content">Structure View</h3>
+                    <div class="control-options" role="group">
+                        <label class="form-input">
+                            <input type="checkbox" 
+                                   name="show-elements" 
+                                   checked 
+                                   class="form-input"
+                                   aria-describedby="view-help">
+                            Show Elements
+                        </label>
+                        <p id="view-help" class="view-guide content-source accessibility-roles">Control element visibility in the structure view</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="example-section">
-            <h2 class="inner-content">See How It Works</h2>
-            <div class="code-preview" style="background: #f5f5f5; padding: 1rem;" class="style-appearance">
-                <nav class="tag">
-                    <ul class="class tag">
-                        <li class="tag" onclick="showExample()" class="scripting-behavior">
-                            <a href="#" class="tag inner-content">Interactive Example</a>
-                        </li>
+        <section id="help" class="html-guide">
+            <h2 class="guide-heading inner-content">HTML Structure Guide</h2>
+            <div class="guide-content">
+                <article class="pattern-guide" role="article">
+                    <h3 class="pattern-heading inner-content">Common HTML Patterns</h3>
+                    <ul class="pattern-list">
+                        <li class="pattern-item content-source">Document Flow: How elements create hierarchy</li>
+                        <li class="pattern-item content-source">Element Relationships: Parent, child, and sibling connections</li>
+                        <li class="pattern-item content-source">Semantic Structure: Meaningful HTML organization</li>
+                        <li class="pattern-item content-source">Content Architecture: Building clear document outlines</li>
                     </ul>
-                </nav>
+                </article>
             </div>
         </section>
     </main>
 
-    <div class="controls">
-        <div class="visibility-toggles">
-            <label><input type="checkbox" id="showTags" checked> Tags</label>
-            <label><input type="checkbox" id="showClasses" checked> Classes</label>
-            <label><input type="checkbox" id="showIds" checked> IDs</label>
-            <label><input type="checkbox" id="showContentSource" checked> Content</label>
-            <label><input type="checkbox" id="showStyleAppearance" checked> Styles</label>
-            <label><input type="checkbox" id="showFormInput" checked> Forms</label>
-            <label><input type="checkbox" id="showAccessibilityRoles" checked> Accessibility</label>
-            <label><input type="checkbox" id="showMetadataRelationships" checked> Metadata</label>
-            <label><input type="checkbox" id="showMultimedia" checked> Multimedia</label>
-            <label><input type="checkbox" id="showScriptingBehavior" checked> Scripting</label>
-            <label><input type="checkbox" id="showImages" checked> Images</label>
-            <label><input type="checkbox" id="showOthers" checked> Other</label>
-            <label><input type="checkbox" id="showInnerText" checked> Inner Text</label>
-        </div>
-    </div>
+    <footer class="document-footer">
+        <nav class="help-links accessibility-roles" role="navigation">
+            <a href="/guide" rel="help" class="link-guide metadata-relationships scripting-behavior">Usage Guide</a>
+            <a href="/patterns" rel="help" class="link-patterns metadata-relationships scripting-behavior">HTML Patterns</a>
+        </nav>
+        <p class="footer-note content-source">HTML Prism - Understand your document structure</p>
+    </footer>
 </body>
 </html>
 `.trim();
