@@ -44,7 +44,86 @@ const MEMORY_CONFIG = {
     emergencyThreshold: 0.4,   // Emergency cleanup at 40% memory usage
     reRenderInterval: 2000,    // Re-render visible content every 2 seconds
     maxMemoryUsage: 1.5 * 1024 * 1024 * 1024, // 1.5GB in bytes
-    memoryCheckInterval: 1000  // Check memory every second
+    memoryCheckInterval: 100   // Check memory 10 times per second
+};
+
+// Dedicated memory monitor
+const memoryMonitor = {
+    interval: null,
+    
+    start() {
+        this.stop(); // Clear any existing interval
+        
+        // Check memory usage frequently
+        this.interval = setInterval(() => {
+            this.checkMemory();
+        }, MEMORY_CONFIG.memoryCheckInterval);
+        
+        // Also check on any user interaction
+        document.addEventListener('click', () => this.checkMemory());
+        document.addEventListener('scroll', () => this.checkMemory());
+        document.addEventListener('keydown', () => this.checkMemory());
+    },
+    
+    stop() {
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
+    },
+    
+    checkMemory() {
+        if (!window.performance?.memory) return;
+        
+        const memoryInfo = window.performance.memory;
+        const usedMemory = memoryInfo.usedJSHeapSize;
+        
+        if (usedMemory > MEMORY_CONFIG.maxMemoryUsage) {
+            console.warn(`Memory limit exceeded: ${Math.round(usedMemory / 1024 / 1024)}MB / 1.5GB`);
+            this.forceCleanup();
+        }
+    },
+    
+    forceCleanup() {
+        // Stop all processing
+        STATE.isProcessing = true;
+        
+        try {
+            // Clear all caches immediately
+            STATE.nodeCache = new WeakMap();
+            STATE.cacheTimestamps.clear();
+            
+            const output = document.getElementById('output');
+            if (!output) return;
+            
+            // Keep only visible content
+            const visibleElements = new Set(Array.from(getVisibleElements(output))
+                .slice(0, 20)); // Keep only 20 elements
+            
+            // Remove everything else
+            const elements = output.getElementsByTagName('li');
+            while (elements.length > 0) {
+                const element = elements[0];
+                if (!visibleElements.has(element)) {
+                    element.remove();
+                } else if (elements[0] === element) {
+                    // If we couldn't remove the element, break to prevent infinite loop
+                    break;
+                }
+            }
+            
+            // Force garbage collection hint
+            forceGarbageHint();
+            
+            // If still over limit, destroy everything
+            if (window.performance.memory.usedJSHeapSize > MEMORY_CONFIG.maxMemoryUsage) {
+                destroyAllContent('Memory limit still exceeded after cleanup');
+            }
+            
+        } finally {
+            STATE.isProcessing = false;
+        }
+    }
 };
 
 // Enhanced state management
@@ -395,7 +474,10 @@ function startMemoryManager() {
         clearInterval(STATE.cleanupInterval);
     }
 
-    // Visibility change - most aggressive
+    // Start memory monitor
+    memoryMonitor.start();
+
+    // Visibility change handlers
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             destroyAllContent('Tab hidden');
@@ -404,7 +486,7 @@ function startMemoryManager() {
         }
     });
 
-    // Window blur/focus - also aggressive
+    // Window focus handlers
     window.addEventListener('blur', () => {
         destroyAllContent('Window inactive');
     });
