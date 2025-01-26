@@ -40,119 +40,67 @@ function updateVisibility() {
     });
 }
 
-// Move sample HTML to a separate constant or remove it if not needed
+// Sample HTML with proper attribute categorization
 const SAMPLE_HTML = `
 <!DOCTYPE html>
-<html lang="en" class="metadata-relationships">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" class="metadata-relationships">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" class="metadata-relationships">
-    <meta name="description" content="HTML Prism reveals the structure and relationships in your HTML through visual analysis" class="metadata-relationships">
-    <meta name="keywords" content="HTML analysis, semantic structure, element relationships, web architecture" class="metadata-relationships">
-    <meta property="og:title" content="HTML Prism - Understand HTML Structure" class="metadata-relationships">
-    <meta property="og:image" content="prism-preview.png" class="metadata-relationships image-specific">
-    <title class="metadata-relationships">HTML Prism - Visualize HTML Architecture</title>
-    <link rel="stylesheet" href="prism.css" class="metadata-relationships style-appearance">
-    <script src="prism.js" defer class="scripting-behavior"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HTML Prism: Visualize and analyze HTML structure">
+    <title>HTML Structure Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer type="module"></script>
 </head>
 <body>
-    <header class="document-header style-appearance">
-        <img src="prism-logo.svg" 
-             alt="HTML Prism" 
-             class="image-specific"
-             width="120" 
-             height="40">
-        <nav id="main-nav" class="accessibility-roles" role="navigation">
-            <ul class="nav-structure" role="menubar">
-                <li><a href="#input" class="action-analyze scripting-behavior">Analyze HTML</a></li>
-                <li><a href="#output" class="action-visualize scripting-behavior">View Structure</a></li>
-                <li><a href="#help" class="action-learn scripting-behavior">Learn Patterns</a></li>
+    <header class="main-header" role="banner">
+        <nav id="main-nav" class="navigation" role="navigation" aria-label="Main navigation">
+            <ul class="nav-list">
+                <li><a href="#home" onclick="navigate('home')" data-section="home">Home</a></li>
+                <li><a href="#about" onclick="navigate('about')" data-section="about">About</a></li>
             </ul>
         </nav>
     </header>
 
-    <main id="workspace">
-        <section id="input" class="html-input">
-            <h1 class="input-heading inner-content">Analyze Your HTML</h1>
-            <p class="input-guide content-source">Input HTML to reveal its structural patterns and element relationships</p>
+    <main id="content" role="main">
+        <section class="hero" aria-labelledby="hero-title">
+            <h1 id="hero-title">Welcome to HTML Visualizer</h1>
+            <img src="hero.jpg" alt="HTML Structure Visualization" loading="lazy" width="800" height="400">
             
-            <form id="html-form" class="form-input" onsubmit="return processHTML(event)">
-                <label for="code-input" class="form-input accessibility-roles">Enter HTML Code:</label>
-                <textarea 
-                    id="code-input" 
-                    name="html" 
-                    required 
-                    class="form-input"
-                    placeholder="Paste HTML to analyze its structure..."
-                    aria-label="HTML code entry">
-                </textarea>
-                <button type="submit" class="form-submit form-input scripting-behavior">Reveal Structure</button>
+            <form id="contact-form" action="/submit" method="post" onsubmit="handleSubmit(event)">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your name">
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                
+                <button type="submit" class="btn-primary" disabled>Submit</button>
             </form>
         </section>
 
-        <section id="output" class="html-output">
-            <h2 class="output-heading inner-content">Structure Visualization</h2>
-            <div class="output-display">
-                <picture class="visual-output multimedia">
-                    <source srcset="structure-dark.webp" media="(prefers-color-scheme: dark)" class="image-specific">
-                    <source srcset="structure-light.webp" class="image-specific">
-                    <img src="structure.png" 
-                         alt="HTML structure diagram" 
-                         class="image-specific"
-                         width="800" 
-                         height="400"
-                         loading="lazy">
-                </picture>
-                <div class="view-controls">
-                    <h3 class="control-heading inner-content">Structure View</h3>
-                    <div class="control-options" role="group">
-                        <label class="form-input">
-                            <input type="checkbox" 
-                                   name="show-elements" 
-                                   checked 
-                                   class="form-input"
-                                   aria-describedby="view-help">
-                            Show Elements
-                        </label>
-                        <p id="view-help" class="view-guide content-source accessibility-roles">Control element visibility in the structure view</p>
-                    </div>
-                </div>
+        <aside class="sidebar" role="complementary">
+            <div class="widget" data-widget-type="info">
+                <h2>Quick Info</h2>
+                <p>This example demonstrates various HTML elements and their attributes.</p>
             </div>
-        </section>
-
-        <section id="help" class="html-guide">
-            <h2 class="guide-heading inner-content">HTML Structure Guide</h2>
-            <div class="guide-content">
-                <article class="pattern-guide" role="article">
-                    <h3 class="pattern-heading inner-content">Common HTML Patterns</h3>
-                    <ul class="pattern-list">
-                        <li class="pattern-item content-source">Document Flow: How elements create hierarchy</li>
-                        <li class="pattern-item content-source">Element Relationships: Parent, child, and sibling connections</li>
-                        <li class="pattern-item content-source">Semantic Structure: Meaningful HTML organization</li>
-                        <li class="pattern-item content-source">Content Architecture: Building clear document outlines</li>
-                    </ul>
-                </article>
-            </div>
-        </section>
+        </aside>
     </main>
 
-    <footer class="document-footer">
-        <nav class="help-links accessibility-roles" role="navigation">
-            <a href="/guide" rel="help" class="link-guide metadata-relationships scripting-behavior">Usage Guide</a>
-            <a href="/patterns" rel="help" class="link-patterns metadata-relationships scripting-behavior">HTML Patterns</a>
-        </nav>
-        <p class="footer-note content-source">HTML Prism - Understand your document structure</p>
+    <footer class="site-footer" role="contentinfo">
+        <p>&copy; 2024 HTML Visualizer. All rights reserved.</p>
+        <script>
+            console.log('Footer script');
+        </script>
     </footer>
 </body>
 </html>
 `.trim();
 
-// Set the sample HTML only once when the page loads
+// Set the sample HTML when the page loads
 window.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('input');
     if (input && !input.value.trim()) {
         input.value = SAMPLE_HTML;
-        // Removed the automatic visualization
     }
 });
 
