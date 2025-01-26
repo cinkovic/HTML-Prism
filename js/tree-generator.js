@@ -27,17 +27,22 @@ Object.entries(attributeGroups).forEach(([group, attrs]) => {
     attrs.forEach(attr => attrGroupMap.set(attr, group));
 });
 
-// Constants for chunking and memory management
-const CHUNK_SIZE = 50; // Process fewer nodes at once
-const VIEWPORT_BUFFER = 1000; // Pixels above/below viewport to keep rendered
-const DEBOUNCE_DELAY = 150; // ms to wait before processing scroll events
+// Constants for memory management
+const MEMORY_CONFIG = {
+    scrollDebounce: 100,      // ms to wait after scroll
+    cleanupInterval: 5000,    // Run cleanup every 5 seconds
+    viewportBuffer: 1000,     // px above/below viewport to keep
+    maxCacheAge: 30000        // Clear cache entries older than 30 seconds
+};
 
-// Constants for state management
-const nodeCache = new WeakMap();
+// Enhanced state management
 const STATE = {
     isProcessing: false,
-    lastVisibleState: new Map(),
-    scrollTimeout: null
+    scrollTimeout: null,
+    cleanupInterval: null,
+    lastCleanup: Date.now(),
+    nodeCache: new WeakMap(),
+    cacheTimestamps: new Map()
 };
 
 function escapeHTML(str) {
@@ -87,6 +92,21 @@ function generateTreeHTML(node) {
             if (attr.name !== 'class' && attr.name !== 'id') {
                 const group = getAttributeGroup(attr.name);
                 parts.push(`<span class="${group}">[${attr.name}="${escapeHTML(attr.value)}"]</span>`);
+            }
+        }
+
+        // Handle special content (script, style, and text nodes)
+        if (tagName === 'script' && node.textContent.trim()) {
+            parts.push(` <span class="scripting-behavior">${escapeHTML(node.textContent.trim())}</span>`);
+        } else if (tagName === 'style' && node.textContent.trim()) {
+            parts.push(` <span class="style-appearance">${escapeHTML(node.textContent.trim())}</span>`);
+        } else if (node.childNodes) {
+            const textNodes = Array.from(node.childNodes)
+                .filter(node => node.nodeType === TEXT_NODE && node.textContent.trim())
+                .map(node => node.textContent.trim());
+            
+            if (textNodes.length) {
+                parts.push(` <span class="inner-content">${escapeHTML(textNodes.join(' '))}</span>`);
             }
         }
 
@@ -311,7 +331,60 @@ function getVisibleElements(container) {
     return visibleElements;
 }
 
-// Add scroll-based memory management
+// Regular memory cleanup
+function startMemoryManager() {
+    if (STATE.cleanupInterval) {
+        clearInterval(STATE.cleanupInterval);
+    }
+    
+    STATE.cleanupInterval = setInterval(() => {
+        if (!STATE.isProcessing) {
+            performMemoryCleanup();
+        }
+    }, MEMORY_CONFIG.cleanupInterval);
+}
+
+function performMemoryCleanup() {
+    try {
+        const output = document.getElementById('output');
+        if (!output) return;
+
+        const visibleElements = getVisibleElements(output);
+        cleanupInvisibleElements(output, visibleElements);
+        cleanupOldCache();
+        
+        // Force garbage collection hint
+        STATE.lastCleanup = Date.now();
+    } catch (error) {
+        console.error('Memory cleanup error:', error);
+    }
+}
+
+function cleanupOldCache() {
+    const now = Date.now();
+    for (const [key, timestamp] of STATE.cacheTimestamps) {
+        if (now - timestamp > MEMORY_CONFIG.maxCacheAge) {
+            STATE.cacheTimestamps.delete(key);
+        }
+    }
+}
+
+function cleanupInvisibleElements(container, visibleElements) {
+    const elements = container.getElementsByTagName('li');
+    for (const element of elements) {
+        if (!visibleElements.has(element)) {
+            const ul = element.querySelector('ul');
+            if (ul && ul.innerHTML) {
+                // Cache content before clearing
+                STATE.nodeCache.set(element, ul.innerHTML);
+                STATE.cacheTimestamps.set(element.dataset.nodeId || generateNodeId(element), Date.now());
+                ul.innerHTML = '';
+            }
+        }
+    }
+}
+
+// Enhanced scroll handler
 function initializeScrollManager() {
     const output = document.getElementById('output');
     if (!output) return;
@@ -322,40 +395,34 @@ function initializeScrollManager() {
         }
         
         STATE.scrollTimeout = setTimeout(() => {
-            const visibleElements = getVisibleElements(output);
-            cleanupInvisibleElements(output, visibleElements);
-        }, DEBOUNCE_DELAY);
+            if (!STATE.isProcessing) {
+                performMemoryCleanup();
+            }
+        }, MEMORY_CONFIG.scrollDebounce);
     });
 }
 
-function cleanupInvisibleElements(container, visibleElements) {
-    if (!container) return;
-    
-    const elements = container.getElementsByTagName('li');
-    for (const element of elements) {
-        if (!visibleElements.has(element) && !element.classList.contains('collapsed')) {
-            const ul = element.querySelector('ul');
-            if (ul && ul.innerHTML) {
-                nodeCache.set(element, ul.innerHTML);
-                ul.innerHTML = '';
-            }
-        }
+// Modified visibility update with memory management
+function updateVisibility() {
+    if (STATE.isProcessing) return;
+    STATE.isProcessing = true;
+
+    try {
+        const output = document.getElementById('output');
+        const visibleElements = getVisibleElements(output);
+        
+        requestAnimationFrame(() => {
+            updateVisibleElements(visibleElements);
+            performMemoryCleanup();
+            STATE.isProcessing = false;
+        });
+    } catch (error) {
+        console.error('Visibility update error:', error);
+        STATE.isProcessing = false;
     }
 }
 
-function cleanup() {
-    STATE.isProcessing = false;
-    STATE.lastVisibleState.clear();
-    if (STATE.scrollTimeout) {
-        clearTimeout(STATE.scrollTimeout);
-    }
-    const output = document.getElementById('output');
-    if (output) {
-        output.innerHTML = '';
-    }
-}
-
-// Initialize scroll management when visualizing
+// Modified visualize function
 function visualize() {
     if (STATE.isProcessing) return;
     STATE.isProcessing = true;
@@ -368,11 +435,11 @@ function visualize() {
         
         if (!input?.value.trim() || !outputDiv) return;
 
-        const rootNode = parseHTML(input.value);
-        outputDiv.innerHTML = generateTreeHTML(rootNode);
+        outputDiv.innerHTML = generateTreeHTML(parseHTML(input.value));
         
         addCollapsibleFunctionality();
         initializeScrollManager();
+        startMemoryManager();
         updateVisibility();
         
     } catch (error) {
@@ -382,10 +449,30 @@ function visualize() {
     }
 }
 
+// Enhanced cleanup
+function cleanup() {
+    STATE.isProcessing = false;
+    STATE.cacheTimestamps.clear();
+    
+    if (STATE.scrollTimeout) {
+        clearTimeout(STATE.scrollTimeout);
+    }
+    if (STATE.cleanupInterval) {
+        clearInterval(STATE.cleanupInterval);
+    }
+    
+    const output = document.getElementById('output');
+    if (output) {
+        output.innerHTML = '';
+    }
+}
+
 // Event listeners for cleanup
 window.addEventListener('beforeunload', cleanup);
 window.addEventListener('visibilitychange', () => {
-    if (document.hidden) cleanup();
+    if (document.hidden) {
+        performMemoryCleanup();
+    }
 });
 
 // Add browser checks
