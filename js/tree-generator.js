@@ -394,103 +394,54 @@ function startMemoryManager() {
     if (STATE.cleanupInterval) {
         clearInterval(STATE.cleanupInterval);
     }
-    
-    // Immediate cleanup
-    performMemoryCleanup();
-    
-    // Ultra-frequent cleanup cycles
+
+    // Visibility change - most aggressive
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            destroyAllContent('Tab hidden');
+        } else {
+            requestIdleCallback(() => reRenderVisibleContent());
+        }
+    });
+
+    // Window blur/focus - also aggressive
+    window.addEventListener('blur', () => {
+        destroyAllContent('Window inactive');
+    });
+
+    window.addEventListener('focus', () => {
+        requestIdleCallback(() => reRenderVisibleContent());
+    });
+
+    // Regular cleanup when active
     STATE.cleanupInterval = setInterval(() => {
-        if (!STATE.isProcessing) {
+        if (!document.hidden && !STATE.isProcessing) {
             performMemoryCleanup();
-            forceGarbageHint();
         }
     }, MEMORY_CONFIG.cleanupInterval);
-
-    // Continuous memory monitoring
-    setInterval(() => {
-        if (window.performance?.memory) {
-            const memoryInfo = window.performance.memory;
-            if (memoryInfo.usedJSHeapSize > MEMORY_CONFIG.maxMemoryUsage) {
-                forceMemoryLimit();
-            }
-        }
-    }, MEMORY_CONFIG.memoryCheckInterval);
-
-    // Regular re-rendering
-    setInterval(() => {
-        if (!STATE.isProcessing) {
-            reRenderVisibleContent();
-        }
-    }, MEMORY_CONFIG.reRenderInterval);
 }
 
-function reRenderVisibleContent() {
-    const output = document.getElementById('output');
-    if (!output || STATE.isProcessing) return;
-
-    STATE.isProcessing = true;
-    try {
-        const visibleElements = getVisibleElements(output);
-        
-        visibleElements.forEach(element => {
-            if (!element.classList.contains('collapsed')) {
-                const ul = element.querySelector('ul');
-                if (ul) {
-                    const cachedContent = STATE.nodeCache.get(element);
-                    if (cachedContent) {
-                        ul.innerHTML = cachedContent;
-                        addCollapsibleFunctionality();
-                        updateVisibility();
-                    }
-                }
-            }
-        });
-
-        // Clear any stale cache after re-render
-        STATE.cacheTimestamps.clear();
-        STATE.nodeCache = new WeakMap();
-        
-    } catch (error) {
-        console.error('Re-render error:', error);
-    } finally {
-        STATE.isProcessing = false;
-    }
-}
-
-function forceGarbageHint() {
-    // Clear all caches and references
-    STATE.nodeCache = new WeakMap();
-    STATE.cacheTimestamps.clear();
+function destroyAllContent(reason) {
+    console.warn(`Destroying content: ${reason}`);
     
-    // Create and destroy objects to hint at garbage collection
-    const arr = new Array(100000);
-    for (let i = 0; i < arr.length; i++) {
-        arr[i] = new Object();
-    }
-    arr.length = 0;
-}
-
-function forceMemoryLimit() {
+    // Stop all ongoing processes
     STATE.isProcessing = true;
+    
     try {
+        // Clear all intervals
+        if (STATE.cleanupInterval) {
+            clearInterval(STATE.cleanupInterval);
+            STATE.cleanupInterval = null;
+        }
+        
         // Clear all caches and references
-        STATE.cacheTimestamps.clear();
         STATE.nodeCache = new WeakMap();
+        STATE.cacheTimestamps.clear();
         
+        // Destroy DOM content
         const output = document.getElementById('output');
-        if (!output) return;
-
-        // Get only the absolutely necessary visible elements
-        const visibleElements = new Set(Array.from(getVisibleElements(output))
-            .slice(0, 50)); // Keep only the most immediate visible elements
-        
-        // Destroy everything else
-        const elements = output.getElementsByTagName('li');
-        for (let i = elements.length - 1; i >= 0; i--) {
-            const element = elements[i];
-            if (!visibleElements.has(element)) {
-                element.remove(); // Complete removal instead of just clearing
-            }
+        if (output) {
+            output.innerHTML = `<div class="placeholder">Content cleared - ${reason}</div>`;
         }
         
         // Force garbage collection hint
@@ -501,63 +452,64 @@ function forceMemoryLimit() {
     }
 }
 
-function performMemoryCleanup() {
-    if (STATE.isProcessing) return;
+function reRenderVisibleContent() {
+    const output = document.getElementById('output');
+    if (!output || STATE.isProcessing || document.hidden) return;
+
     STATE.isProcessing = true;
-
     try {
-        // Check memory first
-        if (window.performance?.memory) {
-            const memoryInfo = window.performance.memory;
-            if (memoryInfo.usedJSHeapSize > MEMORY_CONFIG.maxMemoryUsage) {
-                console.warn('Memory usage exceeded 1.5GB - forcing cleanup');
-                forceMemoryLimit();
-                return;
-            }
-        }
-
-        // Continue with regular cleanup
-        const output = document.getElementById('output');
-        if (!output) {
-            STATE.isProcessing = false;
-            return;
-        }
-
-        STATE.cacheTimestamps.clear();
-        const visibleElements = getVisibleElements(output);
-        const elements = Array.from(output.getElementsByTagName('li'));
-        
-        let processed = 0;
-        function processChunk() {
-            const chunk = elements.slice(processed, processed + MEMORY_CONFIG.chunkSize);
-            chunk.forEach(element => {
-                if (!visibleElements.has(element)) {
+        const placeholder = output.querySelector('.placeholder');
+        if (placeholder) {
+            // Re-visualize from scratch if we had destroyed the content
+            visualize();
+        } else {
+            // Normal re-render of visible elements
+            const visibleElements = getVisibleElements(output);
+            visibleElements.forEach(element => {
+                if (!element.classList.contains('collapsed')) {
                     const ul = element.querySelector('ul');
                     if (ul) {
-                        ul.textContent = '';
-                        if (!element.classList.contains('collapsed')) {
-                            ul.remove();
+                        const cachedContent = STATE.nodeCache.get(element);
+                        if (cachedContent) {
+                            ul.innerHTML = cachedContent;
                         }
                     }
                 }
             });
+        }
+    } catch (error) {
+        console.error('Re-render error:', error);
+    } finally {
+        STATE.isProcessing = false;
+    }
+}
 
-            processed += MEMORY_CONFIG.chunkSize;
-            
-            if (processed < elements.length) {
-                requestAnimationFrame(processChunk);
-            } else {
-                requestAnimationFrame(() => {
-                    reRenderVisibleContent();
-                    forceGarbageHint();
-                    STATE.isProcessing = false;
-                });
+function performMemoryCleanup() {
+    if (STATE.isProcessing || document.hidden) return;
+    
+    if (window.performance?.memory?.usedJSHeapSize > MEMORY_CONFIG.maxMemoryUsage) {
+        destroyAllContent('Memory limit exceeded');
+        return;
+    }
+    
+    // Regular cleanup only if active and under memory limit
+    STATE.isProcessing = true;
+    try {
+        const output = document.getElementById('output');
+        if (!output) return;
+
+        const visibleElements = getVisibleElements(output);
+        const elements = output.getElementsByTagName('li');
+        
+        for (let i = elements.length - 1; i >= 0; i--) {
+            const element = elements[i];
+            if (!visibleElements.has(element)) {
+                element.remove();
             }
         }
-
-        requestAnimationFrame(processChunk);
-    } catch (error) {
-        console.error('Memory cleanup error:', error);
+        
+        forceGarbageHint();
+    } finally {
         STATE.isProcessing = false;
     }
 }
