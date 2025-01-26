@@ -33,15 +33,16 @@ Object.entries(attributeGroups).forEach(([group, attrs]) => {
     attrs.forEach(attr => attrGroupMap.set(attr, group));
 });
 
-// More aggressive memory config
+// Ultra-aggressive memory and render config
 const MEMORY_CONFIG = {
     scrollDebounce: 25,        // Quick scroll response
-    cleanupInterval: 500,      // Cleanup every 500ms (twice per second)
-    viewportBuffer: 300,       // Smaller viewport buffer
-    maxCacheAge: 3000,        // Cache only for 3 seconds
-    maxCachedNodes: 500,      // Reduced node limit
-    chunkSize: 25,            // Smaller chunks for faster processing
-    emergencyThreshold: 0.6    // Trigger emergency cleanup at 60% memory usage
+    cleanupInterval: 250,      // Cleanup 4 times per second
+    viewportBuffer: 200,       // Minimal viewport buffer
+    maxCacheAge: 1000,        // Cache only for 1 second
+    maxCachedNodes: 200,      // Severely limited cache
+    chunkSize: 20,            // Smaller chunks
+    emergencyThreshold: 0.4,   // Emergency cleanup at 40% memory usage
+    reRenderInterval: 2000     // Re-render visible content every 2 seconds
 };
 
 // Enhanced state management
@@ -392,49 +393,108 @@ function startMemoryManager() {
         clearInterval(STATE.cleanupInterval);
     }
     
-    // Immediate initial cleanup
+    // Immediate cleanup
     performMemoryCleanup();
     
-    // Regular cleanup interval
+    // Ultra-frequent cleanup cycles
     STATE.cleanupInterval = setInterval(() => {
         if (!STATE.isProcessing) {
             performMemoryCleanup();
+            forceGarbageHint();
         }
     }, MEMORY_CONFIG.cleanupInterval);
 
-    // Additional aggressive cleanup interval
+    // Regular re-rendering of visible content
     setInterval(() => {
         if (!STATE.isProcessing) {
-            cleanupCacheEntries();
+            reRenderVisibleContent();
         }
-    }, MEMORY_CONFIG.cleanupInterval / 2); // Cache cleanup every 250ms
+    }, MEMORY_CONFIG.reRenderInterval);
 
-    // Memory usage monitoring
+    // Memory monitoring with re-render
     if (window.performance && window.performance.memory) {
         setInterval(() => {
             const memoryInfo = window.performance.memory;
             if (memoryInfo.usedJSHeapSize > memoryInfo.jsHeapSizeLimit * MEMORY_CONFIG.emergencyThreshold) {
                 emergencyCleanup();
+                reRenderVisibleContent();
             }
         }, MEMORY_CONFIG.cleanupInterval);
     }
 }
 
-function emergencyCleanup() {
-    STATE.cacheTimestamps.clear();
-    STATE.nodeCache = new WeakMap();
-    
+function reRenderVisibleContent() {
     const output = document.getElementById('output');
-    if (output) {
+    if (!output || STATE.isProcessing) return;
+
+    STATE.isProcessing = true;
+    try {
         const visibleElements = getVisibleElements(output);
-        const elements = output.getElementsByTagName('li');
         
-        for (const element of elements) {
-            if (!visibleElements.has(element)) {
+        visibleElements.forEach(element => {
+            if (!element.classList.contains('collapsed')) {
                 const ul = element.querySelector('ul');
-                if (ul) ul.innerHTML = '';
+                if (ul) {
+                    const cachedContent = STATE.nodeCache.get(element);
+                    if (cachedContent) {
+                        ul.innerHTML = cachedContent;
+                        addCollapsibleFunctionality();
+                        updateVisibility();
+                    }
+                }
+            }
+        });
+
+        // Clear any stale cache after re-render
+        STATE.cacheTimestamps.clear();
+        STATE.nodeCache = new WeakMap();
+        
+    } catch (error) {
+        console.error('Re-render error:', error);
+    } finally {
+        STATE.isProcessing = false;
+    }
+}
+
+function forceGarbageHint() {
+    STATE.nodeCache = new WeakMap();
+    STATE.cacheTimestamps.clear();
+    
+    // Clear all references
+    const arr = new Array(10000);
+    for (let i = 0; i < arr.length; i++) {
+        arr[i] = new Object();
+    }
+    arr.length = 0;
+}
+
+function emergencyCleanup() {
+    STATE.isProcessing = true;
+    
+    try {
+        // Clear all caches
+        STATE.cacheTimestamps.clear();
+        STATE.nodeCache = new WeakMap();
+        
+        const output = document.getElementById('output');
+        if (output) {
+            const visibleElements = getVisibleElements(output);
+            const elements = output.getElementsByTagName('li');
+            
+            for (const element of elements) {
+                if (!visibleElements.has(element)) {
+                    const ul = element.querySelector('ul');
+                    if (ul) {
+                        ul.textContent = ''; // Faster than innerHTML
+                        ul.remove();
+                    }
+                }
             }
         }
+        
+        forceGarbageHint();
+    } finally {
+        STATE.isProcessing = false;
     }
 }
 
@@ -449,10 +509,9 @@ function performMemoryCleanup() {
             return;
         }
 
-        // Immediate cache cleanup
-        cleanupCacheEntries();
-
-        // Process visible elements
+        // Clear old cache
+        STATE.cacheTimestamps.clear();
+        
         const visibleElements = getVisibleElements(output);
         const elements = Array.from(output.getElementsByTagName('li'));
         
@@ -461,15 +520,13 @@ function performMemoryCleanup() {
             const chunk = elements.slice(processed, processed + MEMORY_CONFIG.chunkSize);
             
             chunk.forEach(element => {
-                if (!visibleElements.has(element) && !element.classList.contains('collapsed')) {
+                if (!visibleElements.has(element)) {
                     const ul = element.querySelector('ul');
-                    if (ul?.innerHTML) {
-                        STATE.nodeCache.set(element, ul.innerHTML);
-                        STATE.cacheTimestamps.set(
-                            element.dataset.nodeId || generateNodeId(element),
-                            Date.now()
-                        );
-                        ul.innerHTML = '';
+                    if (ul) {
+                        ul.textContent = '';
+                        if (!element.classList.contains('collapsed')) {
+                            ul.remove();
+                        }
                     }
                 }
             });
@@ -479,7 +536,12 @@ function performMemoryCleanup() {
             if (processed < elements.length) {
                 requestAnimationFrame(processChunk);
             } else {
-                STATE.isProcessing = false;
+                // Re-render visible content after cleanup
+                requestAnimationFrame(() => {
+                    reRenderVisibleContent();
+                    forceGarbageHint();
+                    STATE.isProcessing = false;
+                });
             }
         }
 
@@ -487,27 +549,6 @@ function performMemoryCleanup() {
     } catch (error) {
         console.error('Memory cleanup error:', error);
         STATE.isProcessing = false;
-    }
-}
-
-function cleanupCacheEntries() {
-    const now = Date.now();
-    const maxEntries = MEMORY_CONFIG.maxCachedNodes;
-    
-    // Remove old entries
-    for (const [key, timestamp] of STATE.cacheTimestamps) {
-        if (now - timestamp > MEMORY_CONFIG.maxCacheAge) {
-            STATE.cacheTimestamps.delete(key);
-        }
-    }
-    
-    // If still too many entries, remove oldest
-    if (STATE.cacheTimestamps.size > maxEntries) {
-        const entries = Array.from(STATE.cacheTimestamps.entries())
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, maxEntries);
-        
-        STATE.cacheTimestamps = new Map(entries);
     }
 }
 
