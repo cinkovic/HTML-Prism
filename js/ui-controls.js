@@ -31,8 +31,8 @@ function updateVisibility() {
     });
 }
 
-// Sample HTML
-document.getElementById('input').value = `
+// Move sample HTML to a separate constant or remove it if not needed
+const SAMPLE_HTML = `
 <!DOCTYPE html>
 <html lang="en" class="metadata-relationships">
 <head>
@@ -137,6 +137,15 @@ document.getElementById('input').value = `
 </body>
 </html>
 `.trim();
+
+// Set the sample HTML only once when the page loads
+window.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('input');
+    if (input && !input.value.trim()) {
+        input.value = SAMPLE_HTML;
+        // Removed the automatic visualization
+    }
+});
 
 // Global error handler
 window.onerror = function(message, source, lineno, colno, error) {
