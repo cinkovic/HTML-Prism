@@ -23,10 +23,19 @@ function updateVisibility() {
         { id: 'showOthers', class: 'other-attributes' },
         { id: 'showInnerText', class: 'inner-content' }
     ];
-    elements.forEach(el => {
-        const show = document.getElementById(el.id).checked;
-        document.querySelectorAll(`.${el.class}`).forEach(elem => {
-            elem.style.display = show ? '' : 'none';
+
+    // Cache DOM queries
+    const displayUpdates = elements.map(el => ({
+        show: document.getElementById(el.id)?.checked,
+        elements: document.querySelectorAll(`.${el.class}`)
+    }));
+
+    // Batch DOM updates
+    requestAnimationFrame(() => {
+        displayUpdates.forEach(update => {
+            update.elements.forEach(elem => {
+                elem.style.display = update.show ? '' : 'none';
+            });
         });
     });
 }

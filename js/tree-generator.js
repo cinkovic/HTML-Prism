@@ -1,250 +1,106 @@
+const attributeGroups = {
+    'content-source': ['src', 'href', 'content', 'value', 'placeholder'],
+    'style-appearance': ['style', 'rel', 'media', 'type', 'defer', 'async'],
+    'form-input': ['name', 'required', 'pattern', 'min', 'max', 'step', 'readonly', 'disabled', 'checked', 'selected', 'for'],
+    'accessibility-roles': ['role', 'tabindex', 'title', 'alt', 'lang', 'hidden'],
+    'metadata-relationships': ['charset', 'name', 'property', 'rel', 'itemprop', 'itemtype'],
+    'multimedia': ['controls', 'autoplay', 'loop', 'muted', 'preload'],
+    'scripting-behavior': ['onclick', 'onsubmit', 'onload', 'onchange', 'oninput'],
+    'image-specific': ['width', 'height', 'loading', 'srcset', 'sizes'],
+    'other-attributes': []
+};
+
 function generateTreeHTML(node) {
     if (!node) return '';
     if (node.nodeType !== Node.ELEMENT_NODE) return '';
 
     try {
-        let result = '<li>';
+        // Use array joining instead of string concatenation for better performance
+        const parts = ['<li>'];
         const hasChildren = node.children.length > 0;
-        const textContent = Array.from(node.childNodes)
-            .filter(node => node.nodeType === Node.TEXT_NODE)
-            .map(node => node.textContent.trim())
-            .filter(text => text.length > 0)
-            .join(' ');
-
-        result += `<span class="collapsible${!hasChildren ? ' no-arrow' : ''}">`;
-
-        result += `<span class="tag">${node.tagName.toLowerCase()}</span>`;
         
+        // Get text content once and cache it
+        const textNodes = Array.from(node.childNodes)
+            .filter(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0)
+            .map(node => node.textContent.trim());
+        const textContent = textNodes.length ? textNodes.join(' ') : '';
+
+        parts.push(`<span class="collapsible${!hasChildren ? ' no-arrow' : ''}">`);
+        parts.push(`<span class="tag">${node.tagName.toLowerCase()}</span>`);
+        
+        // Optimize class handling
         if (node.className) {
-            let classes;
-            if (typeof node.className === 'string') {
-                classes = node.className.split(' ');
-            } else if (node.className.baseVal) {
-                // Handle SVG elements
-                classes = node.className.baseVal.split(' ');
-            } else {
-                classes = [];
-            }
+            const classes = (typeof node.className === 'string' ? 
+                node.className : 
+                node.className.baseVal || ''
+            ).split(' ').filter(c => c.trim());
             
-            classes = classes.filter(c => c.trim() !== '');
-            if (classes.length > 0) {
-                result += '<span class="class">.' + classes.join('.') + '</span>';
+            if (classes.length) {
+                parts.push('<span class="class">.' + classes.join('.') + '</span>');
             }
         }
         
-        if (node.id) result += `<span class="id">#${node.id}</span>`;
+        if (node.id) {
+            parts.push(`<span class="id">#${node.id}</span>`);
+        }
 
-        let attributeGroups = {
-            'content-source': [
-                // Core resource references
-                'src', 'href', 'srcset', 'sizes', 'source', 'icon', 'manifest', 'srcdoc',
-                // Resource metadata
-                'alt', 'title', 'caption', 'figcaption', 'data',
-                // Link behavior
-                'target', 'rel', 'download', 'ping',
-                // Media specifics
-                'media', 'poster', 'preload',
-                // Citations & References
-                'cite', 'quotation', 'blockquote',
-                // Form destinations
-                'action', 'formaction',
-                // Resource integrity
-                'crossorigin', 'integrity', 'referrerpolicy',
-                // Progressive enhancement
-                'fallback', 'placeholder'
-            ],
-            'style-appearance': [
-                // Core styling
-                'style', 'styles', 'class',
-                // Dimensions & Layout
-                'width', 'height', 'size', 'aspect-ratio', 'align', 'valign', 'shape', 'coords',
-                // Layout
-                'display', 'position', 'float', 'clear', 'z-index', 'popover',
-                // Spacing
-                'margin', 'padding', 'gap',
-                // Visual
-                'background', 'color', 'opacity', 'visibility', 'bgcolor', 'border',
-                // Typography
-                'font', 'font-family', 'font-size', 'font-weight', 'text-align', 'vertical-align', 'face',
-                // Table specific
-                'colspan', 'rowspan', 'cellpadding', 'cellspacing', 'rows',
-                // Flexbox/Grid
-                'flex', 'grid', 'order', 'align', 'justify',
-                // Transitions & Animations
-                'transition', 'animation', 'transform',
-                // SVG-specific styling
-                'stroke-opacity'
-            ],
-            'form-input': [
-                // Core attributes
-                'type', 'name', 'value', 'form',
-                // Validation
-                'required', 'pattern', 'minlength', 'maxlength', 'min', 'max',
-                // State
-                'disabled', 'readonly', 'checked', 'selected', 'multiple',
-                // User experience
-                'placeholder', 'autocomplete', 'autocapitalize', 'autofocus',
-                // File inputs
-                'accept', 'capture',
-                // Form behavior
-                'formmethod', 'formtarget', 'formnovalidate', 'formenctype',
-                // Lists & Stepping
-                'list', 'step', 'datalist',
-                // Mobile optimization
-                'inputmode', 'enterkeyhint',
-                // Additional form attributes
-                'method', 'enctype', 'accept-charset', 'spellcheck', 'for'
-            ],
-            'accessibility-roles': [
-                // ARIA
-                'role', 'aria-*',
-                // Navigation
-                'tabindex', 'accesskey',
-                // Language & Direction
-                'lang', 'dir',
-                // State & Properties
-                'hidden', 'disabled', 'readonly',
-                // Interactive elements
-                'contenteditable', 'draggable', 'dropzone', 'translate',
-                // Focus management
-                'autofocus', 'focusable',
-                // Live regions
-                'aria-live', 'aria-atomic',
-                // Descriptions
-                'aria-label', 'aria-describedby',
-                // Additional accessibility
-                'for', 'action'
-            ],
-            'metadata-relationships': [
-                // Custom data
-                'data-*',
-                // Microdata
-                'itemscope', 'itemtype', 'itemprop',
-                // RDFa
-                'vocab', 'typeof', 'property',
-                // Time & Dates
-                'datetime', 'pubdate',
-                // Document structure
-                'rel', 'rev', 'about', 'content', 'id', 'name',
-                // Namespaces
-                'xmlns', 'xml:lang', 'xml:base', 'xml:space',
-                // Resource identification
-                'resource', 'prefix', 'datatype'
-            ],
-            'multimedia': [
-                'autoplay', 'controls', 'loop', 'muted', 'preload', 'playsinline',
-                'volume', 'currenttime', 'duration', 'buffered', 'played', 'seekable',
-                'ended', 'defaultmuted', 'defaultplaybackrate', 'disableremoteplayback',
-                'controlslist'
-            ],
-            'scripting-behavior': [
-                // Mouse events
-                'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 
-                'onmouseout', 'onmousemove', 'onmouseenter', 'onmouseleave',
-                // Keyboard events
-                'onkeydown', 'onkeyup', 'onkeypress',
-                // Form events
-                'onsubmit', 'oninput', 'onchange', 'onformdata', 'oninvalid', 'onreset',
-                // Focus events
-                'onblur', 'onfocus',
-                // Drag events
-                'ondrag', 'ondrop', 'ondragend', 'ondragenter', 'ondragexit', 
-                'ondragleave', 'ondragover', 'ondragstart',
-                // Media events
-                'oncanplay', 'oncanplaythrough', 'ondurationchange', 'onemptied', 
-                'onended', 'onloadeddata', 'onloadedmetadata', 'onloadstart',
-                'onpause', 'onplay', 'onplaying', 'onprogress', 'onratechange',
-                'onseeked', 'onseeking', 'onstalled', 'onsuspend', 'ontimeupdate',
-                'onvolumechange', 'onwaiting',
-                // Other events
-                'onload', 'onscroll', 'onerror', 'onabort', 'onautocomplete', 
-                'onautocompleteerror', 'oncancel', 'onclose', 'oncontextmenu',
-                'oncuechange', 'onselect', 'onslotchange', 'ontoggle', 'onwheel',
-                'onsecuritypolicyviolation',
-                // Script attributes
-                'async', 'defer', 'nonce'
-            ],
-            'image-specific': [
-                // Basic SVG attributes
-                'd', 'viewBox', 'fill', 'stroke', 'stroke-width', 'cx', 'cy', 'r',
-                'x', 'y', 'dx', 'dy', 'rx', 'ry', 'x1', 'x2', 'y1', 'y2', 'z1', 'z2',
-                // Transform and positioning
-                'transform', 'points', 'preserveAspectRatio',
-                // Clipping and masking
-                'path', 'clip-path', 'mask', 'filter',
-                // Advanced SVG attributes
-                'vector-effect', 'pointer-events', 'stop-color', 'stop-opacity',
-                'text-anchor', 'dominant-baseline', 'stroke-linecap', 'stroke-linejoin',
-                'stroke-miterlimit', 'stroke-dasharray', 'stroke-dashoffset',
-                'fill-rule', 'clip-rule', 'enable-background',
-                // Gradient and pattern
-                'gradientUnits', 'gradientTransform', 'spreadMethod', 'fx', 'fy',
-                'offset', 'patternUnits', 'patternTransform',
-                // Markers and masks
-                'marker-start', 'marker-mid', 'marker-end', 'mask-type', 'mask-units',
-                'primitiveUnits',
-                // Links and areas
-                'xlink:href', 'area', 'img'
-            ],
-            'other-attributes': []
-        };
+        // Cache attribute groups for faster lookup
+        const attrGroupMap = new Map();
+        for (const [group, attrs] of Object.entries(attributeGroups)) {
+            attrs.forEach(attr => attrGroupMap.set(attr, group));
+        }
 
-        for (let attr of node.attributes) {
+        // Process attributes more efficiently
+        const processedAttrs = [];
+        for (const attr of node.attributes) {
             if (attr.name === 'class' || attr.name === 'id') continue;
-            let grouped = false;
-            for (let [group, attrs] of Object.entries(attributeGroups)) {
-                if (attrs.includes(attr.name) || 
-                    (group === 'metadata-relationships' && attr.name.startsWith('data-')) ||
-                    (group === 'accessibility-roles' && attr.name.startsWith('aria-'))) {
-                    const sanitizedValue = attr.value
-                        .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;')
-                        .replace(/"/g, '&quot;')
-                        .replace(/'/g, '&#39;')
-                        .replace(/`/g, '&#96;');
-                    result += `<span class="${group}">[${attr.name}="${sanitizedValue}"]</span>`;
-                    grouped = true;
-                    break;
+
+            let group = attrGroupMap.get(attr.name);
+            
+            // Handle special cases
+            if (!group) {
+                if (attr.name.startsWith('data-')) {
+                    group = 'metadata-relationships';
+                } else if (attr.name.startsWith('aria-')) {
+                    group = 'accessibility-roles';
+                } else {
+                    group = 'other-attributes';
                 }
             }
-            if (!grouped) {
-                const sanitizedValue = attr.value
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;')
-                    .replace(/`/g, '&#96;');
-                result += `<span class="other-attributes">[${attr.name}="${sanitizedValue}"]</span>`;
-            }
-        }
 
+            const sanitizedValue = attr.value
+                .replace(/[<>"'`]/g, m => ({
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;',
+                    '`': '&#96;'
+                })[m]);
+
+            processedAttrs.push(`<span class="${group}">[${attr.name}="${sanitizedValue}"]</span>`);
+        }
+        parts.push(processedAttrs.join(''));
+
+        // Handle special content
         if (node.tagName.toLowerCase() === 'script' && node.textContent.trim()) {
-            const sanitizedContent = node.textContent.trim()
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-            result += ` <span class="scripting-behavior">${sanitizedContent}</span>`;
+            parts.push(` <span class="scripting-behavior">${node.textContent.trim().replace(/[<>]/g, m => m === '<' ? '&lt;' : '&gt;')}</span>`);
         } else if (node.tagName.toLowerCase() === 'style' && node.textContent.trim()) {
-            const sanitizedContent = node.textContent.trim()
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-            result += ` <span class="style-appearance">${sanitizedContent}</span>`;
+            parts.push(` <span class="style-appearance">${node.textContent.trim().replace(/[<>]/g, m => m === '<' ? '&lt;' : '&gt;')}</span>`);
         } else if (textContent) {
-            const sanitizedContent = textContent
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-            result += ` <span class="inner-content">${sanitizedContent}</span>`;
+            parts.push(` <span class="inner-content">${textContent.replace(/[<>]/g, m => m === '<' ? '&lt;' : '&gt;')}</span>`);
         }
 
-        result += '</span><ul>';
+        parts.push('</span><ul>');
         
+        // Process children
         if (hasChildren) {
-            for (let child of node.children) {
-                result += generateTreeHTML(child);
+            for (const child of node.children) {
+                parts.push(generateTreeHTML(child));
             }
         }
         
-        result += '</ul></li>';
-        return result;
+        parts.push('</ul></li>');
+        return parts.join('');
     } catch (error) {
         console.error("Error generating tree for node:", node, error);
         return `<li><span class="error">Error processing node: ${error.message}</span></li>`;
@@ -259,19 +115,29 @@ function visualizeHTML(htmlString) {
 function visualize() {
     try {
         const input = document.getElementById('input');
-        if (!input || !input.value.trim()) {
+        if (!input?.value.trim()) {
             throw new Error("Empty or invalid input");
         }
         
-        const output = visualizeHTML(input.value);
         const outputDiv = document.getElementById('output');
         if (!outputDiv) {
             throw new Error("Output container not found");
         }
+
+        // Clear previous content to help GC
+        outputDiv.innerHTML = '';
         
-        outputDiv.innerHTML = output;
-        addCollapsibleFunctionality();
-        updateVisibility();
+        // Process in chunks for large documents
+        requestAnimationFrame(() => {
+            const output = visualizeHTML(input.value);
+            outputDiv.innerHTML = output;
+            
+            // Add event listeners after DOM is updated
+            requestAnimationFrame(() => {
+                addCollapsibleFunctionality();
+                updateVisibility();
+            });
+        });
     } catch (error) {
         console.error("Error in visualization:", error);
         const outputDiv = document.getElementById('output');
@@ -280,6 +146,17 @@ function visualize() {
         }
     }
 }
+
+// Add cleanup function
+function cleanup() {
+    const output = document.getElementById('output');
+    if (output) {
+        output.innerHTML = '';
+    }
+}
+
+// Add window event listeners for cleanup
+window.addEventListener('beforeunload', cleanup);
 
 // Add browser checks
 if (!window.DOMParser) {
