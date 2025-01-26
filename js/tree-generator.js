@@ -1,12 +1,18 @@
 const attributeGroups = {
-    'content-source': ['src', 'href', 'content', 'value', 'placeholder'],
+    'content-source': ['src', 'href', 'content', 'value', 'placeholder', 'action', 'data-src', 'srcset'],
     'style-appearance': ['style', 'rel', 'media', 'type', 'defer', 'async'],
-    'form-input': ['name', 'required', 'pattern', 'min', 'max', 'step', 'readonly', 'disabled', 'checked', 'selected', 'for'],
-    'accessibility-roles': ['role', 'tabindex', 'title', 'alt', 'lang', 'hidden'],
-    'metadata-relationships': ['charset', 'name', 'property', 'rel', 'itemprop', 'itemtype'],
-    'multimedia': ['controls', 'autoplay', 'loop', 'muted', 'preload'],
+    'form-input': ['name', 'required', 'pattern', 'min', 'max', 'step', 'readonly', 'disabled', 'checked', 'selected', 'for', 'form', 'formaction', 'formmethod'],
+    'accessibility-roles': ['role', 'tabindex', 'title', 'alt', 'lang', 'hidden', 'aria-label', 'aria-describedby', 'aria-hidden'],
+    'metadata-relationships': ['charset', 'name', 'property', 'itemprop', 'itemtype', 'data-testid'],
+    'multimedia': ['controls', 'autoplay', 'loop', 'muted', 'preload', 'poster', 'kind', 'track'],
     'scripting-behavior': ['onclick', 'onsubmit', 'onload', 'onchange', 'oninput'],
-    'image-specific': ['width', 'height', 'loading', 'srcset', 'sizes'],
+    'image-specific': [
+        'loading', 'srcset', 'sizes', 'crossorigin', 'decoding', 'referrerpolicy', 'fetchpriority',
+        // SVG specific attributes
+        'fill', 'viewBox', 'width', 'height', 'xmlns', 'd', 'stroke', 'stroke-width', 
+        'stroke-linecap', 'stroke-linejoin', 'stroke-dasharray', 'points', 'transform',
+        'x', 'y', 'x1', 'y1', 'x2', 'y2', 'cx', 'cy', 'r', 'rx', 'ry', 'path'
+    ],
     'other-attributes': []
 };
 
@@ -27,12 +33,15 @@ Object.entries(attributeGroups).forEach(([group, attrs]) => {
     attrs.forEach(attr => attrGroupMap.set(attr, group));
 });
 
-// Constants for memory management
+// More aggressive memory config
 const MEMORY_CONFIG = {
-    scrollDebounce: 100,      // ms to wait after scroll
-    cleanupInterval: 5000,    // Run cleanup every 5 seconds
-    viewportBuffer: 1000,     // px above/below viewport to keep
-    maxCacheAge: 30000        // Clear cache entries older than 30 seconds
+    scrollDebounce: 25,        // Quick scroll response
+    cleanupInterval: 500,      // Cleanup every 500ms (twice per second)
+    viewportBuffer: 300,       // Smaller viewport buffer
+    maxCacheAge: 3000,        // Cache only for 3 seconds
+    maxCachedNodes: 500,      // Reduced node limit
+    chunkSize: 25,            // Smaller chunks for faster processing
+    emergencyThreshold: 0.6    // Trigger emergency cleanup at 60% memory usage
 };
 
 // Enhanced state management
@@ -50,13 +59,27 @@ function escapeHTML(str) {
 }
 
 function getAttributeGroup(attrName) {
-    let group = attrGroupMap.get(attrName);
-    if (!group) {
-        if (attrName.startsWith('data-')) return 'metadata-relationships';
-        if (attrName.startsWith('aria-')) return 'accessibility-roles';
-        return 'other-attributes';
+    const name = attrName.toLowerCase();
+    
+    // Special cases first
+    if (name.startsWith('aria-')) {
+        return 'accessibility-roles';
     }
-    return group;
+    if (name.startsWith('on')) {
+        return 'scripting-behavior';
+    }
+    if (name.startsWith('data-')) {
+        return 'metadata-relationships';
+    }
+    
+    // Check regular attribute groups
+    for (const [group, attrs] of Object.entries(attributeGroups)) {
+        if (attrs.includes(name)) {
+            return group;
+        }
+    }
+    
+    return 'other-attributes';
 }
 
 function generateTreeHTML(node) {
@@ -67,7 +90,6 @@ function generateTreeHTML(node) {
         const hasChildren = node.children.length > 0;
         const tagName = node.tagName.toLowerCase();
         
-        // Special handling for body tag - no tree graphics and no arrow
         const parts = isBodyTag ? 
             ['<li style="list-style: none;"><span class="collapsible no-tree">'] : 
             [`<li><span class="collapsible${hasChildren ? '' : ' no-arrow'}">`];
@@ -87,15 +109,20 @@ function generateTreeHTML(node) {
             parts.push(`<span class="id">#${node.id}</span>`);
         }
 
-        // Process other attributes
+        // Process attributes with improved grouping
+        const processedAttrs = new Map(); // Prevent duplicate attributes
         for (const attr of node.attributes) {
             if (attr.name !== 'class' && attr.name !== 'id') {
                 const group = getAttributeGroup(attr.name);
-                parts.push(`<span class="${group}">[${attr.name}="${escapeHTML(attr.value)}"]</span>`);
+                if (!processedAttrs.has(attr.name)) {
+                    processedAttrs.set(attr.name, 
+                        `<span class="${group}">[${attr.name}="${escapeHTML(attr.value)}"]</span>`);
+                }
             }
         }
+        parts.push(...processedAttrs.values());
 
-        // Handle special content (script, style, and text nodes)
+        // Handle special content
         if (tagName === 'script' && node.textContent.trim()) {
             parts.push(` <span class="scripting-behavior">${escapeHTML(node.textContent.trim())}</span>`);
         } else if (tagName === 'style' && node.textContent.trim()) {
@@ -331,109 +358,20 @@ function getVisibleElements(container) {
     return visibleElements;
 }
 
-// Regular memory cleanup
-function startMemoryManager() {
-    if (STATE.cleanupInterval) {
-        clearInterval(STATE.cleanupInterval);
-    }
-    
-    STATE.cleanupInterval = setInterval(() => {
-        if (!STATE.isProcessing) {
-            performMemoryCleanup();
-        }
-    }, MEMORY_CONFIG.cleanupInterval);
-}
-
-function performMemoryCleanup() {
-    try {
-        const output = document.getElementById('output');
-        if (!output) return;
-
-        const visibleElements = getVisibleElements(output);
-        cleanupInvisibleElements(output, visibleElements);
-        cleanupOldCache();
-        
-        // Force garbage collection hint
-        STATE.lastCleanup = Date.now();
-    } catch (error) {
-        console.error('Memory cleanup error:', error);
-    }
-}
-
-function cleanupOldCache() {
-    const now = Date.now();
-    for (const [key, timestamp] of STATE.cacheTimestamps) {
-        if (now - timestamp > MEMORY_CONFIG.maxCacheAge) {
-            STATE.cacheTimestamps.delete(key);
-        }
-    }
-}
-
-function cleanupInvisibleElements(container, visibleElements) {
-    const elements = container.getElementsByTagName('li');
-    for (const element of elements) {
-        if (!visibleElements.has(element)) {
-            const ul = element.querySelector('ul');
-            if (ul && ul.innerHTML) {
-                // Cache content before clearing
-                STATE.nodeCache.set(element, ul.innerHTML);
-                STATE.cacheTimestamps.set(element.dataset.nodeId || generateNodeId(element), Date.now());
-                ul.innerHTML = '';
-            }
-        }
-    }
-}
-
-// Enhanced scroll handler
-function initializeScrollManager() {
-    const output = document.getElementById('output');
-    if (!output) return;
-
-    output.addEventListener('scroll', () => {
-        if (STATE.scrollTimeout) {
-            clearTimeout(STATE.scrollTimeout);
-        }
-        
-        STATE.scrollTimeout = setTimeout(() => {
-            if (!STATE.isProcessing) {
-                performMemoryCleanup();
-            }
-        }, MEMORY_CONFIG.scrollDebounce);
-    });
-}
-
-// Modified visibility update with memory management
-function updateVisibility() {
-    if (STATE.isProcessing) return;
-    STATE.isProcessing = true;
-
-    try {
-        const output = document.getElementById('output');
-        const visibleElements = getVisibleElements(output);
-        
-        requestAnimationFrame(() => {
-            updateVisibleElements(visibleElements);
-            performMemoryCleanup();
-            STATE.isProcessing = false;
-        });
-    } catch (error) {
-        console.error('Visibility update error:', error);
-        STATE.isProcessing = false;
-    }
-}
-
-// Modified visualize function
 function visualize() {
     if (STATE.isProcessing) return;
     STATE.isProcessing = true;
 
-    cleanup();
+    cleanup(); // Reset state before starting
     
     try {
         const input = document.getElementById('input');
         const outputDiv = document.getElementById('output');
         
-        if (!input?.value.trim() || !outputDiv) return;
+        if (!input?.value.trim() || !outputDiv) {
+            STATE.isProcessing = false;
+            return;
+        }
 
         outputDiv.innerHTML = generateTreeHTML(parseHTML(input.value));
         
@@ -449,7 +387,130 @@ function visualize() {
     }
 }
 
-// Enhanced cleanup
+function startMemoryManager() {
+    if (STATE.cleanupInterval) {
+        clearInterval(STATE.cleanupInterval);
+    }
+    
+    // Immediate initial cleanup
+    performMemoryCleanup();
+    
+    // Regular cleanup interval
+    STATE.cleanupInterval = setInterval(() => {
+        if (!STATE.isProcessing) {
+            performMemoryCleanup();
+        }
+    }, MEMORY_CONFIG.cleanupInterval);
+
+    // Additional aggressive cleanup interval
+    setInterval(() => {
+        if (!STATE.isProcessing) {
+            cleanupCacheEntries();
+        }
+    }, MEMORY_CONFIG.cleanupInterval / 2); // Cache cleanup every 250ms
+
+    // Memory usage monitoring
+    if (window.performance && window.performance.memory) {
+        setInterval(() => {
+            const memoryInfo = window.performance.memory;
+            if (memoryInfo.usedJSHeapSize > memoryInfo.jsHeapSizeLimit * MEMORY_CONFIG.emergencyThreshold) {
+                emergencyCleanup();
+            }
+        }, MEMORY_CONFIG.cleanupInterval);
+    }
+}
+
+function emergencyCleanup() {
+    STATE.cacheTimestamps.clear();
+    STATE.nodeCache = new WeakMap();
+    
+    const output = document.getElementById('output');
+    if (output) {
+        const visibleElements = getVisibleElements(output);
+        const elements = output.getElementsByTagName('li');
+        
+        for (const element of elements) {
+            if (!visibleElements.has(element)) {
+                const ul = element.querySelector('ul');
+                if (ul) ul.innerHTML = '';
+            }
+        }
+    }
+}
+
+function performMemoryCleanup() {
+    if (STATE.isProcessing) return;
+    STATE.isProcessing = true;
+
+    try {
+        const output = document.getElementById('output');
+        if (!output) {
+            STATE.isProcessing = false;
+            return;
+        }
+
+        // Immediate cache cleanup
+        cleanupCacheEntries();
+
+        // Process visible elements
+        const visibleElements = getVisibleElements(output);
+        const elements = Array.from(output.getElementsByTagName('li'));
+        
+        let processed = 0;
+        function processChunk() {
+            const chunk = elements.slice(processed, processed + MEMORY_CONFIG.chunkSize);
+            
+            chunk.forEach(element => {
+                if (!visibleElements.has(element) && !element.classList.contains('collapsed')) {
+                    const ul = element.querySelector('ul');
+                    if (ul?.innerHTML) {
+                        STATE.nodeCache.set(element, ul.innerHTML);
+                        STATE.cacheTimestamps.set(
+                            element.dataset.nodeId || generateNodeId(element),
+                            Date.now()
+                        );
+                        ul.innerHTML = '';
+                    }
+                }
+            });
+
+            processed += MEMORY_CONFIG.chunkSize;
+            
+            if (processed < elements.length) {
+                requestAnimationFrame(processChunk);
+            } else {
+                STATE.isProcessing = false;
+            }
+        }
+
+        requestAnimationFrame(processChunk);
+    } catch (error) {
+        console.error('Memory cleanup error:', error);
+        STATE.isProcessing = false;
+    }
+}
+
+function cleanupCacheEntries() {
+    const now = Date.now();
+    const maxEntries = MEMORY_CONFIG.maxCachedNodes;
+    
+    // Remove old entries
+    for (const [key, timestamp] of STATE.cacheTimestamps) {
+        if (now - timestamp > MEMORY_CONFIG.maxCacheAge) {
+            STATE.cacheTimestamps.delete(key);
+        }
+    }
+    
+    // If still too many entries, remove oldest
+    if (STATE.cacheTimestamps.size > maxEntries) {
+        const entries = Array.from(STATE.cacheTimestamps.entries())
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, maxEntries);
+        
+        STATE.cacheTimestamps = new Map(entries);
+    }
+}
+
 function cleanup() {
     STATE.isProcessing = false;
     STATE.cacheTimestamps.clear();
@@ -469,11 +530,6 @@ function cleanup() {
 
 // Event listeners for cleanup
 window.addEventListener('beforeunload', cleanup);
-window.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        performMemoryCleanup();
-    }
-});
 
 // Add browser checks
 if (!window.DOMParser) {
