@@ -42,7 +42,9 @@ const MEMORY_CONFIG = {
     maxCachedNodes: 200,      // Severely limited cache
     chunkSize: 20,            // Smaller chunks
     emergencyThreshold: 0.4,   // Emergency cleanup at 40% memory usage
-    reRenderInterval: 2000     // Re-render visible content every 2 seconds
+    reRenderInterval: 2000,    // Re-render visible content every 2 seconds
+    maxMemoryUsage: 1.5 * 1024 * 1024 * 1024, // 1.5GB in bytes
+    memoryCheckInterval: 1000  // Check memory every second
 };
 
 // Enhanced state management
@@ -404,23 +406,22 @@ function startMemoryManager() {
         }
     }, MEMORY_CONFIG.cleanupInterval);
 
-    // Regular re-rendering of visible content
+    // Continuous memory monitoring
+    setInterval(() => {
+        if (window.performance?.memory) {
+            const memoryInfo = window.performance.memory;
+            if (memoryInfo.usedJSHeapSize > MEMORY_CONFIG.maxMemoryUsage) {
+                forceMemoryLimit();
+            }
+        }
+    }, MEMORY_CONFIG.memoryCheckInterval);
+
+    // Regular re-rendering
     setInterval(() => {
         if (!STATE.isProcessing) {
             reRenderVisibleContent();
         }
     }, MEMORY_CONFIG.reRenderInterval);
-
-    // Memory monitoring with re-render
-    if (window.performance && window.performance.memory) {
-        setInterval(() => {
-            const memoryInfo = window.performance.memory;
-            if (memoryInfo.usedJSHeapSize > memoryInfo.jsHeapSizeLimit * MEMORY_CONFIG.emergencyThreshold) {
-                emergencyCleanup();
-                reRenderVisibleContent();
-            }
-        }, MEMORY_CONFIG.cleanupInterval);
-    }
 }
 
 function reRenderVisibleContent() {
@@ -457,42 +458,44 @@ function reRenderVisibleContent() {
 }
 
 function forceGarbageHint() {
+    // Clear all caches and references
     STATE.nodeCache = new WeakMap();
     STATE.cacheTimestamps.clear();
     
-    // Clear all references
-    const arr = new Array(10000);
+    // Create and destroy objects to hint at garbage collection
+    const arr = new Array(100000);
     for (let i = 0; i < arr.length; i++) {
         arr[i] = new Object();
     }
     arr.length = 0;
 }
 
-function emergencyCleanup() {
+function forceMemoryLimit() {
     STATE.isProcessing = true;
-    
     try {
-        // Clear all caches
+        // Clear all caches and references
         STATE.cacheTimestamps.clear();
         STATE.nodeCache = new WeakMap();
         
         const output = document.getElementById('output');
-        if (output) {
-            const visibleElements = getVisibleElements(output);
-            const elements = output.getElementsByTagName('li');
-            
-            for (const element of elements) {
-                if (!visibleElements.has(element)) {
-                    const ul = element.querySelector('ul');
-                    if (ul) {
-                        ul.textContent = ''; // Faster than innerHTML
-                        ul.remove();
-                    }
-                }
+        if (!output) return;
+
+        // Get only the absolutely necessary visible elements
+        const visibleElements = new Set(Array.from(getVisibleElements(output))
+            .slice(0, 50)); // Keep only the most immediate visible elements
+        
+        // Destroy everything else
+        const elements = output.getElementsByTagName('li');
+        for (let i = elements.length - 1; i >= 0; i--) {
+            const element = elements[i];
+            if (!visibleElements.has(element)) {
+                element.remove(); // Complete removal instead of just clearing
             }
         }
         
+        // Force garbage collection hint
         forceGarbageHint();
+        
     } finally {
         STATE.isProcessing = false;
     }
@@ -503,22 +506,30 @@ function performMemoryCleanup() {
     STATE.isProcessing = true;
 
     try {
+        // Check memory first
+        if (window.performance?.memory) {
+            const memoryInfo = window.performance.memory;
+            if (memoryInfo.usedJSHeapSize > MEMORY_CONFIG.maxMemoryUsage) {
+                console.warn('Memory usage exceeded 1.5GB - forcing cleanup');
+                forceMemoryLimit();
+                return;
+            }
+        }
+
+        // Continue with regular cleanup
         const output = document.getElementById('output');
         if (!output) {
             STATE.isProcessing = false;
             return;
         }
 
-        // Clear old cache
         STATE.cacheTimestamps.clear();
-        
         const visibleElements = getVisibleElements(output);
         const elements = Array.from(output.getElementsByTagName('li'));
         
         let processed = 0;
         function processChunk() {
             const chunk = elements.slice(processed, processed + MEMORY_CONFIG.chunkSize);
-            
             chunk.forEach(element => {
                 if (!visibleElements.has(element)) {
                     const ul = element.querySelector('ul');
@@ -536,7 +547,6 @@ function performMemoryCleanup() {
             if (processed < elements.length) {
                 requestAnimationFrame(processChunk);
             } else {
-                // Re-render visible content after cleanup
                 requestAnimationFrame(() => {
                     reRenderVisibleContent();
                     forceGarbageHint();
