@@ -263,18 +263,7 @@ button:hover {
 .tree-view .no-arrow::before {
     display: none;
 }
-
-/* Remove markers for root level elements */
-.tree-view > ul > li {
-    list-style: none;
-}
-
-/* Keep markers for nested elements */
-.tree-view > ul > li ul > li {
-    list-style: disc;
-}
-
-/* Existing styles for the tree view */
-.tree-view > ul > li > .collapsible.root-element::before {
+.tree-view .collapsible.no-tree::before {
     display: none;
 }
+
