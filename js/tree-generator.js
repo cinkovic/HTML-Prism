@@ -129,6 +129,7 @@ const memoryMonitor = {
 // Enhanced state management
 const STATE = {
     isProcessing: false,
+    isDestroyed: false,
     scrollTimeout: null,
     cleanupInterval: null,
     lastCleanup: Date.now(),
@@ -358,65 +359,41 @@ function generateNodeId(element) {
 }
 
 function updateVisibility() {
-    if (STATE.isProcessing) return;
+    if (!STATE || STATE.isProcessing || STATE.isDestroyed) return;
+    
     STATE.isProcessing = true;
-
+    
     try {
-        const elements = [
-            { id: 'showTags', class: 'tag' },
-            { id: 'showClasses', class: 'class' },
-            { id: 'showIds', class: 'id' },
-            { id: 'showContentSource', class: 'content-source' },
-            { id: 'showStyleAppearance', class: 'style-appearance' },
-            { id: 'showFormInput', class: 'form-input' },
-            { id: 'showAccessibilityRoles', class: 'accessibility-roles' },
-            { id: 'showMetadataRelationships', class: 'metadata-relationships' },
-            { id: 'showMultimedia', class: 'multimedia' },
-            { id: 'showScriptingBehavior', class: 'scripting-behavior' },
-            { id: 'showImages', class: 'image-specific' },
-            { id: 'showOthers', class: 'other-attributes' },
-            { id: 'showInnerText', class: 'inner-content' }
-        ];
-
-        // Get visible elements first
-        const visibleElements = getVisibleElements(document.getElementById('output'));
+        const output = document.getElementById('output');
+        if (!output) return;
         
-        // For collapsed elements, restore their content before updating visibility
-        visibleElements.forEach(element => {
-            if (element.classList.contains('collapsed')) {
-                const ul = element.querySelector('ul');
-                if (ul && nodeCache.has(element)) {
-                    ul.innerHTML = nodeCache.get(element);
-                    addCollapsibleFunctionality();
-                }
-            }
-        });
-
-        // Update visibility states
-        requestAnimationFrame(() => {
-            elements.forEach(({ id, class: className }) => {
-                const show = document.getElementById(id)?.checked;
-                visibleElements.forEach(elem => {
-                    const elements = elem.querySelectorAll(`.${className}`);
-                    elements.forEach(el => {
-                        el.style.display = show ? '' : 'none';
+        const visibleElements = getVisibleElements(output);
+        
+        if (!document.hidden && visibleElements.size > 0) {
+            requestAnimationFrame(() => {
+                try {
+                    VISIBILITY_ELEMENTS.forEach(({ id, class: className }) => {
+                        const checkbox = document.getElementById(id);
+                        const show = checkbox?.checked ?? true;
+                        
+                        visibleElements.forEach(elem => {
+                            const elements = elem.querySelectorAll(`.${className}`);
+                            elements.forEach(el => {
+                                if (el) {
+                                    el.style.display = show ? '' : 'none';
+                                }
+                            });
+                        });
                     });
-                });
-            });
-
-            // Re-cache collapsed elements after visibility update
-            visibleElements.forEach(element => {
-                if (element.classList.contains('collapsed')) {
-                    const ul = element.querySelector('ul');
-                    if (ul) {
-                        nodeCache.set(element, ul.innerHTML);
-                        ul.innerHTML = '';
-                    }
+                } catch (error) {
+                    console.error('Error in visibility update:', error);
+                } finally {
+                    STATE.isProcessing = false;
                 }
             });
-
+        } else {
             STATE.isProcessing = false;
-        });
+        }
     } catch (error) {
         console.error('Error in updateVisibility:', error);
         STATE.isProcessing = false;
@@ -504,33 +481,50 @@ function startMemoryManager() {
 }
 
 function destroyAllContent(reason) {
+    if (!STATE) return; // Guard against undefined STATE
     console.warn(`Destroying content: ${reason}`);
     
-    // Stop all ongoing processes
-    STATE.isProcessing = true;
-    
     try {
+        // Stop all ongoing processes
+        STATE.isProcessing = true;
+        
         // Clear all intervals
         if (STATE.cleanupInterval) {
             clearInterval(STATE.cleanupInterval);
             STATE.cleanupInterval = null;
         }
         
-        // Clear all caches and references
-        STATE.nodeCache = new WeakMap();
-        STATE.cacheTimestamps.clear();
+        // Clear memory monitor
+        if (memoryMonitor) {
+            memoryMonitor.stop();
+        }
         
-        // Destroy DOM content
+        // Clear all caches and references
+        if (STATE.nodeCache) {
+            STATE.nodeCache = new WeakMap();
+        }
+        if (STATE.cacheTimestamps) {
+            STATE.cacheTimestamps.clear();
+        }
+        
+        // Destroy DOM content safely
         const output = document.getElementById('output');
-        if (output) {
+        if (output && !STATE.isDestroyed) {
             output.innerHTML = `<div class="placeholder">Content cleared - ${reason}</div>`;
         }
         
         // Force garbage collection hint
-        forceGarbageHint();
+        if (typeof forceGarbageHint === 'function') {
+            forceGarbageHint();
+        }
         
+    } catch (error) {
+        console.error('Error in destroyAllContent:', error);
     } finally {
-        STATE.isProcessing = false;
+        if (STATE) {
+            STATE.isProcessing = false;
+            STATE.isDestroyed = true;
+        }
     }
 }
 

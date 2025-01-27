@@ -8,36 +8,29 @@ function addCollapsibleFunctionality() {
 }
 
 function updateVisibility() {
-    const elements = [
-        { id: 'showTags', class: 'tag' },
-        { id: 'showClasses', class: 'class' },
-        { id: 'showIds', class: 'id' },
-        { id: 'showContentSource', class: 'content-source' },
-        { id: 'showStyleAppearance', class: 'style-appearance' },
-        { id: 'showFormInput', class: 'form-input' },
-        { id: 'showAccessibilityRoles', class: 'accessibility-roles' },
-        { id: 'showMetadataRelationships', class: 'metadata-relationships' },
-        { id: 'showMultimedia', class: 'multimedia' },
-        { id: 'showScriptingBehavior', class: 'scripting-behavior' },
-        { id: 'showImages', class: 'image-specific' },
-        { id: 'showOthers', class: 'other-attributes' },
-        { id: 'showInnerText', class: 'inner-content' }
-    ];
+    if (STATE.isProcessing) return;
+    STATE.isProcessing = true;
 
-    // Cache DOM queries
-    const displayUpdates = elements.map(el => ({
-        show: document.getElementById(el.id)?.checked,
-        elements: document.querySelectorAll(`.${el.class}`)
-    }));
+    try {
+        // Use the shared VISIBILITY_ELEMENTS instead of redefining the array
+        const displayUpdates = VISIBILITY_ELEMENTS.map(({ id, class: className }) => ({
+            show: document.getElementById(id)?.checked,
+            elements: document.querySelectorAll(`.${className}`)
+        }));
 
-    // Batch DOM updates
-    requestAnimationFrame(() => {
-        displayUpdates.forEach(update => {
-            update.elements.forEach(elem => {
-                elem.style.display = update.show ? '' : 'none';
+        // Batch DOM updates
+        requestAnimationFrame(() => {
+            displayUpdates.forEach(update => {
+                update.elements.forEach(elem => {
+                    elem.style.display = update.show ? '' : 'none';
+                });
             });
+            STATE.isProcessing = false;
         });
-    });
+    } catch (error) {
+        console.error('Error in updateVisibility:', error);
+        STATE.isProcessing = false;
+    }
 }
 
 // Sample HTML that serves as documentation and demonstration
@@ -198,16 +191,89 @@ window.onerror = function(message, source, lineno, colno, error) {
     return true;
 };
 
-function parseHTML(htmlString) {
-    try {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlString, 'text/html');
-        if (doc.body.firstChild && doc.body.firstChild.nodeName === "parsererror") {
-            throw new Error("Parser error");
+function initializeEventListeners() {
+    // Window events
+    const windowEvents = {
+        'beforeunload': cleanup,
+        'blur': () => destroyAllContent('Window inactive'),
+        'focus': () => requestIdleCallback(() => reRenderVisibleContent())
+    };
+
+    Object.entries(windowEvents).forEach(([event, handler]) => {
+        window.addEventListener(event, handler);
+    });
+
+    // Document events
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            destroyAllContent('Tab hidden');
+        } else {
+            requestIdleCallback(() => reRenderVisibleContent());
         }
-        return doc.body;
-    } catch (error) {
-        console.error("Error parsing HTML:", error);
-        return document.createElement('body');
+    });
+
+    // Add visibility change handlers for all controls
+    VISIBILITY_ELEMENTS.forEach(({ id }) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('change', updateVisibility);
+        }
+    });
+}
+
+// Call this during initialization
+initializeEventListeners();
+
+const MEMORY_MANAGER = {
+    start() {
+        this.stop();
+        memoryMonitor.start();
+        
+        STATE.cleanupInterval = setInterval(() => {
+            if (!document.hidden && !STATE.isProcessing) {
+                this.performCleanup();
+            }
+        }, MEMORY_CONFIG.cleanupInterval);
+    },
+
+    stop() {
+        if (STATE.cleanupInterval) {
+            clearInterval(STATE.cleanupInterval);
+            STATE.cleanupInterval = null;
+        }
+        memoryMonitor.stop();
+    },
+
+    performCleanup() {
+        if (window.performance?.memory?.usedJSHeapSize > MEMORY_CONFIG.maxMemoryUsage) {
+            destroyAllContent('Memory limit exceeded');
+            return;
+        }
+
+        if (STATE.isProcessing || document.hidden) return;
+        
+        STATE.isProcessing = true;
+        try {
+            const output = document.getElementById('output');
+            if (!output) return;
+
+            const visibleElements = getVisibleElements(output);
+            const elements = output.getElementsByTagName('li');
+            
+            Array.from(elements).reverse().forEach(element => {
+                if (!visibleElements.has(element)) {
+                    element.remove();
+                }
+            });
+            
+            forceGarbageHint();
+        } finally {
+            STATE.isProcessing = false;
+        }
     }
+};
+
+// Replace startMemoryManager with:
+function startMemoryManager() {
+    MEMORY_MANAGER.start();
 }
