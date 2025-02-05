@@ -34,9 +34,9 @@
     --spacing-container: 1rem;
     --spacing-header: 0.75rem 1rem;
   
-    /* Minimal Border Radius */
-    --radius-sm: 4px;
-    --radius-default: 6px;
+    /* Border Radius */
+    --radius-sm: 9px;    /* For buttons and interactive elements */
+    --radius-md: 11px;    /* For containers and panels */
   
     /* Tree Indentation */
     --tree-indent: 1.25rem;
@@ -135,7 +135,6 @@
     /* Other measurements */
     --tree-indent: 16px;
     --tree-line-indent: 19px;
-    --radius-sm: 15px;
 }
 
 [data-theme="light"] {
