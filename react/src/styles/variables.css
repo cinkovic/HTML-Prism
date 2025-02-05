@@ -146,11 +146,16 @@
     --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     
     /* Font Sizes */
-    --font-size-xs: 0.75rem;    /* 12px */
-    --font-size-sm: 0.875rem;   /* 14px */
-    --font-size-base: 1rem;     /* 16px */
-    --font-size-lg: 1.125rem;   /* 18px */
+    /* --font-size-xs: 0.75rem;    12px */
+    /* --font-size-sm: 0.875rem;   14px */
+    /* --font-size-base: 1rem;     16px */
+    /* --font-size-lg: 1.125rem;   18px */
+    --font-size-xs: 10px;  /* change name to font-size-toggles */
+    --font-size-sm: 11px;  /* change name to font-size- */
+    --font-size-base: 14px;  /* change name to font-size-visualize */
+    --font-size-lg: 16px;  /* change name to font-size-htmlprism */
     
+
     /* Line Heights */
     --line-height-tight: 1.2;
     --line-height-base: 1.4;
