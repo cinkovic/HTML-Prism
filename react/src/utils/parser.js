@@ -12,27 +12,51 @@ export function parseHTML(htmlString) {
   }
 }
 
+// Cache attribute group results
+const attributeGroupCache = new Map();
+
 export function getAttributeGroup(attrName, tagName) {
+  const cacheKey = `${attrName}-${tagName}`;
+  if (attributeGroupCache.has(cacheKey)) {
+    return attributeGroupCache.get(cacheKey);
+  }
+
   const name = attrName.toLowerCase();
   const tag = tagName.toLowerCase();
   
   // Special handling for script and style tags
   if (tag === 'script') {
-    return ['type', 'src', 'async', 'defer', 'crossorigin', 'integrity'].includes(name) 
+    let result = ['type', 'src', 'async', 'defer', 'crossorigin', 'integrity'].includes(name) 
       ? 'scripting-behavior' 
       : 'other-attributes';
+    attributeGroupCache.set(cacheKey, result);
+    return result;
   }
 
   if (tag === 'style') {
-    return ['media', 'type'].includes(name) 
+    let result = ['media', 'type'].includes(name) 
       ? 'style-appearance' 
       : 'other-attributes';
+    attributeGroupCache.set(cacheKey, result);
+    return result;
   }
 
   // Handle prefixed attributes
-  if (name.startsWith('aria-')) return 'accessibility-roles';
-  if (name.startsWith('on')) return 'scripting-behavior';
-  if (name.startsWith('data-')) return 'metadata-relationships';
+  if (name.startsWith('aria-')) {
+    let result = 'accessibility-roles';
+    attributeGroupCache.set(cacheKey, result);
+    return result;
+  }
+  if (name.startsWith('on')) {
+    let result = 'scripting-behavior';
+    attributeGroupCache.set(cacheKey, result);
+    return result;
+  }
+  if (name.startsWith('data-')) {
+    let result = 'metadata-relationships';
+    attributeGroupCache.set(cacheKey, result);
+    return result;
+  }
   
   const attributeGroups = {
     'content-source': [
@@ -74,8 +98,19 @@ export function getAttributeGroup(attrName, tagName) {
   };
 
   for (const [group, attrs] of Object.entries(attributeGroups)) {
-    if (attrs.includes(name)) return group;
+    if (attrs.includes(name)) {
+      let result = group;
+      attributeGroupCache.set(cacheKey, result);
+      return result;
+    }
   }
   
-  return 'other-attributes';
+  let result = 'other-attributes';
+  attributeGroupCache.set(cacheKey, result);
+  return result;
+}
+
+// Clear cache when it gets too large
+if (attributeGroupCache.size > 1000) {
+  attributeGroupCache.clear();
 } 

@@ -1,15 +1,29 @@
 import { getAttributeGroup } from './parser';
 
+// Cache escaped HTML strings
+const escapeCache = new Map();
+
 const escapeHTML = (str) => {
-  const escapeMap = {
+  if (escapeCache.has(str)) {
+    return escapeCache.get(str);
+  }
+
+  const escaped = str.replace(/[<>"'`]/g, m => ({
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
     "'": '&#39;',
     '`': '&#96;'
-  };
-  return str.replace(/[<>"'`]/g, m => escapeMap[m]);
+  })[m]);
+
+  escapeCache.set(str, escaped);
+  return escaped;
 };
+
+// Clear cache periodically
+if (escapeCache.size > 1000) {
+  escapeCache.clear();
+}
 
 const isScriptOrStyle = (node) => {
   const tag = node.tagName.toLowerCase();

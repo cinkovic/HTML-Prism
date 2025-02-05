@@ -36,11 +36,11 @@ export default function ThemeDropdown() {
       </button>
       {isOpen && (
         <div className={styles.menu}>
-          <button onClick={() => toggleTheme('dark')}>
-            🌙 Dark Mode
-          </button>
           <button onClick={() => toggleTheme('light')}>
             ☀️ Light Mode
+          </button>
+          <button onClick={() => toggleTheme('dark')}>
+            🌙 Dark Mode
           </button>
         </div>
       )}
