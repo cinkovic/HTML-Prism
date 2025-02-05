@@ -9,18 +9,22 @@
 
 .button {
   background-color: var(--color-primary);
-  color: white;
+  color: #ffffff;
   border: none;
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  border-radius: var(--button-radius);
   font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
+  box-shadow: var(--button-shadow);
+  will-change: box-shadow, background-color;
 }
 
 .button:hover {
   background-color: var(--color-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-default);
+  box-shadow: var(--button-shadow-hover);
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .spacer {

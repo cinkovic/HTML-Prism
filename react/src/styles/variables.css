@@ -66,8 +66,10 @@
     --light-scrollbar-thumb-hover: #666666;
 
     /* Dark Theme Colors (vibrant set) */
-    --dark-color-primary: #FF4D4D;
-    --dark-color-primary-hover: #FF3333;
+    /* --dark-color-primary: #FF4D4D; */
+    /* --dark-color-primary-hover: #FF3333; */
+    --dark-color-primary: #f8383b;
+    --dark-color-primary-hover: #ff2c2c;
     --dark-color-background: #1A1A1A;
     --dark-color-surface: #242424;
     --dark-color-header: #FFFFFF;
@@ -94,16 +96,16 @@
     --light-color-other: #730871;
 
     /* Syntax Colors - Dark Mode (vibrant set) */
-    --dark-color-tag: #007bff;         /* Cyan */
+    --dark-color-tag: #00e5ff;         /* Cyan */
     --dark-color-class: #00ff6a;       /* Mint */
     --dark-color-id: #fc1f56;          /* Pink */
-    --dark-color-content-source: #00e5ff;    /* Gold */
+    --dark-color-content-source: #007bff;    /* Gold */
     --dark-color-style-appearance: #FF00FF;   /* Magenta */
     --dark-color-form-input: #FF8533;        /* Orange */
     --dark-color-accessibility: #007067;      /* Turquoise */
     --dark-color-metadata: hsl(51, 100%, 65%);          /* Yellow */
     --dark-color-multimedia: #66FF00;        /* Lime */
-    --dark-color-scripting: #6a00ff;         /* Sky Blue */
+    --dark-color-scripting: #8000ff;         /* Sky Blue */
     --dark-color-image: #1AFFD5;            /* Aqua */
     --dark-color-other: #FF66FF;            /* Light Pink */
 
@@ -166,6 +168,10 @@
 
     /* UX Spacing */
     --ux-gap-container: 0.4rem;  /* For consistent spacing between major UI components */
+
+    /* Button specific */
+    --button-radius: calc(var(--radius-md) + 2px);
+    --button-radius-hover: calc(var(--button-radius) + 2px);
 }
 
 [data-theme="light"] {
@@ -195,6 +201,15 @@
     --color-scripting: var(--light-color-scripting);
     --color-image: var(--light-color-image);
     --color-other: var(--light-color-other);
+
+    /* Button shadows */
+    --button-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+    --button-shadow-hover: 0 0 12px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] {
+    --button-shadow: 0 0 8px rgba(255, 77, 77, 0.2);
+    --button-shadow-hover: 0 0 12px rgba(254, 58, 58, 0.55);
 }
 
 /* Global Scrollbar Styles */
