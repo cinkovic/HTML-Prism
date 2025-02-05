@@ -120,7 +120,7 @@
 :global(.scripting-behavior) { color: var(--color-scripting) !important; }
 :global(.image-specific) { color: var(--color-image) !important; }
 :global(.other-attributes) { color: var(--color-other) !important; }
-:global(.inner-content) { color: var(--color-inner-text) !important; }
+:global(.inner-content) { color: var(--color-inner-text); font-weight: 600; }
 
 /* Collapsible controls */
 :global(.collapsible) {

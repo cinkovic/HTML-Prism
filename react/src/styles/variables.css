@@ -160,6 +160,7 @@
     --font-weight-normal: 400;
     --font-weight-medium: 500;
     --font-weight-bold: 600;
+    --font-weight-inner-text: 500;  /* New variable for inner text weight */
 
     /* Component Specific */
     --header-font-size: var(--font-size-lg);

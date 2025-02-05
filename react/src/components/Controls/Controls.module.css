@@ -8,19 +8,81 @@
   border-radius: var(--radius-md);
 }
 
-.control {
+.controls .control {
   display: flex;
   align-items: center;
   gap: 0.25rem;
   font-size: var(--control-font-size);
-  font-weight: var(--font-weight-medium);
-  padding: 0.125rem 0.375rem;
+  padding: 0.25rem 0.5rem;
   border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  color: var(--color-inner-text);
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
+  border: 0.25px solid transparent;
 }
+
+.control input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  margin-right: 5px;
+  position: relative;
+  cursor: pointer;
+  background-color: var(--color-surface);
+}
+
+.control input[type="checkbox"]:checked {
+  background-color: var(--color-surface);
+}
+
+.control input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: none;
+}
+
+.control input[type="checkbox"]:checked::after {
+  display: block;
+}
+
+/* Just the colored dots */
+.showTags:checked::after { background-color: var(--color-tag); }
+.showClasses:checked::after { background-color: var(--color-class); }
+.showIds:checked::after { background-color: var(--color-id); }
+.showContentSource:checked::after { background-color: var(--color-content-source); }
+.showStyleAppearance:checked::after { background-color: var(--color-style-appearance); }
+.showFormInput:checked::after { background-color: var(--color-form-input); }
+.showAccessibilityRoles:checked::after { background-color: var(--color-accessibility); }
+.showMetadataRelationships:checked::after { background-color: var(--color-metadata); }
+.showMultimedia:checked::after { background-color: var(--color-multimedia); }
+.showScriptingBehavior:checked::after { background-color: var(--color-scripting); }
+.showImages:checked::after { background-color: var(--color-image); }
+.showOthers:checked::after { background-color: var(--color-other); }
+.showInnerText:checked::after { background-color: var(--color-inner-text); }
+
+/* Colored borders for the control when checked */
+.control:has(.showTags:checked) { border-color: var(--color-tag); }
+.control:has(.showClasses:checked) { border-color: var(--color-class); }
+.control:has(.showIds:checked) { border-color: var(--color-id); }
+.control:has(.showContentSource:checked) { border-color: var(--color-content-source); }
+.control:has(.showStyleAppearance:checked) { border-color: var(--color-style-appearance); }
+.control:has(.showFormInput:checked) { border-color: var(--color-form-input); }
+.control:has(.showAccessibilityRoles:checked) { border-color: var(--color-accessibility); }
+.control:has(.showMetadataRelationships:checked) { border-color: var(--color-metadata); }
+.control:has(.showMultimedia:checked) { border-color: var(--color-multimedia); }
+.control:has(.showScriptingBehavior:checked) { border-color: var(--color-scripting); }
+.control:has(.showImages:checked) { border-color: var(--color-image); }
+.control:has(.showOthers:checked) { border-color: var(--color-other); }
+.control:has(.showInnerText:checked) { border-color: var(--color-inner-text); }
 
 .control:hover {
   background-color: var(--color-background);
@@ -41,61 +103,32 @@
 .control:has(.showOthers:hover) { border-color: #730871; }
 .control:has(.showInnerText:hover) { border-color: var(--color-inner-text); }
 
-.control input[type="checkbox"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  width: 13px;
-  height: 13px;
-  border: 2px solid var(--color-border);
-  border-radius: 50%;
-  margin-right: 5px;
-  position: relative;
-  cursor: pointer;
-}
-
-.control input[type="checkbox"]::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  display: none;
-}
-
-.control input[type="checkbox"]:checked::after {
-  display: block;
-}
-
 /* Light theme colors */
-[data-theme="light"] .showTags:checked::after { background-color: var(--light-color-tag); }
-[data-theme="light"] .showClasses:checked::after { background-color: var(--light-color-class); }
-[data-theme="light"] .showIds:checked::after { background-color: var(--light-color-id); }
-[data-theme="light"] .showContentSource:checked::after { background-color: var(--light-color-content-source); }
-[data-theme="light"] .showStyleAppearance:checked::after { background-color: var(--light-color-style-appearance); }
-[data-theme="light"] .showFormInput:checked::after { background-color: var(--light-color-form-input); }
-[data-theme="light"] .showAccessibilityRoles:checked::after { background-color: var(--light-color-accessibility); }
-[data-theme="light"] .showMetadataRelationships:checked::after { background-color: var(--light-color-metadata); }
-[data-theme="light"] .showMultimedia:checked::after { background-color: var(--light-color-multimedia); }
-[data-theme="light"] .showScriptingBehavior:checked::after { background-color: var(--light-color-scripting); }
-[data-theme="light"] .showImages:checked::after { background-color: var(--light-color-image); }
-[data-theme="light"] .showOthers:checked::after { background-color: var(--light-color-other); }
-[data-theme="light"] .showInnerText:checked::after { background-color: var(--light-color-inner-text); }
+[data-theme="light"] .showTags:checked { border-color: var(--light-color-tag); }
+[data-theme="light"] .showClasses:checked { border-color: var(--light-color-class); }
+[data-theme="light"] .showIds:checked { border-color: var(--light-color-id); }
+[data-theme="light"] .showContentSource:checked { border-color: var(--light-color-content-source); }
+[data-theme="light"] .showStyleAppearance:checked { border-color: var(--light-color-style-appearance); }
+[data-theme="light"] .showFormInput:checked { border-color: var(--light-color-form-input); }
+[data-theme="light"] .showAccessibilityRoles:checked { border-color: var(--light-color-accessibility); }
+[data-theme="light"] .showMetadataRelationships:checked { border-color: var(--light-color-metadata); }
+[data-theme="light"] .showMultimedia:checked { border-color: var(--light-color-multimedia); }
+[data-theme="light"] .showScriptingBehavior:checked { border-color: var(--light-color-scripting); }
+[data-theme="light"] .showImages:checked { border-color: var(--light-color-image); }
+[data-theme="light"] .showOthers:checked { border-color: var(--light-color-other); }
+[data-theme="light"] .showInnerText:checked { border-color: var(--light-color-inner-text); }
 
 /* Dark theme colors */
-[data-theme="dark"] .showTags:checked::after { background-color: var(--dark-color-tag); }
-[data-theme="dark"] .showClasses:checked::after { background-color: var(--dark-color-class); }
-[data-theme="dark"] .showIds:checked::after { background-color: var(--dark-color-id); }
-[data-theme="dark"] .showContentSource:checked::after { background-color: var(--dark-color-content-source); }
-[data-theme="dark"] .showStyleAppearance:checked::after { background-color: var(--dark-color-style-appearance); }
-[data-theme="dark"] .showFormInput:checked::after { background-color: var(--dark-color-form-input); }
-[data-theme="dark"] .showAccessibilityRoles:checked::after { background-color: var(--dark-color-accessibility); }
-[data-theme="dark"] .showMetadataRelationships:checked::after { background-color: var(--dark-color-metadata); }
-[data-theme="dark"] .showMultimedia:checked::after { background-color: var(--dark-color-multimedia); }
-[data-theme="dark"] .showScriptingBehavior:checked::after { background-color: var(--dark-color-scripting); }
-[data-theme="dark"] .showImages:checked::after { background-color: var(--dark-color-image); }
-[data-theme="dark"] .showOthers:checked::after { background-color: var(--dark-color-other); }
-[data-theme="dark"] .showInnerText:checked::after { background-color: var(--dark-color-inner-text); } 
+[data-theme="dark"] .showTags:checked { border-color: var(--dark-color-tag); }
+[data-theme="dark"] .showClasses:checked { border-color: var(--dark-color-class); }
+[data-theme="dark"] .showIds:checked { border-color: var(--dark-color-id); }
+[data-theme="dark"] .showContentSource:checked { border-color: var(--dark-color-content-source); }
+[data-theme="dark"] .showStyleAppearance:checked { border-color: var(--dark-color-style-appearance); }
+[data-theme="dark"] .showFormInput:checked { border-color: var(--dark-color-form-input); }
+[data-theme="dark"] .showAccessibilityRoles:checked { border-color: var(--dark-color-accessibility); }
+[data-theme="dark"] .showMetadataRelationships:checked { border-color: var(--dark-color-metadata); }
+[data-theme="dark"] .showMultimedia:checked { border-color: var(--dark-color-multimedia); }
+[data-theme="dark"] .showScriptingBehavior:checked { border-color: var(--dark-color-scripting); }
+[data-theme="dark"] .showImages:checked { border-color: var(--dark-color-image); }
+[data-theme="dark"] .showOthers:checked { border-color: var(--dark-color-other); }
+[data-theme="dark"] .showInnerText:checked { border-color: var(--dark-color-inner-text); }
