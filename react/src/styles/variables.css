@@ -1,0 +1,43 @@
+:root {
+    /* Colors */
+    --color-tag: rgb(0, 17, 251);
+    --color-class: rgb(40, 197, 1);
+    --color-id: rgb(249, 1, 59);
+    --color-content-source: #00aaff;
+    --color-style-appearance: #fe01fa;
+    --color-form-input: #ff8000;
+    --color-accessibility: #00ebd0;
+    --color-metadata: #B8860B;
+    --color-multimedia: #a5be17;
+    --color-scripting: #186cb1;
+    --color-image: #20B2AA;
+    --color-other: #730871;
+    --color-inner-text: black;
+  
+    /* Theme Colors */
+    --color-background: #dcd3c8;
+    --color-header: #564f43;
+    --color-button: #333;
+    --color-button-hover: #1f1f1f;
+    --color-border: #989898;
+    --color-tree-line: #8888887e;
+    --color-arrow: #5c5e7784;
+  
+    /* Spacing */
+    --spacing-container: 20px;
+    --spacing-header: 10px 22px;
+    --spacing-button: 4px 15px 6px 15px;
+    
+    /* Shadows */
+    --shadow-default: 0 0 10px rgba(87, 87, 87, 0.2);
+    --shadow-button: 0 0 6px rgba(255, 255, 255, 0.3);
+    --shadow-button-hover: 0 0 10px rgba(255, 255, 255, 0.807);
+  
+    /* Border Radius */
+    --radius-input: 10px;
+    --radius-button: 15px;
+  
+    /* Tree View */
+    --tree-indent: 16px;
+    --tree-line-indent: 19px;
+  }

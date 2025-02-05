@@ -1,0 +1,16 @@
+.input {
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: var(--shadow-default);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-input);
+    height: 150px;
+    min-height: 20px;
+    max-height: 80vh;
+    margin-bottom: 10px;
+    resize: vertical !important;
+    padding: 10px;
+    overflow: auto;
+    white-space: pre;
+    font-family: monospace;
+  }

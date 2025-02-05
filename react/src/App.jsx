@@ -1,24 +1,34 @@
 import { useState } from 'react'
-import './App.css'
+import { VisibilityProvider } from './context/VisibilityContext.jsx'
+import Header from './components/Header/Header'
+import CodeInput from './components/CodeInput/CodeInput'
+import Controls from './components/Controls/Controls'
+import TreeView from './components/TreeView/TreeView'
+import styles from './App.module.css'
+import './styles/variables.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [htmlContent, setHtmlContent] = useState('')
+  const [visualizeContent, setVisualizeContent] = useState('')
+
+  const handleVisualize = () => {
+    setVisualizeContent(htmlContent)
+  }
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+    <VisibilityProvider>
+      <div className={styles.app}>
+        <Header onVisualize={handleVisualize} />
+        <div className={styles.container}>
+          <CodeInput 
+            value={htmlContent} 
+            onChange={setHtmlContent} 
+          />
+          <Controls />
+          <TreeView htmlContent={visualizeContent} />
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </VisibilityProvider>
   )
 }
 

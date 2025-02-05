@@ -1,0 +1,40 @@
+.header {
+  background-color: var(--color-header);
+  color: white;
+  padding: var(--spacing-header);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button {
+  padding: var(--spacing-button);
+  font-size: 16px;
+  font-family: inherit;
+  background-color: var(--color-button);
+  color: white;
+  border: none;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  box-shadow: var(--shadow-button);
+  font-weight: 500;
+}
+
+.button:hover {
+  background-color: var(--color-button-hover);
+  box-shadow: var(--shadow-button-hover);
+}
+
+.headerSpan {
+  font-weight: 100;
+}
+
+h1 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 400;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+} 

@@ -1,0 +1,59 @@
+.controls {
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 13px;
+  padding-bottom: 3px;
+  font-weight: 500;
+}
+
+.control input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 13px;
+  height: 13px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  margin-right: 5px;
+  position: relative;
+  cursor: pointer;
+}
+
+.control input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: none;
+}
+
+.control input[type="checkbox"]:checked::after {
+  display: block;
+}
+
+/* Checkbox colors based on attribute types */
+.showTags:checked::after { background-color: var(--color-tag); }
+.showClasses:checked::after { background-color: var(--color-class); }
+.showIds:checked::after { background-color: var(--color-id); }
+.showContentSource:checked::after { background-color: var(--color-content-source); }
+.showStyleAppearance:checked::after { background-color: var(--color-style-appearance); }
+.showFormInput:checked::after { background-color: var(--color-form-input); }
+.showAccessibilityRoles:checked::after { background-color: var(--color-accessibility); }
+.showMetadataRelationships:checked::after { background-color: var(--color-metadata); }
+.showMultimedia:checked::after { background-color: var(--color-multimedia); }
+.showScriptingBehavior:checked::after { background-color: var(--color-scripting); }
+.showImages:checked::after { background-color: var(--color-image); }
+.showOthers:checked::after { background-color: var(--color-other); }
+.showInnerText:checked::after { background-color: var(--color-inner-text); } 

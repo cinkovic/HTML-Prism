@@ -1,0 +1,158 @@
+.controls {
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .control {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 13px;
+    padding-bottom: 3px;
+    font-weight: 500;
+  }
+  
+  .control input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    border: 2px solid #333;
+    border-radius: 50%;
+    margin-right: 5px;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .control input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: none;
+  }
+  
+  .control input[type="checkbox"]:checked::after {
+    display: block;
+  }
+  
+  /* Checkbox colors based on attribute types */
+  .showTags:checked::after { background-color: var(--color-tag); }
+  .showClasses:checked::after { background-color: var(--color-class); }
+  .showIds:checked::after { background-color: var(--color-id); }
+  .showContentSource:checked::after { background-color: var(--color-content-source); }
+  .showStyleAppearance:checked::after { background-color: var(--color-style-appearance); }
+  .showFormInput:checked::after { background-color: var(--color-form-input); }
+  .showAccessibilityRoles:checked::after { background-color: var(--color-accessibility); }
+  .showMetadataRelationships:checked::after { background-color: var(--color-metadata); }
+  .showMultimedia:checked::after { background-color: var(--color-multimedia); }
+  .showScriptingBehavior:checked::after { background-color: var(--color-scripting); }
+  .showImages:checked::after { background-color: var(--color-image); }
+  .showOthers:checked::after { background-color: var(--color-other); }
+  .showInnerText:checked::after { background-color: var(--color-inner-text); }
+
+.treeView {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  box-shadow: var(--shadow-default);
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.treeView ul {
+  list-style-type: none;
+  padding-left: var(--tree-indent);
+  margin: 0;
+}
+
+.treeView li {
+  position: relative;
+  padding-left: var(--tree-line-indent);
+}
+
+.treeView li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -1px;
+  border-left: 1px solid var(--color-tree-line);
+  height: 100%;
+}
+
+.treeView li:last-child::before {
+  height: 9px;
+}
+
+.treeView li::after {
+  content: '';
+  position: absolute;
+  top: 9px;
+  left: 0;
+  width: var(--tree-indent);
+  border-top: 1px solid var(--color-tree-line);
+}
+
+.treeView > ul > li:first-child::before {
+  top: 9px;
+}
+
+/* Collapsible functionality */
+.treeView :global(.collapsible) {
+  cursor: pointer;
+  user-select: none;
+}
+
+.treeView :global(.collapsible::before) {
+  content: '▼';
+  color: var(--color-arrow);
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  font-size: 8px;
+  padding: 5px;
+  position: absolute;
+  left: -10.4px;
+  top: 0.8px;
+  text-align: center;
+  line-height: 10px;
+  z-index: 1;
+}
+
+.treeView :global(.collapsed > .collapsible::before) {
+  content: '►';
+  top: -0.9px;
+  left: -8.6px;
+  font-size: 10px;
+}
+
+.treeView :global(.collapsed > ul) {
+  display: none;
+}
+
+/* Add these color classes */
+.treeView :global(.tag) { color: var(--color-tag); }
+.treeView :global(.class) { color: var(--color-class); }
+.treeView :global(.id) { color: var(--color-id); }
+.treeView :global(.content-source) { color: var(--color-content-source); }
+.treeView :global(.style-appearance) { color: var(--color-style-appearance); }
+.treeView :global(.form-input) { color: var(--color-form-input); }
+.treeView :global(.accessibility-roles) { color: var(--color-accessibility); }
+.treeView :global(.metadata-relationships) { color: var(--color-metadata); }
+.treeView :global(.multimedia) { color: var(--color-multimedia); }
+.treeView :global(.scripting-behavior) { color: var(--color-scripting); }
+.treeView :global(.image-specific) { color: var(--color-image); }
+.treeView :global(.other-attributes) { color: var(--color-other); }
+.treeView :global(.inner-content) { color: var(--color-inner-text); }
