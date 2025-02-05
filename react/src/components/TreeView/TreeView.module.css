@@ -61,12 +61,12 @@
 .treeView {
   flex: 1;
   overflow: auto;
-  padding: 1rem;
+  padding: 0.5rem;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-default);
+  border-radius: var(--radius-sm);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 13px;
+  font-size: 0.875rem;
   line-height: 1.4;
 }
 
@@ -107,13 +107,28 @@
   top: 9px;
 }
 
-/* Collapsible functionality */
-.treeView :global(.collapsible) {
+/* Global syntax highlighting colors */
+:global(.tag) { color: var(--color-tag) !important; }
+:global(.class) { color: var(--color-class) !important; }
+:global(.id) { color: var(--color-id) !important; }
+:global(.content-source) { color: var(--color-content-source) !important; }
+:global(.style-appearance) { color: var(--color-style-appearance) !important; }
+:global(.form-input) { color: var(--color-form-input) !important; }
+:global(.accessibility-roles) { color: var(--color-accessibility) !important; }
+:global(.metadata-relationships) { color: var(--color-metadata) !important; }
+:global(.multimedia) { color: var(--color-multimedia) !important; }
+:global(.scripting-behavior) { color: var(--color-scripting) !important; }
+:global(.image-specific) { color: var(--color-image) !important; }
+:global(.other-attributes) { color: var(--color-other) !important; }
+:global(.inner-content) { color: var(--color-inner-text) !important; }
+
+/* Collapsible controls */
+:global(.collapsible) {
   cursor: pointer;
   user-select: none;
 }
 
-.treeView :global(.collapsible::before) {
+:global(.collapsible::before) {
   content: '▼';
   color: var(--color-arrow);
   display: inline-block;
@@ -129,28 +144,17 @@
   z-index: 1;
 }
 
-.treeView :global(.collapsed > .collapsible::before) {
+:global(.collapsed > .collapsible::before) {
   content: '►';
   top: -0.9px;
   left: -8.6px;
   font-size: 10px;
 }
 
-.treeView :global(.collapsed > ul) {
+:global(.collapsed > ul) {
   display: none;
 }
 
-/* Color classes for elements */
-.treeView :global(.tag) { color: var(--color-tag); }
-.treeView :global(.class) { color: var(--color-class); }
-.treeView :global(.id) { color: var(--color-id); }
-.treeView :global(.contentsource) { color: var(--color-content-source); }
-.treeView :global(.styleappearance) { color: var(--color-style-appearance); }
-.treeView :global(.forminput) { color: var(--color-form-input); }
-.treeView :global(.accessibilityroles) { color: var(--color-accessibility); }
-.treeView :global(.metadatarelationships) { color: var(--color-metadata); }
-.treeView :global(.multimedia) { color: var(--color-multimedia); }
-.treeView :global(.scriptingbehavior) { color: var(--color-scripting); }
-.treeView :global(.imagespecific) { color: var(--color-image); }
-.treeView :global(.otherattributes) { color: var(--color-other); }
-.treeView :global(.innercontent) { color: var(--color-inner-text); }
+:global(.collapsible.no-arrow::before) {
+  display: none;
+}

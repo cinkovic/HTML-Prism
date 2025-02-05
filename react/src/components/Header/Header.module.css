@@ -3,7 +3,6 @@
   padding: 0.5rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -21,6 +20,10 @@
   background-color: var(--color-primary-hover);
   transform: translateY(-1px);
   box-shadow: var(--shadow-default);
+}
+
+.spacer {
+  flex: 1;
 }
 
 .headerSpan {

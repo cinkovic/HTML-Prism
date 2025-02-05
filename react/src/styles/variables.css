@@ -47,6 +47,124 @@
     --scrollbar-track: #1A1A1A;
     --scrollbar-thumb: #333333;
     --scrollbar-thumb-hover: #444444;
+
+    /* Light Theme Colors */
+    --light-color-primary: #333333;
+    --light-color-primary-hover: #1f1f1f;
+    --light-color-background: #dcd3c8;
+    --light-color-surface: #ffffff;
+    --light-color-header: #564f43;
+    --light-color-border: #989898;
+    --light-color-tree-line: #8888887e;
+    --light-color-arrow: #5c5e7784;
+    --light-color-inner-text: #000000;
+    --light-scrollbar-track: #f1f5f9;
+    --light-scrollbar-thumb: #989898;
+    --light-scrollbar-thumb-hover: #666666;
+
+    /* Dark Theme Colors (vibrant set) */
+    --dark-color-primary: #FF4D4D;
+    --dark-color-primary-hover: #FF3333;
+    --dark-color-background: #1A1A1A;
+    --dark-color-surface: #242424;
+    --dark-color-header: #FFFFFF;
+    --dark-color-border: #333333;
+    --dark-color-tree-line: #333333;
+    --dark-color-arrow: #666666;
+    --dark-color-inner-text: #E0E0E0;
+    --dark-scrollbar-track: #1A1A1A;
+    --dark-scrollbar-thumb: #333333;
+    --dark-scrollbar-thumb-hover: #444444;
+
+    /* Syntax Colors - Light Mode */
+    --light-color-tag: rgb(0, 17, 251);
+    --light-color-class: rgb(40, 197, 1);
+    --light-color-id: rgb(249, 1, 59);
+    --light-color-content-source: #00aaff;
+    --light-color-style-appearance: #fe01fa;
+    --light-color-form-input: #ff8000;
+    --light-color-accessibility: #00ebd0;
+    --light-color-metadata: #B8860B;
+    --light-color-multimedia: #a5be17;
+    --light-color-scripting: #186cb1;
+    --light-color-image: #20B2AA;
+    --light-color-other: #730871;
+
+    /* Syntax Colors - Dark Mode (vibrant set) */
+    --dark-color-tag: #00E5FF;         /* Cyan */
+    --dark-color-class: #00FF9D;       /* Mint */
+    --dark-color-id: #FF3366;          /* Pink */
+    --dark-color-content-source: #FFB800;    /* Gold */
+    --dark-color-style-appearance: #FF00FF;   /* Magenta */
+    --dark-color-form-input: #FF8533;        /* Orange */
+    --dark-color-accessibility: #00FFCC;      /* Turquoise */
+    --dark-color-metadata: #FFD700;          /* Yellow */
+    --dark-color-multimedia: #66FF00;        /* Lime */
+    --dark-color-scripting: #00BFFF;         /* Sky Blue */
+    --dark-color-image: #1AFFD5;            /* Aqua */
+    --dark-color-other: #FF66FF;            /* Light Pink */
+
+    /* Default to dark theme */
+    --color-primary: var(--dark-color-primary);
+    --color-primary-hover: var(--dark-color-primary-hover);
+    --color-background: var(--dark-color-background);
+    --color-surface: var(--dark-color-surface);
+    --color-header: var(--dark-color-header);
+    --color-border: var(--dark-color-border);
+    --color-tree-line: var(--dark-color-tree-line);
+    --color-arrow: var(--dark-color-arrow);
+    --color-inner-text: var(--dark-color-inner-text);
+    --scrollbar-track: var(--dark-scrollbar-track);
+    --scrollbar-thumb: var(--dark-scrollbar-thumb);
+    --scrollbar-thumb-hover: var(--dark-scrollbar-thumb-hover);
+
+    /* Syntax colors default to dark theme */
+    --color-tag: var(--dark-color-tag);
+    --color-class: var(--dark-color-class);
+    --color-id: var(--dark-color-id);
+    --color-content-source: var(--dark-color-content-source);
+    --color-style-appearance: var(--dark-color-style-appearance);
+    --color-form-input: var(--dark-color-form-input);
+    --color-accessibility: var(--dark-color-accessibility);
+    --color-metadata: var(--dark-color-metadata);
+    --color-multimedia: var(--dark-color-multimedia);
+    --color-scripting: var(--dark-color-scripting);
+    --color-image: var(--dark-color-image);
+    --color-other: var(--dark-color-other);
+
+    /* Other measurements */
+    --tree-indent: 16px;
+    --tree-line-indent: 19px;
+    --radius-sm: 15px;
+}
+
+[data-theme="light"] {
+    --color-primary: var(--light-color-primary);
+    --color-primary-hover: var(--light-color-primary-hover);
+    --color-background: var(--light-color-background);
+    --color-surface: var(--light-color-surface);
+    --color-header: var(--light-color-header);
+    --color-border: var(--light-color-border);
+    --color-tree-line: var(--light-color-tree-line);
+    --color-arrow: var(--light-color-arrow);
+    --color-inner-text: var(--light-color-inner-text);
+    --scrollbar-track: var(--light-scrollbar-track);
+    --scrollbar-thumb: var(--light-scrollbar-thumb);
+    --scrollbar-thumb-hover: var(--light-scrollbar-thumb-hover);
+    
+    /* Switch to light mode syntax colors */
+    --color-tag: var(--light-color-tag);
+    --color-class: var(--light-color-class);
+    --color-id: var(--light-color-id);
+    --color-content-source: var(--light-color-content-source);
+    --color-style-appearance: var(--light-color-style-appearance);
+    --color-form-input: var(--light-color-form-input);
+    --color-accessibility: var(--light-color-accessibility);
+    --color-metadata: var(--light-color-metadata);
+    --color-multimedia: var(--light-color-multimedia);
+    --color-scripting: var(--light-color-scripting);
+    --color-image: var(--light-color-image);
+    --color-other: var(--light-color-other);
 }
 
 /* Global Scrollbar Styles */

@@ -5,7 +5,7 @@
   padding: 0.5rem;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: 0.8rem;
 }
 
 .control {
@@ -13,32 +13,73 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.75rem;
-  padding: 0.125rem 0.25rem;
-  border-radius: var(--radius-sm);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.6rem;
   cursor: pointer;
-}
-
-.control input[type="checkbox"] {
-  width: 0.75rem;
-  height: 0.75rem;
-  margin: 0;
+  color: var(--color-inner-text);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 }
 
 .control:hover {
-  background-color: #f1f5f9;
+  background-color: var(--color-background);
 }
 
-/* Checkbox colors based on attribute types */
-.showTags:checked::after { background-color: var(--color-tag); }
-.showClasses:checked::after { background-color: var(--color-class); }
-.showIds:checked::after { background-color: var(--color-id); }
-.showContentSource:checked::after { background-color: var(--color-content-source); }
-.showStyleAppearance:checked::after { background-color: var(--color-style-appearance); }
-.showFormInput:checked::after { background-color: var(--color-form-input); }
-.showAccessibilityRoles:checked::after { background-color: var(--color-accessibility); }
-.showMetadataRelationships:checked::after { background-color: var(--color-metadata); }
-.showMultimedia:checked::after { background-color: var(--color-multimedia); }
-.showScriptingBehavior:checked::after { background-color: var(--color-scripting); }
-.showImages:checked::after { background-color: var(--color-image); }
-.showOthers:checked::after { background-color: var(--color-other); }
+/* Hover border colors using syntax colors */
+.control:has(.showTags:hover) { border-color: rgb(0, 17, 251); }
+.control:has(.showClasses:hover) { border-color: rgb(40, 197, 1); }
+.control:has(.showIds:hover) { border-color: rgb(249, 1, 59); }
+.control:has(.showContentSource:hover) { border-color: #00aaff; }
+.control:has(.showStyleAppearance:hover) { border-color: #fe01fa; }
+.control:has(.showFormInput:hover) { border-color: #ff8000; }
+.control:has(.showAccessibilityRoles:hover) { border-color: #00ebd0; }
+.control:has(.showMetadataRelationships:hover) { border-color: #B8860B; }
+.control:has(.showMultimedia:hover) { border-color: #a5be17; }
+.control:has(.showScriptingBehavior:hover) { border-color: #186cb1; }
+.control:has(.showImages:hover) { border-color: #20B2AA; }
+.control:has(.showOthers:hover) { border-color: #730871; }
+.control:has(.showInnerText:hover) { border-color: var(--color-inner-text); }
+
+.control input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 13px;
+  height: 13px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  margin-right: 5px;
+  position: relative;
+  cursor: pointer;
+}
+
+.control input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: none;
+}
+
+.control input[type="checkbox"]:checked::after {
+  display: block;
+}
+
+/* Checkbox colors using syntax colors */
+.showTags:checked::after { background-color: rgb(0, 17, 251); }
+.showClasses:checked::after { background-color: rgb(40, 197, 1); }
+.showIds:checked::after { background-color: rgb(249, 1, 59); }
+.showContentSource:checked::after { background-color: #00aaff; }
+.showStyleAppearance:checked::after { background-color: #fe01fa; }
+.showFormInput:checked::after { background-color: #ff8000; }
+.showAccessibilityRoles:checked::after { background-color: #00ebd0; }
+.showMetadataRelationships:checked::after { background-color: #B8860B; }
+.showMultimedia:checked::after { background-color: #a5be17; }
+.showScriptingBehavior:checked::after { background-color: #186cb1; }
+.showImages:checked::after { background-color: #20B2AA; }
+.showOthers:checked::after { background-color: #730871; }
 .showInnerText:checked::after { background-color: var(--color-inner-text); } 

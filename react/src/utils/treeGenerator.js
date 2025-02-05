@@ -52,10 +52,10 @@ export function generateTreeHTML(node) {
     for (const attr of node.attributes) {
       if (attr.name !== 'class' && attr.name !== 'id') {
         const group = getAttributeGroup(attr.name, tagName);
-        const className = group.replace('-', ''); // Remove hyphens for CSS class names
+        // Keep the hyphen in the class name to match CSS
         if (!processedAttrs.has(attr.name)) {
           processedAttrs.set(attr.name, 
-            `<span class="${className}">[${attr.name}="${escapeHTML(attr.value)}"]</span>`);
+            `<span class="${group}">[${attr.name}="${escapeHTML(attr.value)}"]</span>`);
         }
       }
     }
@@ -68,7 +68,7 @@ export function generateTreeHTML(node) {
         .map(node => node.textContent.trim());
       
       if (textNodes.length) {
-        parts.push(` <span class="innercontent">${escapeHTML(textNodes.join(' '))}</span>`);
+        parts.push(` <span class="inner-content">${escapeHTML(textNodes.join(' '))}</span>`);
       }
     }
 

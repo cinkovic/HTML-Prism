@@ -1,4 +1,5 @@
 import styles from './Header.module.css';
+import ThemeDropdown from './ThemeDropdown';
 
 function Header({ onVisualize }) {
   return (
@@ -10,9 +11,8 @@ function Header({ onVisualize }) {
       >
         Visualize
       </button>
-      <h1>
-        <span className={styles.headerSpan}>HTML</span> Prism
-      </h1>
+      <div className={styles.spacer} />
+      <ThemeDropdown />
     </div>
   );
 }
