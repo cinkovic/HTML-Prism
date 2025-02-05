@@ -144,14 +144,14 @@ export const VISIBILITY_CONFIG = [
   { id: 'showTags', label: 'Tags', class: 'tag' },
   { id: 'showClasses', label: 'Classes', class: 'class' },
   { id: 'showIds', label: 'IDs', class: 'id' },
-  { id: 'showContentSource', label: 'Content & Source', class: 'contentsource' },
-  { id: 'showStyleAppearance', label: 'Styling & Appearance', class: 'styleappearance' },
-  { id: 'showFormInput', label: 'Form & Input', class: 'forminput' },
-  { id: 'showAccessibilityRoles', label: 'Accessibility & Roles', class: 'accessibilityroles' },
-  { id: 'showMetadataRelationships', label: 'Metadata & Relationships', class: 'metadatarelationships' },
-  { id: 'showScriptingBehavior', label: 'Scripting & Behavior', class: 'scriptingbehavior' },
-  { id: 'showImages', label: 'Images', class: 'imagespecific' },
+  { id: 'showContentSource', label: 'Content & Source', class: 'content-source' },
+  { id: 'showStyleAppearance', label: 'Styling & Appearance', class: 'style-appearance' },
+  { id: 'showFormInput', label: 'Form & Input', class: 'form-input' },
+  { id: 'showAccessibilityRoles', label: 'Accessibility & Roles', class: 'accessibility-roles' },
+  { id: 'showMetadataRelationships', label: 'Metadata & Relationships', class: 'metadata-relationships' },
   { id: 'showMultimedia', label: 'Multimedia', class: 'multimedia' },
-  { id: 'showOthers', label: 'Others', class: 'otherattributes' },
-  { id: 'showInnerText', label: 'Inner Text', class: 'innercontent' }
+  { id: 'showScriptingBehavior', label: 'Scripting & Behavior', class: 'scripting-behavior' },
+  { id: 'showImages', label: 'Images', class: 'image-specific' },
+  { id: 'showOthers', label: 'Others', class: 'other-attributes' },
+  { id: 'showInnerText', label: 'Inner Text', class: 'inner-content' }
 ]; 

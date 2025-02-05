@@ -46,7 +46,7 @@
   appearance: none;
   width: 13px;
   height: 13px;
-  border: 2px solid #333;
+  border: 2px solid var(--color-border);
   border-radius: 50%;
   margin-right: 5px;
   position: relative;
@@ -69,17 +69,32 @@
   display: block;
 }
 
-/* Checkbox colors using syntax colors */
-.showTags:checked::after { background-color: rgb(0, 17, 251); }
-.showClasses:checked::after { background-color: rgb(40, 197, 1); }
-.showIds:checked::after { background-color: rgb(249, 1, 59); }
-.showContentSource:checked::after { background-color: #00aaff; }
-.showStyleAppearance:checked::after { background-color: #fe01fa; }
-.showFormInput:checked::after { background-color: #ff8000; }
-.showAccessibilityRoles:checked::after { background-color: #00ebd0; }
-.showMetadataRelationships:checked::after { background-color: #B8860B; }
-.showMultimedia:checked::after { background-color: #a5be17; }
-.showScriptingBehavior:checked::after { background-color: #186cb1; }
-.showImages:checked::after { background-color: #20B2AA; }
-.showOthers:checked::after { background-color: #730871; }
-.showInnerText:checked::after { background-color: var(--color-inner-text); } 
+/* Light theme colors */
+[data-theme="light"] .showTags:checked::after { background-color: var(--light-color-tag); }
+[data-theme="light"] .showClasses:checked::after { background-color: var(--light-color-class); }
+[data-theme="light"] .showIds:checked::after { background-color: var(--light-color-id); }
+[data-theme="light"] .showContentSource:checked::after { background-color: var(--light-color-content-source); }
+[data-theme="light"] .showStyleAppearance:checked::after { background-color: var(--light-color-style-appearance); }
+[data-theme="light"] .showFormInput:checked::after { background-color: var(--light-color-form-input); }
+[data-theme="light"] .showAccessibilityRoles:checked::after { background-color: var(--light-color-accessibility); }
+[data-theme="light"] .showMetadataRelationships:checked::after { background-color: var(--light-color-metadata); }
+[data-theme="light"] .showMultimedia:checked::after { background-color: var(--light-color-multimedia); }
+[data-theme="light"] .showScriptingBehavior:checked::after { background-color: var(--light-color-scripting); }
+[data-theme="light"] .showImages:checked::after { background-color: var(--light-color-image); }
+[data-theme="light"] .showOthers:checked::after { background-color: var(--light-color-other); }
+[data-theme="light"] .showInnerText:checked::after { background-color: var(--light-color-inner-text); }
+
+/* Dark theme colors */
+[data-theme="dark"] .showTags:checked::after { background-color: var(--dark-color-tag); }
+[data-theme="dark"] .showClasses:checked::after { background-color: var(--dark-color-class); }
+[data-theme="dark"] .showIds:checked::after { background-color: var(--dark-color-id); }
+[data-theme="dark"] .showContentSource:checked::after { background-color: var(--dark-color-content-source); }
+[data-theme="dark"] .showStyleAppearance:checked::after { background-color: var(--dark-color-style-appearance); }
+[data-theme="dark"] .showFormInput:checked::after { background-color: var(--dark-color-form-input); }
+[data-theme="dark"] .showAccessibilityRoles:checked::after { background-color: var(--dark-color-accessibility); }
+[data-theme="dark"] .showMetadataRelationships:checked::after { background-color: var(--dark-color-metadata); }
+[data-theme="dark"] .showMultimedia:checked::after { background-color: var(--dark-color-multimedia); }
+[data-theme="dark"] .showScriptingBehavior:checked::after { background-color: var(--dark-color-scripting); }
+[data-theme="dark"] .showImages:checked::after { background-color: var(--dark-color-image); }
+[data-theme="dark"] .showOthers:checked::after { background-color: var(--dark-color-other); }
+[data-theme="dark"] .showInnerText:checked::after { background-color: var(--dark-color-inner-text); } 
