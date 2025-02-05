@@ -1,3 +1,6 @@
 _backup/
 tmp/
 .vscode/
+
+node_modules/
+
