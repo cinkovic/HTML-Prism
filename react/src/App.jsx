@@ -20,12 +20,16 @@ function App() {
       <div className={styles.app}>
         <Header onVisualize={handleVisualize} />
         <div className={styles.container}>
-          <CodeInput 
-            value={htmlContent} 
-            onChange={setHtmlContent} 
-          />
-          <Controls />
-          <TreeView htmlContent={visualizeContent} />
+          <div className={styles.leftPanel}>
+            <CodeInput 
+              value={htmlContent} 
+              onChange={setHtmlContent} 
+            />
+            <Controls />
+          </div>
+          <div className={styles.rightPanel}>
+            <TreeView htmlContent={visualizeContent} />
+          </div>
         </div>
       </div>
     </VisibilityProvider>

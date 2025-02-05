@@ -1,40 +1,33 @@
 .header {
-  background-color: var(--color-header);
-  color: white;
-  padding: var(--spacing-header);
+  background-color: var(--color-surface);
+  padding: 0.5rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .button {
-  padding: var(--spacing-button);
-  font-size: 16px;
-  font-family: inherit;
-  background-color: var(--color-button);
+  background-color: var(--color-primary);
   color: white;
   border: none;
-  border-radius: var(--radius-button);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s;
-  box-shadow: var(--shadow-button);
-  font-weight: 500;
 }
 
 .button:hover {
-  background-color: var(--color-button-hover);
-  box-shadow: var(--shadow-button-hover);
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-default);
 }
 
 .headerSpan {
-  font-weight: 100;
+  color: var(--color-primary);
 }
 
 h1 {
+  font-size: 1.125rem;
   margin: 0;
-  font-size: 17px;
-  font-weight: 400;
-  user-select: none;
-  -webkit-user-select: none;
-  pointer-events: none;
 } 
