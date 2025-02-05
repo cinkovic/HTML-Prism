@@ -144,48 +144,100 @@ export const attributeGroups = {
   'content-source': [
     'src', 'href', 'content', 'value', 'placeholder', 'action', 
     'data-src', 'srcset', 'formaction', 'cite', 'poster',
-    'type',
+    'data-tracking', 'data-section', 'data-menu', 'data-feature',
+    'data-form', 'data-action', 'data-widget-type',
+    'sizes', 'target', 'download', 'ping', 'rel',
+    'method', 'enctype', 'accept', 'accept-charset',
+    'type'
   ],
+  
   'style-appearance': [
-    'style', 'class', 'rel', 'media', 'display',
+    'style', 'class', 'media', 'hidden', 'display',
     'align', 'valign', 'bgcolor', 'color', 'border', 'background',
-    'hidden'
+    'dir', 'lang', 'translate', 'spellcheck',
+    'contenteditable', 'draggable', 'dropzone',
+    'visibility', 'slot', 'part'
   ],
+  
   'form-input': [
     'name', 'required', 'pattern', 'min', 'max', 'step', 'readonly',
     'disabled', 'checked', 'selected', 'for', 'form', 'formmethod',
     'maxlength', 'minlength', 'multiple', 'autofocus', 'autocomplete',
-    'type'
+    'list', 'dirname', 'cols', 'rows', 'wrap', 'size',
+    'novalidate', 'formnovalidate', 'formtarget', 'formenctype',
+    'inputmode', 'type'
   ],
+  
   'accessibility-roles': [
-    'role', 'tabindex', 'title', 'alt', 'lang', 'aria-label',
+    'role', 'tabindex', 'title', 'alt', 'aria-label',
     'aria-describedby', 'aria-hidden', 'aria-live', 'aria-atomic',
-    'accesskey', 'draggable'
+    'aria-disabled', 'aria-required', 'aria-invalid',
+    'aria-expanded', 'aria-haspopup', 'aria-level',
+    'aria-multiline', 'aria-multiselectable', 'aria-orientation',
+    'aria-pressed', 'aria-readonly', 'aria-selected',
+    'aria-sort', 'aria-valuemax', 'aria-valuemin',
+    'aria-valuenow', 'aria-valuetext', 'accesskey'
   ],
+  
   'metadata-relationships': [
     'charset', 'name', 'property', 'itemprop', 'itemtype',
     'http-equiv', 'scheme', 'about', 'rev', 'xmlns', 'version',
-    'id'
+    'id', 'data-testid', 'itemscope', 'itemref', 'itemid',
+    'prefix', 'property', 'resource', 'typeof', 'vocab',
+    'contextmenu', 'default'
   ],
+  
   'multimedia': [
     'controls', 'autoplay', 'loop', 'muted', 'preload', 'kind',
-    'track', 'buffered', 'volume', 'playsinline'
+    'track', 'buffered', 'volume', 'playsinline', 'poster',
+    'mediagroup', 'crossorigin', 'currenttime', 'defaultmuted',
+    'defaultplaybackrate', 'played', 'seekable', 'seeking',
+    'ended', 'duration', 'paused', 'playbackrate'
   ],
+  
   'scripting-behavior': [
     'defer', 'async', 'nomodule', 'nonce', 'integrity',
     'importance', 'blocking', 'fetchpriority',
-    'onclick', 'onsubmit', 'onload', 'onchange', 'oninput'
+    'onclick', 'onsubmit', 'onload', 'onchange', 'oninput',
+    'onblur', 'onfocus', 'onreset', 'onselect', 'onabort',
+    'oncanplay', 'oncanplaythrough', 'ondurationchange',
+    'onemptied', 'onended', 'onerror', 'onloadeddata',
+    'onloadedmetadata', 'onloadstart', 'onpause', 'onplay',
+    'onplaying', 'onprogress', 'onratechange', 'onseeked',
+    'onseeking', 'onstalled', 'onsuspend', 'ontimeupdate',
+    'onvolumechange', 'onwaiting', 'onwheel', 'onmousedown',
+    'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup',
+    'onkeydown', 'onkeypress', 'onkeyup'
   ],
+  
   'image-specific': [
     'loading', 'srcset', 'sizes', 'width', 'height', 'decoding',
     'referrerpolicy', 'fetchpriority', 'crossorigin', 'ismap', 'usemap',
-    'viewBox', 'fill', 'stroke', 'stroke-width', 'd', 'points',
-    'transform', 'x', 'y', 'cx', 'cy', 'r', 'rx', 'ry'
+    'viewBox', 'preserveAspectRatio', 'xmlns', 'fill', 'stroke',
+    'stroke-width', 'd', 'points', 'transform', 'x', 'y', 'cx', 'cy',
+    'r', 'rx', 'ry', 'x1', 'y1', 'x2', 'y2', 'patternUnits',
+    'patternContentUnits', 'gradientUnits', 'gradientTransform',
+    'spreadMethod', 'startOffset', 'textLength', 'lengthAdjust',
+    'path', 'clip-path', 'clip-rule', 'color-interpolation',
+    'color-rendering', 'dominant-baseline', 'fill-opacity',
+    'fill-rule', 'flood-color', 'flood-opacity', 'font-family',
+    'font-size', 'font-size-adjust', 'font-stretch', 'font-style',
+    'font-variant', 'font-weight', 'image-rendering',
+    'letter-spacing', 'lighting-color', 'marker-end',
+    'marker-mid', 'marker-start', 'mask', 'opacity',
+    'overflow', 'pointer-events', 'shape-rendering',
+    'stop-color', 'stop-opacity', 'stroke-dasharray',
+    'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin',
+    'stroke-miterlimit', 'stroke-opacity', 'text-anchor',
+    'text-decoration', 'text-rendering', 'unicode-bidi',
+    'vector-effect', 'visibility', 'word-spacing',
+    'writing-mode'
   ],
+  
   'other-attributes': []
 };
 
-// Form input types - to help categorize 'type' attribute correctly
+// Form input types
 export const formInputTypes = [
   'text', 'password', 'checkbox', 'radio', 'submit', 'reset', 'file', 
   'hidden', 'image', 'button', 'email', 'url', 'number', 'range', 
@@ -193,11 +245,18 @@ export const formInputTypes = [
   'color'
 ];
 
-// Content type elements - elements where 'type' indicates content type
-export const contentTypeElements = ['script', 'style', 'link', 'source', 'object', 'embed'];
+// Elements where 'type' indicates content type
+export const contentTypeElements = [
+  'script', 'style', 'link', 'source', 'object', 'embed', 'input', 
+  'button'
+];
 
 // Special handling for script and style tags
-export const scriptAttributes = ['type', 'src', 'async', 'defer', 'crossorigin', 'integrity'];
+export const scriptAttributes = [
+  'type', 'src', 'async', 'defer', 'crossorigin', 'integrity',
+  'nomodule', 'nonce', 'referrerpolicy'
+];
+
 export const styleAttributes = ['media', 'type'];
 
 // Visibility configuration
