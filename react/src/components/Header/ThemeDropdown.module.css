@@ -8,8 +8,8 @@
   border: none;
   padding: 0;
   font: inherit;
-  font-size: 1.125rem;
-  font-weight: 500;
+  font-size: var(--header-font-size);
+  font-weight: var(--font-weight-medium);
   color: var(--color-header);
   cursor: pointer;
   display: flex;
@@ -42,7 +42,7 @@
   border: none;
   background: none;
   color: var(--color-inner-text);
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   cursor: pointer;
   border-radius: var(--radius-sm);
   display: flex;

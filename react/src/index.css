@@ -5,8 +5,8 @@ html, body {
 }
 
 body { 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.4; 
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-base);
   display: flex;
   flex-direction: column;
   background-color: var(--color-background);

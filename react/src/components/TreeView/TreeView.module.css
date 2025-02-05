@@ -9,9 +9,9 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    font-size: 13px;
+    font-size: var(--control-font-size);
     padding-bottom: 3px;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
   }
   
   .control input[type="checkbox"] {
@@ -65,9 +65,9 @@
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  font-family: var(--font-family-mono);
+  font-size: var(--code-font-size);
+  line-height: var(--line-height-base);
 }
 
 .treeView ul {

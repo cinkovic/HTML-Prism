@@ -91,16 +91,16 @@
     --light-color-other: #730871;
 
     /* Syntax Colors - Dark Mode (vibrant set) */
-    --dark-color-tag: #00e5ff;         /* Cyan */
+    --dark-color-tag: #007bff;         /* Cyan */
     --dark-color-class: #00ff6a;       /* Mint */
     --dark-color-id: #fc1f56;          /* Pink */
-    --dark-color-content-source: #035bff;    /* Gold */
+    --dark-color-content-source: #00e5ff;    /* Gold */
     --dark-color-style-appearance: #FF00FF;   /* Magenta */
     --dark-color-form-input: #FF8533;        /* Orange */
     --dark-color-accessibility: #007067;      /* Turquoise */
     --dark-color-metadata: hsl(51, 100%, 65%);          /* Yellow */
     --dark-color-multimedia: #66FF00;        /* Lime */
-    --dark-color-scripting: #8400ff;         /* Sky Blue */
+    --dark-color-scripting: #6a00ff;         /* Sky Blue */
     --dark-color-image: #1AFFD5;            /* Aqua */
     --dark-color-other: #FF66FF;            /* Light Pink */
 
@@ -135,6 +135,31 @@
     /* Other measurements */
     --tree-indent: 16px;
     --tree-line-indent: 19px;
+
+    /* Typography */
+    --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    
+    /* Font Sizes */
+    --font-size-xs: 0.75rem;    /* 12px */
+    --font-size-sm: 0.875rem;   /* 14px */
+    --font-size-base: 1rem;     /* 16px */
+    --font-size-lg: 1.125rem;   /* 18px */
+    
+    /* Line Heights */
+    --line-height-tight: 1.2;
+    --line-height-base: 1.4;
+    --line-height-relaxed: 1.6;
+    
+    /* Font Weights */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 600;
+
+    /* Component Specific */
+    --header-font-size: var(--font-size-lg);
+    --code-font-size: var(--font-size-sm);
+    --control-font-size: var(--font-size-xs);
 }
 
 [data-theme="light"] {
