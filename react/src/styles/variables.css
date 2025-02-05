@@ -96,15 +96,15 @@
     --light-color-other: #730871;
 
     /* Syntax Colors - Dark Mode (vibrant set) */
-    --dark-color-tag: #00e5ff;         /* Cyan */
+    --dark-color-tag: #007bff;         /* Cyan */
     --dark-color-class: #00ff6a;       /* Mint */
     --dark-color-id: #fc1f56;          /* Pink */
-    --dark-color-content-source: #007bff;    /* Gold */
+    --dark-color-content-source: #00e5ff;    /* Gold */
     --dark-color-style-appearance: #FF00FF;   /* Magenta */
     --dark-color-form-input: #FF8533;        /* Orange */
     --dark-color-accessibility: #007067;      /* Turquoise */
     --dark-color-metadata: hsl(51, 100%, 65%);          /* Yellow */
-    --dark-color-multimedia: #66FF00;        /* Lime */
+    --dark-color-multimedia: #757900;        /* Lime */
     --dark-color-scripting: #8000ff;         /* Sky Blue */
     --dark-color-image: #1AFFD5;            /* Aqua */
     --dark-color-other: #FF66FF;            /* Light Pink */
@@ -168,7 +168,7 @@
     --control-font-size: var(--font-size-xs);
 
     /* UX Spacing */
-    --ux-gap-container: 0.4rem;  /* For consistent spacing between major UI components */
+    --ux-gap-container: 0.3rem;  /* For consistent spacing between major UI components */
 
     /* Button specific */
     --button-radius: calc(var(--radius-md) + 2px);

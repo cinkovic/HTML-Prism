@@ -1,3 +1,9 @@
+/* Add these at the top to define our border widths */
+:root {
+  --border-width-thin: 0.25px;
+  --border-width-thick: 1px;
+}
+
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -17,7 +23,7 @@
   border-radius: var(--radius-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  border: 0.25px solid transparent;
+  border: var(--border-width-thin) solid transparent;
 }
 
 .control input[type="checkbox"] {
@@ -69,39 +75,39 @@
 .showOthers:checked::after { background-color: var(--color-other); }
 .showInnerText:checked::after { background-color: var(--color-inner-text); }
 
-/* Colored borders for the control when checked */
-.control:has(.showTags:checked) { border-color: var(--color-tag); }
-.control:has(.showClasses:checked) { border-color: var(--color-class); }
-.control:has(.showIds:checked) { border-color: var(--color-id); }
-.control:has(.showContentSource:checked) { border-color: var(--color-content-source); }
-.control:has(.showStyleAppearance:checked) { border-color: var(--color-style-appearance); }
-.control:has(.showFormInput:checked) { border-color: var(--color-form-input); }
-.control:has(.showAccessibilityRoles:checked) { border-color: var(--color-accessibility); }
-.control:has(.showMetadataRelationships:checked) { border-color: var(--color-metadata); }
-.control:has(.showMultimedia:checked) { border-color: var(--color-multimedia); }
-.control:has(.showScriptingBehavior:checked) { border-color: var(--color-scripting); }
-.control:has(.showImages:checked) { border-color: var(--color-image); }
-.control:has(.showOthers:checked) { border-color: var(--color-other); }
-.control:has(.showInnerText:checked) { border-color: var(--color-inner-text); }
+/* Super specific selectors for checked state - using border-color instead of full border property */
+.controls .control:has(.showTags:checked) { border-color: var(--color-tag) !important; }
+.controls .control:has(.showClasses:checked) { border-color: var(--color-class) !important; }
+.controls .control:has(.showIds:checked) { border-color: var(--color-id) !important; }
+.controls .control:has(.showContentSource:checked) { border-color: var(--color-content-source) !important; }
+.controls .control:has(.showStyleAppearance:checked) { border-color: var(--color-style-appearance) !important; }
+.controls .control:has(.showFormInput:checked) { border-color: var(--color-form-input) !important; }
+.controls .control:has(.showAccessibilityRoles:checked) { border-color: var(--color-accessibility) !important; }
+.controls .control:has(.showMetadataRelationships:checked) { border-color: var(--color-metadata) !important; }
+.controls .control:has(.showMultimedia:checked) { border-color: var(--color-multimedia) !important; }
+.controls .control:has(.showScriptingBehavior:checked) { border-color: var(--color-scripting) !important; }
+.controls .control:has(.showImages:checked) { border-color: var(--color-image) !important; }
+.controls .control:has(.showOthers:checked) { border-color: var(--color-other) !important; }
+.controls .control:has(.showInnerText:checked) { border-color: var(--color-inner-text) !important; }
 
-.control:hover {
+/* Super specific selectors for hover state */
+.controls .control:has(.showTags):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showClasses):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showIds):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showContentSource):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showStyleAppearance):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showFormInput):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showAccessibilityRoles):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showMetadataRelationships):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showMultimedia):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showScriptingBehavior):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showImages):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showOthers):hover { border-width: var(--border-width-thick) !important; }
+.controls .control:has(.showInnerText):hover { border-width: var(--border-width-thick) !important; }
+
+.controls .control:hover {
   background-color: var(--color-background);
 }
-
-/* Hover border colors using syntax colors */
-.control:has(.showTags:hover) { border-color: rgb(0, 17, 251); }
-.control:has(.showClasses:hover) { border-color: rgb(40, 197, 1); }
-.control:has(.showIds:hover) { border-color: rgb(249, 1, 59); }
-.control:has(.showContentSource:hover) { border-color: #00aaff; }
-.control:has(.showStyleAppearance:hover) { border-color: #fe01fa; }
-.control:has(.showFormInput:hover) { border-color: #ff8000; }
-.control:has(.showAccessibilityRoles:hover) { border-color: #00ebd0; }
-.control:has(.showMetadataRelationships:hover) { border-color: #B8860B; }
-.control:has(.showMultimedia:hover) { border-color: #a5be17; }
-.control:has(.showScriptingBehavior:hover) { border-color: #186cb1; }
-.control:has(.showImages:hover) { border-color: #20B2AA; }
-.control:has(.showOthers:hover) { border-color: #730871; }
-.control:has(.showInnerText:hover) { border-color: var(--color-inner-text); }
 
 /* Light theme colors */
 [data-theme="light"] .showTags:checked { border-color: var(--light-color-tag); }
