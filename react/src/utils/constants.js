@@ -140,6 +140,67 @@ export const SAMPLE_HTML = `
 </html>
 `.trim();
 
+export const attributeGroups = {
+  'content-source': [
+    'src', 'href', 'content', 'value', 'placeholder', 'action', 
+    'data-src', 'srcset', 'formaction', 'cite', 'poster',
+    'type',
+  ],
+  'style-appearance': [
+    'style', 'class', 'rel', 'media', 'display',
+    'align', 'valign', 'bgcolor', 'color', 'border', 'background',
+    'hidden'
+  ],
+  'form-input': [
+    'name', 'required', 'pattern', 'min', 'max', 'step', 'readonly',
+    'disabled', 'checked', 'selected', 'for', 'form', 'formmethod',
+    'maxlength', 'minlength', 'multiple', 'autofocus', 'autocomplete',
+    'type'
+  ],
+  'accessibility-roles': [
+    'role', 'tabindex', 'title', 'alt', 'lang', 'aria-label',
+    'aria-describedby', 'aria-hidden', 'aria-live', 'aria-atomic',
+    'accesskey', 'draggable'
+  ],
+  'metadata-relationships': [
+    'charset', 'name', 'property', 'itemprop', 'itemtype',
+    'http-equiv', 'scheme', 'about', 'rev', 'xmlns', 'version',
+    'id'
+  ],
+  'multimedia': [
+    'controls', 'autoplay', 'loop', 'muted', 'preload', 'kind',
+    'track', 'buffered', 'volume', 'playsinline'
+  ],
+  'scripting-behavior': [
+    'defer', 'async', 'nomodule', 'nonce', 'integrity',
+    'importance', 'blocking', 'fetchpriority',
+    'onclick', 'onsubmit', 'onload', 'onchange', 'oninput'
+  ],
+  'image-specific': [
+    'loading', 'srcset', 'sizes', 'width', 'height', 'decoding',
+    'referrerpolicy', 'fetchpriority', 'crossorigin', 'ismap', 'usemap',
+    'viewBox', 'fill', 'stroke', 'stroke-width', 'd', 'points',
+    'transform', 'x', 'y', 'cx', 'cy', 'r', 'rx', 'ry'
+  ],
+  'other-attributes': []
+};
+
+// Form input types - to help categorize 'type' attribute correctly
+export const formInputTypes = [
+  'text', 'password', 'checkbox', 'radio', 'submit', 'reset', 'file', 
+  'hidden', 'image', 'button', 'email', 'url', 'number', 'range', 
+  'search', 'tel', 'date', 'time', 'datetime-local', 'month', 'week', 
+  'color'
+];
+
+// Content type elements - elements where 'type' indicates content type
+export const contentTypeElements = ['script', 'style', 'link', 'source', 'object', 'embed'];
+
+// Special handling for script and style tags
+export const scriptAttributes = ['type', 'src', 'async', 'defer', 'crossorigin', 'integrity'];
+export const styleAttributes = ['media', 'type'];
+
+// Visibility configuration
 export const VISIBILITY_CONFIG = [
   { id: 'showTags', label: 'Tags', class: 'tag' },
   { id: 'showClasses', label: 'Classes', class: 'class' },

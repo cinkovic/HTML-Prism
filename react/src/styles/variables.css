@@ -91,16 +91,16 @@
     --light-color-other: #730871;
 
     /* Syntax Colors - Dark Mode (vibrant set) */
-    --dark-color-tag: #00E5FF;         /* Cyan */
-    --dark-color-class: #00FF9D;       /* Mint */
-    --dark-color-id: #FF3366;          /* Pink */
-    --dark-color-content-source: #FFB800;    /* Gold */
+    --dark-color-tag: #00e5ff;         /* Cyan */
+    --dark-color-class: #00ff6a;       /* Mint */
+    --dark-color-id: #fc1f56;          /* Pink */
+    --dark-color-content-source: #035bff;    /* Gold */
     --dark-color-style-appearance: #FF00FF;   /* Magenta */
     --dark-color-form-input: #FF8533;        /* Orange */
-    --dark-color-accessibility: #00FFCC;      /* Turquoise */
-    --dark-color-metadata: #FFD700;          /* Yellow */
+    --dark-color-accessibility: #007067;      /* Turquoise */
+    --dark-color-metadata: hsl(51, 100%, 65%);          /* Yellow */
     --dark-color-multimedia: #66FF00;        /* Lime */
-    --dark-color-scripting: #00BFFF;         /* Sky Blue */
+    --dark-color-scripting: #8400ff;         /* Sky Blue */
     --dark-color-image: #1AFFD5;            /* Aqua */
     --dark-color-other: #FF66FF;            /* Light Pink */
 
