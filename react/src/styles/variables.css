@@ -44,9 +44,12 @@
 
     /* Custom Scrollbar */
     --scrollbar-width: 8px;
-    --scrollbar-track: #1A1A1A;
-    --scrollbar-thumb: #333333;
-    --scrollbar-thumb-hover: #444444;
+    --scrollbar-track: var(--color-surface);
+    --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+    --scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
+    --scrollbar-margin: 4px;  /* New variable for scrollbar spacing */
+    --scrollbar-thumb-radius: calc(var(--scrollbar-width) / 2);
+    --scrollbar-border-width: 2px;  /* New variable for the thumb border */
 
     /* Light Theme Colors */
     --light-color-primary: #333333;
@@ -73,8 +76,8 @@
     --dark-color-arrow: #666666;
     --dark-color-inner-text: #E0E0E0;
     --dark-scrollbar-track: #1A1A1A;
-    --dark-scrollbar-thumb: #333333;
-    --dark-scrollbar-thumb-hover: #444444;
+    --dark-scrollbar-thumb: rgba(255, 255, 255, 0.2);
+    --dark-scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
 
     /* Syntax Colors - Light Mode */
     --light-color-tag: rgb(0, 17, 251);
@@ -160,6 +163,9 @@
     --header-font-size: var(--font-size-lg);
     --code-font-size: var(--font-size-sm);
     --control-font-size: var(--font-size-xs);
+
+    /* UX Spacing */
+    --ux-gap-container: 0.4rem;  /* For consistent spacing between major UI components */
 }
 
 [data-theme="light"] {

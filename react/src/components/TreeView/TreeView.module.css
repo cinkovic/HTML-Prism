@@ -61,7 +61,7 @@
 .treeView {
   flex: 1;
   overflow: auto;
-  padding: 0.5rem;
+  padding: calc(var(--scrollbar-margin) + 0.5rem);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -157,4 +157,33 @@
 
 :global(.collapsible.no-arrow::before) {
   display: none;
+}
+
+/* Scrollbar styles specific to treeView */
+.treeView::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+.treeView::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  margin: var(--scrollbar-margin);
+  border-radius: var(--radius-md);
+}
+
+.treeView::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: var(--scrollbar-thumb-radius);
+  border: var(--scrollbar-border-width) solid var(--scrollbar-track);
+  min-height: calc(var(--scrollbar-width) * 2);
+  width: calc(var(--scrollbar-width) - (var(--scrollbar-border-width) * 2));
+  height: calc(var(--scrollbar-width) - (var(--scrollbar-border-width) * 2));
+}
+
+.treeView::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+.treeView::-webkit-scrollbar-corner {
+  background-color: transparent;
 }

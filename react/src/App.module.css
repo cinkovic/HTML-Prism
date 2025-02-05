@@ -8,7 +8,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--ux-gap-container);
   padding: 0.5rem;
   flex: 1;
   overflow: hidden;
@@ -17,7 +17,7 @@
 .leftPanel {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--ux-gap-container);
 }
 
 .leftPanel :global(.input) {
