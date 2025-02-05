@@ -142,17 +142,17 @@
   display: none;
 }
 
-/* Add these color classes */
+/* Color classes for elements */
 .treeView :global(.tag) { color: var(--color-tag); }
 .treeView :global(.class) { color: var(--color-class); }
 .treeView :global(.id) { color: var(--color-id); }
-.treeView :global(.content-source) { color: var(--color-content-source); }
-.treeView :global(.style-appearance) { color: var(--color-style-appearance); }
-.treeView :global(.form-input) { color: var(--color-form-input); }
-.treeView :global(.accessibility-roles) { color: var(--color-accessibility); }
-.treeView :global(.metadata-relationships) { color: var(--color-metadata); }
+.treeView :global(.contentsource) { color: var(--color-content-source); }
+.treeView :global(.styleappearance) { color: var(--color-style-appearance); }
+.treeView :global(.forminput) { color: var(--color-form-input); }
+.treeView :global(.accessibilityroles) { color: var(--color-accessibility); }
+.treeView :global(.metadatarelationships) { color: var(--color-metadata); }
 .treeView :global(.multimedia) { color: var(--color-multimedia); }
-.treeView :global(.scripting-behavior) { color: var(--color-scripting); }
-.treeView :global(.image-specific) { color: var(--color-image); }
-.treeView :global(.other-attributes) { color: var(--color-other); }
-.treeView :global(.inner-content) { color: var(--color-inner-text); }
+.treeView :global(.scriptingbehavior) { color: var(--color-scripting); }
+.treeView :global(.imagespecific) { color: var(--color-image); }
+.treeView :global(.otherattributes) { color: var(--color-other); }
+.treeView :global(.innercontent) { color: var(--color-inner-text); }

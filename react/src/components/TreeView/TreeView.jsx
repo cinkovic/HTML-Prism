@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useVisibility } from '../../context/VisibilityContext.jsx';
 import { parseHTML } from '../../utils/parser';
 import { generateTreeHTML } from '../../utils/treeGenerator';
-import { VISIBILITY_CONFIG } from '../../utils/constants';
 import styles from './TreeView.module.css';
+import { VISIBILITY_CONFIG } from '../../utils/constants';
 
 function TreeView({ htmlContent }) {
   const outputRef = useRef(null);
@@ -12,11 +12,11 @@ function TreeView({ htmlContent }) {
   useEffect(() => {
     if (!htmlContent) return;
     
-    const parsedHTML = parseHTML(htmlContent);
-    const treeHTML = generateTreeHTML(parsedHTML);
+    const parsedDoc = parseHTML(htmlContent);
+    const treeHTML = generateTreeHTML(parsedDoc.documentElement);
     
     if (outputRef.current) {
-      outputRef.current.innerHTML = treeHTML;
+      outputRef.current.innerHTML = `<ul>${treeHTML}</ul>`;
       addCollapsibleFunctionality();
     }
   }, [htmlContent]);
@@ -26,6 +26,8 @@ function TreeView({ htmlContent }) {
   }, [visibility]);
 
   const addCollapsibleFunctionality = () => {
+    if (!outputRef.current) return;
+    
     const elements = outputRef.current.querySelectorAll('.collapsible');
     elements.forEach(item => {
       item.addEventListener('click', handleCollapse);
@@ -49,14 +51,11 @@ function TreeView({ htmlContent }) {
   const updateVisibility = () => {
     if (!outputRef.current) return;
 
-    Object.entries(visibility).forEach(([key, isVisible]) => {
-      const className = VISIBILITY_CONFIG.find(config => config.id === key)?.class;
-      if (className) {
-        const elements = outputRef.current.querySelectorAll(`.${className}`);
-        elements.forEach(element => {
-          element.style.display = isVisible ? '' : 'none';
-        });
-      }
+    VISIBILITY_CONFIG.forEach(({ id, class: className }) => {
+      const elements = outputRef.current.querySelectorAll(`.${className}`);
+      elements.forEach(element => {
+        element.style.display = visibility[id] ? '' : 'none';
+      });
     });
   };
 
