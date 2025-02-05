@@ -12,6 +12,7 @@
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+  user-select: none; /* Prevent text selection for all controls */
 }
 
 .controls .control {
@@ -24,6 +25,10 @@
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   border: var(--border-width-thin) solid transparent;
+  user-select: none; /* Ensure text cannot be selected */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .control input[type="checkbox"] {
@@ -38,6 +43,7 @@
   position: relative;
   cursor: pointer;
   background-color: var(--color-surface);
+  flex-shrink: 0; /* Prevent checkbox from shrinking */
 }
 
 .control input[type="checkbox"]:checked {
@@ -54,6 +60,7 @@
   height: 6px;
   border-radius: 50%;
   display: none;
+  margin: 0; /* Remove any default margins */
 }
 
 .control input[type="checkbox"]:checked::after {
