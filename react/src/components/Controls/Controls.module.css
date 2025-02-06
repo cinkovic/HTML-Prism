@@ -45,51 +45,45 @@
   cursor: pointer;
   background-color: var(--color-surface);
   flex-shrink: 0; /* Prevent checkbox from shrinking */
-  padding: 0; /* Remove any padding */
-  box-sizing: border-box; /* Include border in width/height calculation */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.control input[type="checkbox"]:checked {
-  background-color: var(--color-surface);
-}
-
-.control input[type="checkbox"]::after {
+/* Create a wrapper for the dot */
+.control input[type="checkbox"]::before {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Center the dot */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  display: none;
-  margin: 0; /* Remove any default margins */
-  box-sizing: border-box; /* Consistent box sizing */
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
-.control input[type="checkbox"]:checked::after {
-  display: block;
-  width: 6px; /* Fixed width */
-  height: 6px; /* Fixed height */
+/* Show the dot when checked */
+.control input[type="checkbox"]:checked::before {
+  opacity: 1;
 }
 
-/* Just the colored dots */
-.showTags:checked::after { background-color: var(--color-tag); }
-.showClasses:checked::after { background-color: var(--color-class); }
-.showIds:checked::after { background-color: var(--color-id); }
-.showContentSource:checked::after { background-color: var(--color-content-source); }
-.showStyleAppearance:checked::after { background-color: var(--color-style-appearance); }
-.showFormInput:checked::after { background-color: var(--color-form-input); }
-.showAccessibilityRoles:checked::after { background-color: var(--color-accessibility); }
-.showMetadataRelationships:checked::after { background-color: var(--color-metadata); }
-.showMultimedia:checked::after { background-color: var(--color-multimedia); }
-.showScriptingBehavior:checked::after { background-color: var(--color-scripting); }
-.showImages:checked::after { background-color: var(--color-image); }
-.showOthers:checked::after { background-color: var(--color-other); }
-.showInnerText:checked::after { background-color: var(--color-inner-text); }
+/* Color styles for the dots */
+.showTags:checked::before { background-color: var(--color-tag); }
+.showClasses:checked::before { background-color: var(--color-class); }
+.showIds:checked::before { background-color: var(--color-id); }
+.showContentSource:checked::before { background-color: var(--color-content-source); }
+.showStyleAppearance:checked::before { background-color: var(--color-style-appearance); }
+.showFormInput:checked::before { background-color: var(--color-form-input); }
+.showAccessibilityRoles:checked::before { background-color: var(--color-accessibility); }
+.showMetadataRelationships:checked::before { background-color: var(--color-metadata); }
+.showMultimedia:checked::before { background-color: var(--color-multimedia); }
+.showScriptingBehavior:checked::before { background-color: var(--color-scripting); }
+.showImages:checked::before { background-color: var(--color-image); }
+.showOthers:checked::before { background-color: var(--color-other); }
+.showInnerText:checked::before { background-color: var(--color-inner-text); }
 
 /* Super specific selectors for checked state - using border-color instead of full border property */
 .controls .control:has(.showTags:checked) { border-color: var(--color-tag) !important; }
