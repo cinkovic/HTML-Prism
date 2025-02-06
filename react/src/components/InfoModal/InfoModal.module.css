@@ -142,3 +142,13 @@
   font-weight: 550;
   color: #666;
 }
+
+.instructionsList {
+  padding-left: 20px !important;
+}
+
+.instructionsList li {
+  margin: 8px 0;
+  color: #444;
+  line-height: 1.2;
+}

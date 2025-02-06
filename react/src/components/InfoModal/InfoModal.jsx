@@ -23,7 +23,7 @@ export default function InfoModal({ onClose }) {
         <button className={styles.closeButton} onClick={onClose}>×</button>
 
         <h3>To use HTML Prism:</h3>
-        <ul>
+        <ul className={styles.instructionsList}>
           <li>Paste your HTML code into the input area</li>
           <li>Click "Visualize" to analyze your HTML</li>
           <li>Use the checkboxes to toggle different attribute categories</li>
