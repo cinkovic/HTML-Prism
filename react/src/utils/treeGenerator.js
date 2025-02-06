@@ -43,7 +43,11 @@ export function generateTreeHTML(node) {
     const tagName = node.tagName.toLowerCase();
     const hasChildren = node.children.length > 0;
     
-    const parts = [`<li><span class="collapsible${hasChildren ? '' : ' no-arrow'}">`];
+    // Special case for HTML tag - no collapsible class
+    const isHtmlTag = tagName === 'html';
+    const collapsibleClass = isHtmlTag ? '' : `collapsible${hasChildren ? '' : ' no-arrow'}`;
+    
+    const parts = [`<li><span class="${collapsibleClass}">`];
     
     // Add tag name
     parts.push(`<span class="tag">${tagName}</span>`);

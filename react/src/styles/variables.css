@@ -39,8 +39,8 @@
     --radius-md: 11px;    /* For containers and panels */
   
     /* Tree Indentation */
-    --tree-indent: 1.25rem;
-    --tree-line-indent: 1.5rem;
+    --tree-indent: 3px;      /* Even more compact */
+    --tree-line-indent: 15px; /* Keep the 3px difference */
 
     /* Custom Scrollbar */
     --scrollbar-width: 8px;
@@ -136,10 +136,6 @@
     --color-scripting: var(--dark-color-scripting);
     --color-image: var(--dark-color-image);
     --color-other: var(--dark-color-other);
-
-    /* Other measurements */
-    --tree-indent: 16px;
-    --tree-line-indent: 19px;
 
     /* Typography */
     --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

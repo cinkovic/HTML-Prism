@@ -103,8 +103,10 @@
   border-top: 1px solid var(--color-tree-line);
 }
 
-.treeView > ul > li:first-child::before {
-  top: 9px;
+/* Remove the line for HTML tag */
+.treeView > ul > li:first-child::before,
+.treeView > ul > li:first-child::after {
+  display: none;
 }
 
 /* Global syntax highlighting colors */
