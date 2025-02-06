@@ -24,14 +24,16 @@ export default function InfoModal({ onClose }) {
         
         <h2>HTML Attribute Categories</h2>
         <div className={styles.twoColumnLayout}>
-          {Object.entries(attributeGroups).map(([category, attributes]) => (
-            <div key={category} className={styles.category}>
-              <h4>{formatCategoryName(category)}</h4>
-              <div className={styles.attributeList}>
-                {attributes.join(', ')}
+          {Object.entries(attributeGroups)
+            .filter(([category]) => category !== 'other-attributes')
+            .map(([category, attributes]) => (
+              <div key={category} className={styles.category}>
+                <h4>{formatCategoryName(category)}</h4>
+                <div className={styles.attributeList}>
+                  {attributes.join(', ')}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>
