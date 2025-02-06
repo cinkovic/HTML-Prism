@@ -39,8 +39,8 @@
     --radius-md: 11px;    /* For containers and panels */
   
     /* Tree Indentation */
-    --tree-indent: 3px;      /* Even more compact */
-    --tree-line-indent: 15px; /* Keep the 3px difference */
+    --tree-indent: 10px;      /* Even more compact */
+    --tree-line-indent: 13px; /* Keep the 3px difference */
 
     /* Custom Scrollbar */
     --scrollbar-width: 8px;
