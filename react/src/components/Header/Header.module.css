@@ -11,7 +11,7 @@
   background-color: var(--color-primary);
   color: #ffffff;
   border: none;
-  padding: 0.6rem 1rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--button-radius);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
@@ -25,6 +25,7 @@
   box-shadow: var(--button-shadow-hover);
   transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
               background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--button-radius-hover);
 }
 
 .spacer {

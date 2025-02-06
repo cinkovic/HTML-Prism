@@ -172,7 +172,7 @@
     --ux-gap-container: 0.3rem;  /* For consistent spacing between major UI components */
 
     /* Button specific */
-    --button-radius: calc(var(--radius-md) + 2px);
+    --button-radius: var(--radius-md);
     --button-radius-hover: calc(var(--button-radius) + 2px);
 }
 
@@ -206,12 +206,12 @@
 
     /* Button shadows */
     --button-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
-    --button-shadow-hover: 0 0 12px rgba(0, 0, 0, 0.45);
+    --button-shadow-hover: 0 0 9px rgba(0, 0, 0, 0.55);
 }
 
 [data-theme="dark"] {
     --button-shadow: 0 0 8px rgba(255, 77, 77, 0.2);
-    --button-shadow-hover: 0 0 12px rgba(254, 58, 58, 0.55);
+    --button-shadow-hover: 0 0 10px rgba(254, 58, 58, 0.65);
 }
 
 /* Global Scrollbar Styles */
