@@ -28,8 +28,15 @@ export function VisibilityProvider({ children }) {
     }));
   };
 
+  const toggleAll = (show) => {
+    setVisibility(Object.keys(defaultVisibilityState).reduce((acc, key) => {
+      acc[key] = show;
+      return acc;
+    }, {}));
+  };
+
   return (
-    <VisibilityContext.Provider value={{ visibility, toggleVisibility }}>
+    <VisibilityContext.Provider value={{ visibility, toggleVisibility, toggleAll }}>
       {children}
     </VisibilityContext.Provider>
   );
