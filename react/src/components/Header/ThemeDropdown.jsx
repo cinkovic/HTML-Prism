@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import styles from './ThemeDropdown.module.css';
+import InfoModal from '../InfoModal/InfoModal';
 
 export default function ThemeDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('dark'); // Default theme
   const dropdownRef = useRef(null);
   
@@ -49,8 +51,16 @@ export default function ThemeDropdown() {
           >
             🌙 Dark Mode
           </button>
+          <div className={styles.divider}></div>
+          <button 
+            onClick={() => setShowInfo(true)}
+            className={styles.menuItem}
+          >
+            ℹ️ About HTML-Prism
+          </button>
         </div>
       )}
+      {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
     </div>
   );
 } 
