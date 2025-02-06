@@ -63,7 +63,7 @@
 }
 
 .divider {
-  height: 1px;
+  height: 0.75px;
   background-color: var(--color-border);
   margin: 0.5rem 0;
 }

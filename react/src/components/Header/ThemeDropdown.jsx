@@ -17,6 +17,11 @@ export default function ThemeDropdown() {
     setIsOpen(false);
   };
 
+  const handleToggleAll = (show) => {
+    toggleAll(show);
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     // Load saved theme
     const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -56,11 +61,11 @@ export default function ThemeDropdown() {
             ⚫ Dark Mode
           </button>
           <div className={styles.divider}></div>
-          <button onClick={() => toggleAll(true)} className={styles.menuItem}>
+          <button onClick={() => handleToggleAll(true)} className={styles.menuItem}>
             {/* ✓ Show All Filters */}
             ◉ Show All Filters
           </button>
-          <button onClick={() => toggleAll(false)} className={styles.menuItem}>
+          <button onClick={() => handleToggleAll(false)} className={styles.menuItem}>
             {/* ✕ Hide All Filters */}
             ◌ Hide All Filters
           </button>
