@@ -83,7 +83,7 @@ export function generateTreeHTML(node) {
       if (content) {
         // Use scripting-behavior for script content and style-appearance for style content
         const contentClass = tagName === 'script' ? 'scripting-behavior' : 'style-appearance';
-        parts.push(` <span class="${contentClass}">{${escapeHTML(content.substring(0, 100))}${content.length > 100 ? '...' : ''}}</span>`);
+        parts.push(` <span class="${contentClass}">{${escapeHTML(content)}}</span>`);
       }
     } else if (!shouldSkipTextContent(node)) {
       const textNodes = Array.from(node.childNodes)
