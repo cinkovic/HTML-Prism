@@ -82,18 +82,18 @@
     --dark-scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
 
     /* Syntax Colors - Light Mode */
-    --light-color-tag: rgb(0, 17, 251);
+    --light-color-tag: rgb(38, 0, 255);
     --light-color-class: rgb(40, 197, 1);
     --light-color-id: rgb(249, 1, 59);
-    --light-color-content-source: #00aaff;
+    --light-color-content-source: #0091ff;
     --light-color-style-appearance: #fe01fa;
-    --light-color-form-input: #ff8000;
-    --light-color-accessibility: #00ebd0;
-    --light-color-metadata: #B8860B;
-    --light-color-multimedia: #a5be17;
-    --light-color-scripting: #186cb1;
-    --light-color-image: #20B2AA;
-    --light-color-other: #730871;
+    --light-color-form-input: #ffa200;
+    --light-color-accessibility: #04e3be;
+    --light-color-metadata: #9d7101;
+    --light-color-multimedia: #eb00bc;
+    --light-color-scripting: #6cb118;
+    --light-color-image: #0297b5;
+    --light-color-other: #730845;
 
     /* Syntax Colors - Dark Mode (vibrant set) */
     --dark-color-tag: #007bff;         /* Cyan */
@@ -107,7 +107,7 @@
     --dark-color-multimedia: #757900;        /* Lime */
     --dark-color-scripting: #9225ff;         /* Sky Blue */
     --dark-color-image: #1AFFD5;            /* Aqua */
-    --dark-color-other: #FF66FF;            /* Light Pink */
+    --dark-color-other: #b8698e;            /* Light Pink */
 
     /* Default to dark theme */
     --color-primary: var(--dark-color-primary);

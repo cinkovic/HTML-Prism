@@ -20,7 +20,7 @@
   align-items: center;
   gap: 0.25rem;
   font-size: var(--control-font-size);
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.75rem; /* Increase left padding */
   border-radius: var(--radius-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
@@ -40,10 +40,16 @@
   border: 1px solid var(--color-border);
   border-radius: 50%;
   margin-right: 5px;
+  margin-left: -4px; /* Move toggles left */
   position: relative;
   cursor: pointer;
   background-color: var(--color-surface);
   flex-shrink: 0; /* Prevent checkbox from shrinking */
+  padding: 0; /* Remove any padding */
+  box-sizing: border-box; /* Include border in width/height calculation */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .control input[type="checkbox"]:checked {
@@ -55,16 +61,19 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); /* Center the dot */
   width: 6px;
   height: 6px;
   border-radius: 50%;
   display: none;
   margin: 0; /* Remove any default margins */
+  box-sizing: border-box; /* Consistent box sizing */
 }
 
 .control input[type="checkbox"]:checked::after {
   display: block;
+  width: 6px; /* Fixed width */
+  height: 6px; /* Fixed height */
 }
 
 /* Just the colored dots */
