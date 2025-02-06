@@ -47,9 +47,9 @@
     --scrollbar-track: var(--color-surface);
     --scrollbar-thumb: rgba(0, 0, 0, 0.2);
     --scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
-    --scrollbar-margin: 4px;  /* New variable for scrollbar spacing */
+    --scrollbar-margin: 6px;  /* Increased from 4px to 6px */
     --scrollbar-thumb-radius: calc(var(--scrollbar-width) / 2);
-    --scrollbar-border-width: 2px;  /* New variable for the thumb border */
+    --scrollbar-border-width: 2px;
 
     /* Light Theme Colors */
     --light-color-primary: #333333;

@@ -22,7 +22,7 @@ export default function InfoModal({ onClose }) {
       <div className={styles.modalContent} onClick={e => e.stopPropagation()} ref={modalRef}>
         <button className={styles.closeButton} onClick={onClose}>×</button>
 
-        <h3>To use HTML Prism:</h3>
+        <h3 className={styles.modalTitle}>To use HTML Prism:</h3>
         <ul className={styles.instructionsList}>
           <li>Paste your HTML code into the input area</li>
           <li>Click "Visualize" to analyze your HTML</li>
@@ -31,14 +31,13 @@ export default function InfoModal({ onClose }) {
           <li>Toggle between light and dark themes using the dropdown menu</li>
         </ul>
 
-        <br />
-        <h3>HTML Attribute Categories:</h3>
+        <h3 className={styles.modalTitle}>HTML Attribute Categories:</h3>
         <div className={styles.twoColumnLayout}>
           {Object.entries(attributeGroups)
             .filter(([category]) => category !== 'other-attributes')
             .map(([category, attributes]) => (
               <div key={category} className={styles.category}>
-                <h4>{formatCategoryName(category)}</h4>
+                <h3 className={styles.categoryTitle}>{formatCategoryName(category)}</h3>
                 <div className={styles.attributeList}>
                   {attributes.join(', ')}
                 </div>
@@ -46,18 +45,25 @@ export default function InfoModal({ onClose }) {
             ))}
         </div>
 
-        <br />
-        <h3>Contributions are welcome.</h3>
-        <p>Please feel free to submit a Pull Request: <a href="https://github.com/cinkovic/HTML-Prism" target="_blank" rel="noopener" className={styles.githubLink}>https://github.com/cinkovic/HTML-Prism</a></p>
+        <h3 className={styles.modalTitle}>Contributions are welcome.</h3>
+        <p className={styles.modalText}>
+          Please feel free to submit a Pull Request:{' '}
+          <a 
+            href="https://github.com/cinkovic/HTML-Prism" 
+            target="_blank" 
+            rel="noopener" 
+            className={styles.githubLink}
+          >
+            https://github.com/cinkovic/HTML-Prism
+          </a>
+        </p>
 
-        <br />
-        <h3>License:</h3>
-        <p>This project is licensed under the MIT License.</p>
-        <p>Vanilla JavaScript, script as well as React branch are available on GitHub via above link.</p>
-        
-        <br />
+        <h3 className={styles.modalTitle}>License:</h3>
+        <p className={styles.modalText}>This project is licensed under the MIT License.</p>
+        <p className={styles.modalText}>
+          Source code for React app and vanilla JavaScript implementation are available as GitHub branches in above repository.
+        </p>
       </div>
-
     </div>
   );
 } 

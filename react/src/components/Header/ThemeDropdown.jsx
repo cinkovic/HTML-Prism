@@ -46,6 +46,19 @@ export default function ThemeDropdown() {
       </button>
       {isOpen && (
         <div className={styles.menu}>
+          
+          <button onClick={() => handleToggleAll(true)} className={styles.menuItem}>
+            {/* ✓ Show All Filters */}
+            ◉ Show All Filters
+          </button>
+
+          <button onClick={() => handleToggleAll(false)} className={styles.menuItem}>
+            {/* ✕ Hide All Filters */}
+            ◌ Hide All Filters
+          </button>
+
+          <div className={styles.divider}></div>
+
           <button 
             onClick={() => toggleTheme('light')}
             data-active={currentTheme === 'light'}
@@ -53,6 +66,7 @@ export default function ThemeDropdown() {
             {/* ☀️ Light Mode */}
             ⚪ Light Mode
           </button>
+
           <button 
             onClick={() => toggleTheme('dark')}
             data-active={currentTheme === 'dark'}
@@ -60,16 +74,9 @@ export default function ThemeDropdown() {
             {/* 🌙 Dark Mode */}
             ⚫ Dark Mode
           </button>
+
           <div className={styles.divider}></div>
-          <button onClick={() => handleToggleAll(true)} className={styles.menuItem}>
-            {/* ✓ Show All Filters */}
-            ◉ Show All Filters
-          </button>
-          <button onClick={() => handleToggleAll(false)} className={styles.menuItem}>
-            {/* ✕ Hide All Filters */}
-            ◌ Hide All Filters
-          </button>
-          <div className={styles.divider}></div>
+          
           <button 
             onClick={() => setShowInfo(true)}
             className={styles.menuItem}
@@ -77,6 +84,7 @@ export default function ThemeDropdown() {
             {/* ℹ️ About HTML-Prism */}
             ⓘ About HTML-Prism
           </button>
+
         </div>
       )}
       {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
