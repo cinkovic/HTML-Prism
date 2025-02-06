@@ -237,29 +237,13 @@ export const attributeGroups = {
   'other-attributes': []
 };
 
-// Form input types
-export const formInputTypes = [
-  'text', 'password', 'checkbox', 'radio', 'submit', 'reset', 'file', 
-  'hidden', 'image', 'button', 'email', 'url', 'number', 'range', 
-  'search', 'tel', 'date', 'time', 'datetime-local', 'month', 'week', 
-  'color'
-];
-
-// Elements where 'type' indicates content type
+// Keep contentTypeElements since it's used in parser.js
 export const contentTypeElements = [
   'script', 'style', 'link', 'source', 'object', 'embed', 'input', 
   'button'
 ];
 
-// Special handling for script and style tags
-export const scriptAttributes = [
-  'type', 'src', 'async', 'defer', 'crossorigin', 'integrity',
-  'nomodule', 'nonce', 'referrerpolicy'
-];
-
-export const styleAttributes = ['media', 'type'];
-
-// Visibility configuration
+// Keep VISIBILITY_CONFIG since it's used in Controls.jsx
 export const VISIBILITY_CONFIG = [
   { id: 'showTags', label: 'Tags', class: 'tag' },
   { id: 'showClasses', label: 'Classes', class: 'class' },

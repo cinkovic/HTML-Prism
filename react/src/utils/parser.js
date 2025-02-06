@@ -1,4 +1,4 @@
-import { attributeGroups, scriptAttributes, styleAttributes, formInputTypes, contentTypeElements, VISIBILITY_CONFIG } from './constants';
+import { attributeGroups } from './constants';
 
 export function parseHTML(htmlString) {
   try {
@@ -35,9 +35,6 @@ export function getAttributeGroup(attrName, tagName) {
   if (name === 'type') {
     if (tag === 'input' || tag === 'button') {
       return 'form-input';
-    }
-    if (contentTypeElements.includes(tag)) {
-      return 'content-source';
     }
   }
   

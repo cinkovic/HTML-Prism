@@ -31,8 +31,8 @@ const isScriptOrStyle = (node) => {
 };
 
 const shouldSkipTextContent = (node) => {
-  return isScriptOrStyle(node) || 
-         node.tagName.toLowerCase() === 'head' ||
+  // Remove script and style from this check, only skip meta and head content
+  return node.tagName.toLowerCase() === 'head' ||
          node.tagName.toLowerCase() === 'meta';
 };
 
@@ -43,7 +43,6 @@ export function generateTreeHTML(node) {
     const tagName = node.tagName.toLowerCase();
     const hasChildren = node.children.length > 0;
     
-    // Special case for HTML tag - no collapsible class
     const isHtmlTag = tagName === 'html';
     const collapsibleClass = isHtmlTag ? '' : `collapsible${hasChildren ? '' : ' no-arrow'}`;
     
@@ -70,7 +69,6 @@ export function generateTreeHTML(node) {
     for (const attr of node.attributes) {
       if (attr.name !== 'class' && attr.name !== 'id') {
         const group = getAttributeGroup(attr.name, tagName);
-        // Keep the hyphen in the class name to match CSS
         if (!processedAttrs.has(attr.name)) {
           processedAttrs.set(attr.name, 
             `<span class="${group}">[${attr.name}="${escapeHTML(attr.value)}"]</span>`);
@@ -79,8 +77,15 @@ export function generateTreeHTML(node) {
     }
     parts.push(...processedAttrs.values());
 
-    // Handle text content
-    if (!shouldSkipTextContent(node)) {
+    // Handle text content with special case for script and style
+    if (isScriptOrStyle(node)) {
+      const content = node.textContent.trim();
+      if (content) {
+        // Use scripting-behavior for script content and style-appearance for style content
+        const contentClass = tagName === 'script' ? 'scripting-behavior' : 'style-appearance';
+        parts.push(` <span class="${contentClass}">{${escapeHTML(content.substring(0, 100))}${content.length > 100 ? '...' : ''}}</span>`);
+      }
+    } else if (!shouldSkipTextContent(node)) {
       const textNodes = Array.from(node.childNodes)
         .filter(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim())
         .map(node => node.textContent.trim());
