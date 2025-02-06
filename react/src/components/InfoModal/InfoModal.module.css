@@ -44,11 +44,41 @@
   background-color: var(--color-background);
 }
 
+.modalContent h3 {
+  color: var(--color-primary);
+  margin: 1.5rem 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.modalContent h3:first-of-type {
+  margin-top: 0;
+}
+
+.modalContent ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modalContent li {
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.modalContent li::before {
+  content: "•";
+  color: var(--color-primary);
+  position: absolute;
+  left: 0.5rem;
+}
+
 .twoColumnLayout {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  margin-top: 1rem;
+  margin: 1rem 0;
 }
 
 .category {
@@ -73,6 +103,29 @@
   opacity: 0.9;
 }
 
+.modalContent a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.modalContent a:hover {
+  opacity: 0.8;
+}
+
+.modalContent p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Add subtle separator between sections */
+.modalContent > h3:not(:first-of-type) {
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
 @media (max-width: 768px) {
   .twoColumnLayout {
     grid-template-columns: 1fr;
@@ -83,4 +136,9 @@
     margin: 1rem;
     width: auto;
   }
+}
+
+.githubLink {
+  font-weight: 550;
+  color: #666;
 }
