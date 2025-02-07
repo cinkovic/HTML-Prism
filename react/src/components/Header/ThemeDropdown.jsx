@@ -57,6 +57,8 @@ export default function ThemeDropdown() {
             {visibility.showInputControls ? "Hide Input Panel" : "Show Input Panel"}
           </button>
 
+          <div className={styles.divider}></div>
+
           <button 
             onClick={() => handleToggleAll(true)} 
             className={styles.menuItem}
