@@ -237,13 +237,11 @@ export const attributeGroups = {
   'other-attributes': []
 };
 
-// Keep contentTypeElements since it's used in parser.js
 export const contentTypeElements = [
   'script', 'style', 'link', 'source', 'object', 'embed', 'input', 
   'button'
 ];
 
-// Keep VISIBILITY_CONFIG since it's used in Controls.jsx
 export const VISIBILITY_CONFIG = [
   { id: 'showTags', label: 'Tags', class: 'tag' },
   { id: 'showClasses', label: 'Classes', class: 'class' },
@@ -258,4 +256,4 @@ export const VISIBILITY_CONFIG = [
   { id: 'showMultimedia', label: 'Multimedia', class: 'multimedia' },
   { id: 'showOthers', label: 'Others', class: 'other-attributes' },
   { id: 'showInnerText', label: 'Inner Text', class: 'inner-content' }
-]; 
+];
