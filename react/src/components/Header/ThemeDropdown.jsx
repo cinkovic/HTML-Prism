@@ -9,7 +9,7 @@ export default function ThemeDropdown() {
   const [showInfo, setShowInfo] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('dark'); // Default theme
   const dropdownRef = useRef(null);
-  const { toggleAll } = useVisibility();
+  const { toggleAll, toggleInputControls, visibility } = useVisibility();
   
   // Apply theme and persist selection to localStorage
   const toggleTheme = (theme) => {
@@ -49,7 +49,14 @@ export default function ThemeDropdown() {
       </button>
       {isOpen && (
         <div className={styles.menu}>
-          
+          <button 
+            onClick={toggleInputControls} 
+            className={styles.menuItem}
+            data-icon={visibility.showInputControls ? "▣" : "□"}
+          >
+            {visibility.showInputControls ? "Hide Input Panel" : "Show Input Panel"}
+          </button>
+
           <button 
             onClick={() => handleToggleAll(true)} 
             className={styles.menuItem}

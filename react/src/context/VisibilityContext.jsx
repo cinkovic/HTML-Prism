@@ -15,6 +15,7 @@ const defaultVisibilityState = {
   showMultimedia: true,
   showOthers: true,
   showInnerText: true,
+  showInputControls: true,
 };
 
 export const VisibilityContext = createContext();
@@ -38,8 +39,16 @@ export function VisibilityProvider({ children }) {
     }, {}));
   };
 
+  // Add new helper function for UI toggle
+  const toggleInputControls = () => {
+    setVisibility(prev => ({
+      ...prev,
+      showInputControls: !prev.showInputControls
+    }));
+  };
+
   return (
-    <VisibilityContext.Provider value={{ visibility, toggleVisibility, toggleAll }}>
+    <VisibilityContext.Provider value={{ visibility, toggleVisibility, toggleAll, toggleInputControls }}>
       {children}
     </VisibilityContext.Provider>
   );
