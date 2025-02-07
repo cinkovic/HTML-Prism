@@ -4,12 +4,13 @@ tmp/
 node_modules/
 
 # Ignore React development files but keep the build
-react/src/
+react/
 react/public/
 react/node_modules/
 react/.env*
 react/package.json
 react/package-lock.json
+
 react/vite.config.js
 react/*.log
 
