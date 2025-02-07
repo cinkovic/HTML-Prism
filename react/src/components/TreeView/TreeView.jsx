@@ -32,7 +32,20 @@ function TreeView({ htmlContent }) {
   // Cache tree HTML generation result until htmlContent changes
   const treeHTML = useMemo(() => generateTree(htmlContent), [htmlContent, generateTree]);
 
-  // Initialize tree view with generated HTML and add collapsible functionality
+  // Update visibility of elements based on current visibility state
+  const updateVisibility = useCallback(() => {
+    if (!outputRef.current) return;
+
+    // Update visibility for each category
+    VISIBILITY_CONFIG.forEach(({ id, class: className }) => {
+      const elements = outputRef.current.querySelectorAll(`.${className}`);
+      elements.forEach(element => {
+        element.style.display = visibility[id] ? '' : 'none';
+      });
+    });
+  }, [visibility]);
+
+  // Initialize tree view and set up collapsible functionality
   useEffect(() => {
     if (outputRef.current) {
       outputRef.current.innerHTML = `<ul>${treeHTML}</ul>`;
@@ -40,31 +53,10 @@ function TreeView({ htmlContent }) {
     }
   }, [treeHTML]);
 
-  // Optimize visibility updates using requestAnimationFrame for DOM writes
-  const updateVisibility = useCallback(() => {
-    if (!outputRef.current) return;
-    
-    // Batch DOM reads to prevent layout thrashing
-    const updates = VISIBILITY_CONFIG.map(({ id, class: className }) => {
-      const elements = outputRef.current.querySelectorAll(`.${className}`);
-      return { elements, isVisible: visibility[id] };
-    });
-
-    // Batch DOM writes in next animation frame
-    requestAnimationFrame(() => {
-      updates.forEach(({ elements, isVisible }) => {
-        elements.forEach(element => {
-          element.style.display = isVisible ? '' : 'none';
-        });
-      });
-    });
-  }, [visibility]);
-
-  // Debounce visibility updates to prevent excessive DOM manipulation
-  const debouncedUpdate = useMemo(
-    () => debounce(updateVisibility, 16),
-    [updateVisibility]
-  );
+  // Update visibility whenever visibility state changes
+  useEffect(() => {
+    updateVisibility();
+  }, [visibility, updateVisibility]);
 
   // Add click handlers for collapsible tree nodes
   const addCollapsibleFunctionality = () => {
