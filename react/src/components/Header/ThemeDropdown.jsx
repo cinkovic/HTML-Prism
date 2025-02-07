@@ -35,6 +35,10 @@ export default function ThemeDropdown() {
     try {
       const text = await navigator.clipboard.readText();
       updateHtmlContent(text);
+      // Show controls if they're hidden
+      if (!visibility.showInputControls) {
+        toggleInputControls();
+      }
       setIsOpen(false);
     } catch (err) {
       console.error('Failed to read clipboard:', err);
@@ -80,7 +84,7 @@ export default function ThemeDropdown() {
             className={styles.menuItem}
             data-icon={visibility.showInputControls ? "▣" : "□"}
           >
-            {visibility.showInputControls ? "Hide Input Panel" : "Show Input Panel"}
+            {visibility.showInputControls ? "Hide Controls" : "Show Controls"}
           </button>
 
           <div className={styles.divider}></div>
