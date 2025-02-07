@@ -1,9 +1,13 @@
 import { attributeGroups } from './constants';
 
+// Cache attribute group results to improve performance
+const attributeGroupCache = new Map();
+
 export function parseHTML(htmlString) {
   try {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, 'text/html');
+    // Check for parser errors in the resulting document
     if (doc.body.firstChild && doc.body.firstChild.nodeName === "parsererror") {
       throw new Error("Parser error");
     }
@@ -14,10 +18,8 @@ export function parseHTML(htmlString) {
   }
 }
 
-// Cache attribute group results
-const attributeGroupCache = new Map();
-
 export function getAttributeGroup(attrName, tagName) {
+  // Use cache to avoid redundant group lookups
   const cacheKey = `${attrName}-${tagName}`;
   if (attributeGroupCache.has(cacheKey)) {
     return attributeGroupCache.get(cacheKey);
@@ -26,33 +28,32 @@ export function getAttributeGroup(attrName, tagName) {
   const name = attrName.toLowerCase();
   const tag = tagName.toLowerCase();
   
-  // Handle prefixed attributes first
+  // Handle special attribute prefixes that determine their group
   if (name.startsWith('aria-')) return 'accessibility-roles';
   if (name.startsWith('on')) return 'scripting-behavior';
   if (name.startsWith('data-')) return 'metadata-relationships';
   
-  // Special handling for 'type' attribute
+  // Special case for 'type' attribute based on element context
   if (name === 'type') {
     if (tag === 'input' || tag === 'button') {
       return 'form-input';
     }
   }
   
-  // Check regular attribute groups
+  // Search through attribute groups for matching attributes
   for (const [group, attrs] of Object.entries(attributeGroups)) {
     if (attrs.includes(name)) {
-      let result = group;
-      attributeGroupCache.set(cacheKey, result);
-      return result;
+      attributeGroupCache.set(cacheKey, group);
+      return group;
     }
   }
   
-  let result = 'other-attributes';
-  attributeGroupCache.set(cacheKey, result);
-  return result;
+  // Default to other-attributes if no specific group is found
+  attributeGroupCache.set(cacheKey, 'other-attributes');
+  return 'other-attributes';
 }
 
-// Clear cache when it gets too large
+// Prevent memory leaks by clearing cache when it grows too large
 if (attributeGroupCache.size > 1000) {
   attributeGroupCache.clear();
 } 

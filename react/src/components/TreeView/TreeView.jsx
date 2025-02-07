@@ -5,7 +5,7 @@ import { generateTreeHTML } from '../../utils/treeGenerator';
 import styles from './TreeView.module.css';
 import { VISIBILITY_CONFIG } from '../../utils/constants';
 
-// Simple debounce implementation
+// Custom debounce implementation to limit the frequency of function calls
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -22,15 +22,17 @@ function TreeView({ htmlContent }) {
   const outputRef = useRef(null);
   const { visibility } = useVisibility();
 
-  // Memoize tree generation
+  // Memoize tree generation to prevent unnecessary recalculations
   const generateTree = useCallback((content) => {
     if (!content) return '';
     const parsedDoc = parseHTML(content);
     return generateTreeHTML(parsedDoc.documentElement);
   }, []);
 
+  // Cache tree HTML generation result until htmlContent changes
   const treeHTML = useMemo(() => generateTree(htmlContent), [htmlContent, generateTree]);
 
+  // Initialize tree view with generated HTML and add collapsible functionality
   useEffect(() => {
     if (outputRef.current) {
       outputRef.current.innerHTML = `<ul>${treeHTML}</ul>`;
@@ -38,17 +40,17 @@ function TreeView({ htmlContent }) {
     }
   }, [treeHTML]);
 
-  // Optimize visibility updates
+  // Optimize visibility updates using requestAnimationFrame for DOM writes
   const updateVisibility = useCallback(() => {
     if (!outputRef.current) return;
     
-    // Batch DOM reads
+    // Batch DOM reads to prevent layout thrashing
     const updates = VISIBILITY_CONFIG.map(({ id, class: className }) => {
       const elements = outputRef.current.querySelectorAll(`.${className}`);
       return { elements, isVisible: visibility[id] };
     });
 
-    // Batch DOM writes
+    // Batch DOM writes in next animation frame
     requestAnimationFrame(() => {
       updates.forEach(({ elements, isVisible }) => {
         elements.forEach(element => {
@@ -58,16 +60,13 @@ function TreeView({ htmlContent }) {
     });
   }, [visibility]);
 
-  // Debounced visibility update
+  // Debounce visibility updates to prevent excessive DOM manipulation
   const debouncedUpdate = useMemo(
     () => debounce(updateVisibility, 16),
     [updateVisibility]
   );
 
-  useEffect(() => {
-    debouncedUpdate();
-  }, [debouncedUpdate]);
-
+  // Add click handlers for collapsible tree nodes
   const addCollapsibleFunctionality = () => {
     if (!outputRef.current) return;
     
@@ -83,6 +82,7 @@ function TreeView({ htmlContent }) {
     };
   };
 
+  // Toggle collapsed state of tree nodes
   const handleCollapse = (e) => {
     e.stopPropagation();
     const parentLi = e.target.closest('li');

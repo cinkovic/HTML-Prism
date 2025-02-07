@@ -4,12 +4,14 @@ import InfoModal from '../InfoModal/InfoModal';
 import { useVisibility } from '../../context/VisibilityContext';
 
 export default function ThemeDropdown() {
+  // State for dropdown visibility and theme selection
   const [isOpen, setIsOpen] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('dark'); // Default theme
   const dropdownRef = useRef(null);
   const { toggleAll } = useVisibility();
   
+  // Apply theme and persist selection to localStorage
   const toggleTheme = (theme) => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -17,13 +19,14 @@ export default function ThemeDropdown() {
     setIsOpen(false);
   };
 
+  // Toggle all visibility filters and close dropdown
   const handleToggleAll = (show) => {
     toggleAll(show);
     setIsOpen(false);
   };
 
   useEffect(() => {
-    // Load saved theme
+    // Load saved theme preference from localStorage
     const savedTheme = localStorage.getItem('theme') || 'dark';
     setCurrentTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);

@@ -5,6 +5,7 @@ import { attributeGroups } from '../../utils/constants';
 export default function InfoModal({ onClose }) {
   const modalRef = useRef(null);
 
+  // Handle ESC key press to close modal
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape') onClose();
@@ -14,14 +15,18 @@ export default function InfoModal({ onClose }) {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [onClose]);
 
+  // Format category names from kebab-case to Title Case
   const formatCategoryName = (name) => 
     name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
+      {/* Stop event propagation to prevent closing when clicking modal content */}
       <div className={styles.modalContent} onClick={e => e.stopPropagation()} ref={modalRef}>
+        {/* Modal content structure */}
         <button className={styles.closeButton} onClick={onClose}>×</button>
 
+        {/* Instructions section */}
         <h3 className={styles.modalTitle}>To use HTML Prism:</h3>
         <ul className={styles.instructionsList}>
           <li>Paste your HTML code into the input area</li>
@@ -31,8 +36,10 @@ export default function InfoModal({ onClose }) {
           <li>Toggle between light and dark themes using the dropdown menu</li>
         </ul>
 
+        {/* Attribute categories section */}
         <h3 className={styles.modalTitle}>HTML Attribute Categories:</h3>
         <div className={styles.twoColumnLayout}>
+          {/* Filter out 'other-attributes' category and render remaining categories */}
           {Object.entries(attributeGroups)
             .filter(([category]) => category !== 'other-attributes')
             .map(([category, attributes]) => (
@@ -45,6 +52,7 @@ export default function InfoModal({ onClose }) {
             ))}
         </div>
 
+        {/* Footer information */}
         <h3 className={styles.modalTitle}>Contributions are welcome.</h3>
         <p className={styles.modalText}>
           Please feel free to submit a Pull Request:{' '}

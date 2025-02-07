@@ -5,6 +5,8 @@ import { SAMPLE_HTML } from '../../utils/constants';
 function CodeInput({ value, onChange }) {
   const textareaRef = useRef(null);
 
+  // Initialize with sample HTML content if no value is provided
+  // useEffect ensures this only happens once on component mount
   useEffect(() => {
     if (textareaRef.current && !value) {
       onChange(SAMPLE_HTML);

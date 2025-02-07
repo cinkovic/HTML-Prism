@@ -4,6 +4,7 @@ import ThemeDropdown from './ThemeDropdown';
 function Header({ onVisualize }) {
   return (
     <div className={styles.header}>
+      {/* Trigger visualization of current HTML input */}
       <button 
         onClick={onVisualize} 
         className={styles.button}
@@ -12,6 +13,7 @@ function Header({ onVisualize }) {
         Visualize
       </button>
       <div className={styles.spacer} />
+      {/* Theme selection and app information dropdown */}
       <ThemeDropdown />
     </div>
   );

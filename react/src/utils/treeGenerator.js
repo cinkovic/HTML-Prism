@@ -1,8 +1,9 @@
 import { getAttributeGroup } from './parser';
 
-// Cache escaped HTML strings
+// Cache for storing escaped HTML strings to improve performance
 const escapeCache = new Map();
 
+// Safely escapes HTML special characters with caching
 const escapeHTML = (str) => {
   if (escapeCache.has(str)) {
     return escapeCache.get(str);
@@ -25,11 +26,13 @@ if (escapeCache.size > 1000) {
   escapeCache.clear();
 }
 
+// Determines if node content should be treated as raw text (script/style)
 const isScriptOrStyle = (node) => {
   const tag = node.tagName.toLowerCase();
   return tag === 'script' || tag === 'style';
 };
 
+// Identifies nodes whose text content should be omitted from the tree view
 const shouldSkipTextContent = (node) => {
   // Remove script and style from this check, only skip meta and head content
   return node.tagName.toLowerCase() === 'head' ||
@@ -40,14 +43,19 @@ export function generateTreeHTML(node) {
   if (!node || node.nodeType !== Node.ELEMENT_NODE) return '';
 
   try {
+    // Build HTML tree structure with collapsible functionality
+    // Special handling for HTML tag as root element
     const tagName = node.tagName.toLowerCase();
     const hasChildren = node.children.length > 0;
     
     const isHtmlTag = tagName === 'html';
     const collapsibleClass = isHtmlTag ? '' : `collapsible${hasChildren ? '' : ' no-arrow'}`;
     
+    // Array-based string concatenation for better performance
     const parts = [`<li><span class="${collapsibleClass}">`];
     
+    // Process node attributes in specific order: tag, classes, ID, other attributes
+    // Each attribute type gets its own styling class for visibility toggling
     // Add tag name
     parts.push(`<span class="tag">${tagName}</span>`);
 
@@ -77,7 +85,7 @@ export function generateTreeHTML(node) {
     }
     parts.push(...processedAttrs.values());
 
-    // Handle text content with special case for script and style
+    // Special handling for script/style content and text nodes
     if (isScriptOrStyle(node)) {
       const content = node.textContent.trim();
       if (content) {
@@ -97,7 +105,7 @@ export function generateTreeHTML(node) {
 
     parts.push('</span>');
 
-    // Handle children
+    // Recursively process child nodes
     if (hasChildren) {
       parts.push('<ul>');
       for (const child of node.children) {

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 
+// Default visibility state for all attribute categories
 const defaultVisibilityState = {
   showTags: true,
   showClasses: true,
@@ -21,6 +22,7 @@ export const VisibilityContext = createContext();
 export function VisibilityProvider({ children }) {
   const [visibility, setVisibility] = useState(defaultVisibilityState);
 
+  // Toggles visibility for a single category
   const toggleVisibility = (key) => {
     setVisibility(prev => ({
       ...prev,
@@ -28,6 +30,7 @@ export function VisibilityProvider({ children }) {
     }));
   };
 
+  // Bulk updates all visibility flags to either show or hide
   const toggleAll = (show) => {
     setVisibility(Object.keys(defaultVisibilityState).reduce((acc, key) => {
       acc[key] = show;
