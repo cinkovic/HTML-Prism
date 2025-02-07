@@ -148,3 +148,36 @@
 [data-theme="dark"] .showImages:checked { border-color: var(--dark-color-image); }
 [data-theme="dark"] .showOthers:checked { border-color: var(--dark-color-other); }
 [data-theme="dark"] .showInnerText:checked { border-color: var(--dark-color-inner-text); }
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .controls {
+    padding: 0.15rem;
+    gap: 0.15rem;
+  }
+
+  .control {
+    padding: 0.15rem 0.35rem 0.15rem 0.5rem;
+    font-size: calc(var(--control-font-size) + 1px);
+  }
+
+  .control input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+
+  /* Increase touch target size */
+  .control input[type="checkbox"]::before {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 380px) {
+  .controls {
+    padding: 0.1rem;
+    gap: 0.1rem;
+  }
+}

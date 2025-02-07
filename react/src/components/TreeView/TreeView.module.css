@@ -190,3 +190,43 @@
 .treeView::-webkit-scrollbar-corner {
   background-color: transparent;
 }
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .treeView {
+    padding: 0.25rem;
+    padding-left: 0;
+    font-size: calc(var(--code-font-size) + 1px);
+  }
+
+  /* Adjust tree indentation for mobile */
+  .treeView ul {
+    padding-left: calc(var(--tree-indent) * 0.8);
+  }
+
+  .treeView li {
+    padding-left: calc(var(--tree-line-indent) * 0.8);
+  }
+
+  /* Increase touch target size for collapsible arrows */
+  :global(.collapsible::before) {
+    width: 12px;
+    height: 12px;
+    font-size: 10px;
+    padding: 6px;
+    left: -12px;
+  }
+
+  :global(.collapsed > .collapsible::before) {
+    font-size: 12px;
+    left: -10px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 380px) {
+  .treeView {
+    padding: 0.15rem;
+    padding-left: 0;
+  }
+}

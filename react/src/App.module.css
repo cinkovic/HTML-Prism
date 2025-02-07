@@ -24,6 +24,7 @@
   resize: vertical;
   min-height: 100px;
   height: 200px;
+  max-height: 40vh;
 }
 
 .rightPanel {
@@ -38,7 +39,28 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0.25rem;
+    gap: 0.25rem;
+  }
+
   .leftPanel {
-    min-height: 120px;
+    gap: 0.25rem;
+  }
+
+  .leftPanel :global(.input) {
+    height: 150px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .container {
+    padding: 0.15rem;
+  }
+
+  .leftPanel :global(.input) {
+    height: 120px;
+    min-height: 80px;
   }
 }

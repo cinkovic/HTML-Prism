@@ -174,6 +174,14 @@
     /* Button specific */
     --button-radius: var(--radius-md);
     --button-radius-hover: calc(var(--button-radius) + 2px);
+
+    /* Add responsive spacing variables */
+    --spacing-mobile: 0.25rem;
+    --spacing-mobile-sm: 0.15rem;
+    
+    /* Add touch-friendly sizes */
+    --touch-target-size: 44px;
+    --touch-target-size-sm: 36px;
 }
 
 [data-theme="light"] {
@@ -249,4 +257,32 @@ input, textarea {
     background-color: var(--color-surface);
     color: var(--color-inner-text);
     border-color: var(--color-border);
+}
+
+@media (max-width: 768px) {
+  :root {
+    /* Adjust font sizes for mobile */
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-base: 14px;
+    --font-size-lg: 16px;
+    
+    /* Adjust spacing for mobile */
+    --tree-indent: 8px;
+    --tree-line-indent: 11px;
+    
+    /* Adjust scrollbar for touch */
+    --scrollbar-width: 10px;
+    --scrollbar-margin: 4px;
+  }
+}
+
+@media (max-width: 380px) {
+  :root {
+    /* Further adjustments for very small screens */
+    --font-size-xs: 10px;
+    --font-size-sm: 11px;
+    --tree-indent: 6px;
+    --tree-line-indent: 9px;
+  }
 }
