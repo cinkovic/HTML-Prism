@@ -51,11 +51,14 @@
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
 }
 
-.menu button[data-active="true"] {
-  background-color: color-mix(in srgb, var(--color-background) 50%, var(--color-surface));
+/* Create fixed-width space for icons */
+.menu button::before {
+  content: attr(data-icon);
+  width: 1.5rem;
+  display: inline-block;
+  text-align: center;
 }
 
 .menu button:hover:not([data-active="true"]) {
@@ -83,4 +86,8 @@
 
 .menuItem:hover {
   background-color: var(--color-background);
+}
+
+.menuItem[data-active="true"] {
+  background-color: color-mix(in srgb, var(--color-background) 50%, var(--color-surface));
 } 
