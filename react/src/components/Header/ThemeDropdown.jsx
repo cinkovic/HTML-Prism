@@ -31,17 +31,62 @@ export default function ThemeDropdown() {
     setIsOpen(false);  // Close menu after toggle
   };
 
-  const handlePasteFromClipboard = async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      updateHtmlContent(text);
-      // Show controls if they're hidden
-      if (!visibility.showInputControls) {
-        toggleInputControls();
+  const handlePasteFromClipboard = () => {
+    // Create hidden textarea
+    const textarea = document.createElement('textarea');
+    textarea.style.cssText = 'position:absolute;left:-9999px;top:-9999px';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    
+    // Try to paste
+    const tryPaste = () => {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.readText()
+          .then(text => {
+            if (text) {
+              updateHtmlContent(text);
+              if (!visibility.showInputControls) {
+                toggleInputControls();
+              }
+            }
+          })
+          .catch(() => null)
+          .finally(() => {
+            document.body.removeChild(textarea);
+            setIsOpen(false);
+          });
+      } else {
+        // Fallback for non-secure contexts
+        setTimeout(() => {
+          if (textarea.value) {
+            updateHtmlContent(textarea.value);
+            if (!visibility.showInputControls) {
+              toggleInputControls();
+            }
+          }
+          document.body.removeChild(textarea);
+          setIsOpen(false);
+        }, 100);
       }
-      setIsOpen(false);
-    } catch (err) {
-      console.error('Failed to read clipboard:', err);
+    };
+
+    // Handle paste event
+    textarea.onpaste = () => {
+      setTimeout(() => {
+        if (textarea.value) {
+          updateHtmlContent(textarea.value);
+          if (!visibility.showInputControls) {
+            toggleInputControls();
+          }
+        }
+        document.body.removeChild(textarea);
+        setIsOpen(false);
+      }, 100);
+    };
+
+    // Try both methods
+    if (document.execCommand('paste') === false) {
+      tryPaste();
     }
   };
 
