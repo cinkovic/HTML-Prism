@@ -25,6 +25,12 @@ export default function ThemeDropdown() {
     setIsOpen(false);
   };
 
+  // Add handler for input controls toggle
+  const handleInputToggle = () => {
+    toggleInputControls();
+    setIsOpen(false);  // Close menu after toggle
+  };
+
   useEffect(() => {
     // Load saved theme preference from localStorage
     const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -50,11 +56,11 @@ export default function ThemeDropdown() {
       {isOpen && (
         <div className={styles.menu}>
           <button 
-            onClick={toggleInputControls} 
+            onClick={handleInputToggle}
             className={styles.menuItem}
             data-icon={visibility.showInputControls ? "▣" : "□"}
           >
-            {visibility.showInputControls ? "Hide Input Panel" : "Show Input Panel"}
+            {visibility.showInputControls ? "Hide Controls" : "Show Controls"}
           </button>
 
           <div className={styles.divider}></div>
