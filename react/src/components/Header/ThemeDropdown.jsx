@@ -72,7 +72,7 @@ export default function ThemeDropdown() {
           <button 
             onClick={handlePasteFromClipboard}
             className={styles.menuItem}
-            data-icon="📋"
+            data-icon="📄"
           >
             Paste from Clipboard
           </button>
@@ -82,7 +82,7 @@ export default function ThemeDropdown() {
           <button 
             onClick={handleInputToggle}
             className={styles.menuItem}
-            data-icon={visibility.showInputControls ? "▣" : "□"}
+            data-icon={visibility.showInputControls ? "⊡" : "⊞"}
           >
             {visibility.showInputControls ? "Hide Controls" : "Show Controls"}
           </button>
@@ -130,7 +130,7 @@ export default function ThemeDropdown() {
           <button 
             onClick={() => setShowInfo(true)}
             className={styles.menuItem}
-            data-icon="ⓘ"
+            data-icon="❓"
           >
             About HTML-Prism
           </button>
