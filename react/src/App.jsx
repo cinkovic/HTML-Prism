@@ -11,13 +11,12 @@ import { VisibilityProvider } from './context/VisibilityContext.jsx';
 function AppContent() {
   // State for managing HTML input and visualization content
   // visualizeContent is only updated when the user clicks "Visualize" to prevent constant re-renders
-  const [htmlContent, setHtmlContent] = useState('');
   const [visualizeContent, setVisualizeContent] = useState('');
-  const { visibility } = useVisibility();
+  const { visibility, updateHtmlContent } = useVisibility();
 
   // Updates visualization content on-demand, triggered by user action
   const handleVisualize = () => {
-    setVisualizeContent(htmlContent);
+    setVisualizeContent(visibility.htmlContent);
   }
 
   return (
@@ -28,8 +27,8 @@ function AppContent() {
         {visibility.showInputControls && (
           <div className={styles.leftPanel}>
             <CodeInput 
-              value={htmlContent} 
-              onChange={setHtmlContent} 
+              value={visibility.htmlContent} 
+              onChange={updateHtmlContent} 
             />
             <Controls />
           </div>

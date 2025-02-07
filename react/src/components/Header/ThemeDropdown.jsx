@@ -9,7 +9,7 @@ export default function ThemeDropdown() {
   const [showInfo, setShowInfo] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('dark'); // Default theme
   const dropdownRef = useRef(null);
-  const { toggleAll, toggleInputControls, visibility } = useVisibility();
+  const { toggleAll, toggleInputControls, visibility, updateHtmlContent } = useVisibility();
   
   // Apply theme and persist selection to localStorage
   const toggleTheme = (theme) => {
@@ -29,6 +29,16 @@ export default function ThemeDropdown() {
   const handleInputToggle = () => {
     toggleInputControls();
     setIsOpen(false);  // Close menu after toggle
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      updateHtmlContent(text);
+      setIsOpen(false);
+    } catch (err) {
+      console.error('Failed to read clipboard:', err);
+    }
   };
 
   useEffect(() => {
@@ -56,11 +66,21 @@ export default function ThemeDropdown() {
       {isOpen && (
         <div className={styles.menu}>
           <button 
+            onClick={handlePasteFromClipboard}
+            className={styles.menuItem}
+            data-icon="📋"
+          >
+            Paste from Clipboard
+          </button>
+
+          <div className={styles.divider}></div>
+
+          <button 
             onClick={handleInputToggle}
             className={styles.menuItem}
             data-icon={visibility.showInputControls ? "▣" : "□"}
           >
-            {visibility.showInputControls ? "Hide Controls" : "Show Controls"}
+            {visibility.showInputControls ? "Hide Input Panel" : "Show Input Panel"}
           </button>
 
           <div className={styles.divider}></div>

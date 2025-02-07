@@ -16,11 +16,11 @@ function CodeInput({ value, onChange }) {
   return (
     <textarea
       ref={textareaRef}
-      id="input"
       className={styles.input}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder="Enter your HTML here..."
+      spellCheck="false"
     />
   );
 }

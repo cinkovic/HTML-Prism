@@ -16,6 +16,7 @@ const defaultVisibilityState = {
   showOthers: true,
   showInnerText: true,
   showInputControls: true,
+  htmlContent: '',
 };
 
 export const VisibilityContext = createContext();
@@ -47,8 +48,21 @@ export function VisibilityProvider({ children }) {
     }));
   };
 
+  const updateHtmlContent = (content) => {
+    setVisibility(prev => ({
+      ...prev,
+      htmlContent: content
+    }));
+  };
+
   return (
-    <VisibilityContext.Provider value={{ visibility, toggleVisibility, toggleAll, toggleInputControls }}>
+    <VisibilityContext.Provider value={{ 
+      visibility, 
+      toggleVisibility, 
+      toggleAll, 
+      toggleInputControls,
+      updateHtmlContent
+    }}>
       {children}
     </VisibilityContext.Provider>
   );
